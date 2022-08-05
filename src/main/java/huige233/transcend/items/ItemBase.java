@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Loader;
 
 public class ItemBase extends Item implements IHasModel {
+    private boolean isRangedWeapon = false;
     public ItemBase(String name, CreativeTabs tab) {
         setTranslationKey(name).setRegistryName(name).setCreativeTab(tab);
         ModItems.ITEMS.add(this);
@@ -34,6 +35,12 @@ public class ItemBase extends Item implements IHasModel {
     public EnumRarity getRarity(ItemStack stack )
     {
         return(ModItems.COSMIC_RARITY);
+    }
+
+    public ItemBase setRangedWeapon()
+    {
+        isRangedWeapon = true;
+        return this;
     }
 
 }

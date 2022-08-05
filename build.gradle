@@ -85,7 +85,7 @@ repositories {
     }
     maven { url = "http://maven.cil.li/" }
     maven { url = "https://maven.ellpeck.de/" }
-    maven { url "https://www.cursemaven.com"}
+    maven { url ="https://www.cursemaven.com"}
     maven {
         name = 'GitHub Maven'
         url = "https://jitpack.io"

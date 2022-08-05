@@ -22,6 +22,7 @@ item.transcend_vis.name=Transcend Vis Ring
 item.warp_sword.name=Warp Sword
 item.transcend.sword.destruction.name=Transcend Sword (Destruction of posture)
 item.invulnerable.name=Invulnerable Tool
+item.transcend_shield.name=Transcend Shield
 
 material.flawless.name=Flawless Alloy
 material.transcend.name=Transcend Alloy

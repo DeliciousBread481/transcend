@@ -3,6 +3,7 @@ package huige233.transcend.init;
 import huige233.transcend.Main;
 import huige233.transcend.compat.ThaumcraftCompat;
 import huige233.transcend.items.ItemBase;
+import huige233.transcend.items.ItemTranscendShield;
 import huige233.transcend.items.armor.ArmorBase;
 import huige233.transcend.items.tools.*;
 import huige233.transcend.util.Reference;
@@ -53,4 +54,5 @@ public class ModItems {
     public static final ItemSword WARP_SWORD = new ToolWarp("warp_sword",Main.TranscendTab,warpsword);
     public static final ToolMaterial Invulnera = EnumHelper.addToolMaterial("Invulnera",0,0,1,-4,0);
     public static final ItemSword Invulnerable = new ItemInvulnerable("invulnerable",Invulnera);
+    public static final Item TRANSCEND_SHIELD = new ItemTranscendShield("transcend_shield",Main.TranscendTab);
 }
