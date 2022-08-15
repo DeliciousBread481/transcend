@@ -42,6 +42,7 @@ public class ItemTranscendShield extends ItemAdapting {
             }
         });
     }
+    @Override
     public boolean isShield(ItemStack stack,EntityLivingBase entity){
         return true;
     }
