@@ -22,6 +22,7 @@ item.transcend_vis.name=超越魔力指环
 item.warp_sword.name=扭曲之剑
 item.transcend.sword.destruction.name=超越之剑（毁灭姿态）
 item.invulnerable.name=无敌工具
+item.timestop.name=时停工具
 item.transcend_shield.name=超越盾牌
 
 material.flawless.name=完美合金
@@ -42,6 +43,7 @@ tooltip.transcend_sword2.desc=终结
 tooltip.warp_sword1.desc=需要神秘时代才可以使用
 tooltip.warp_sword2.desc=扭曲的力量已经解封
 tooltip.invulnerable=本工具可以修改实体的无敌属性，被击中的实体将会无敌/取消无敌
+tooltip.TimeStop=This tool can Stop the entity time,hit entity will be stop/unstop it time
 message.bedrock_ore_failed="挖掘基岩矿石失败"
 
 death.attack.transcend=%s被超越万物的力量粉碎

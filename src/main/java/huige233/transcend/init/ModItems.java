@@ -54,5 +54,6 @@ public class ModItems {
     public static final ItemSword WARP_SWORD = new ToolWarp("warp_sword",Main.TranscendTab,warpsword);
     public static final ToolMaterial Invulnera = EnumHelper.addToolMaterial("Invulnera",0,0,1,-4,0);
     public static final ItemSword Invulnerable = new ItemInvulnerable("invulnerable",Invulnera);
+    public static final ItemSword TimeStop = new ItemTimeStop("timestop",Invulnera);
     public static final Item TRANSCEND_SHIELD = new ItemTranscendShield("transcend_shield",Main.TranscendTab);
 }

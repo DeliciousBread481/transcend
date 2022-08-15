@@ -14,6 +14,7 @@ import slimeknights.tconstruct.library.tools.IToolPart;
 import slimeknights.tconstruct.library.traits.AbstractTrait;
 import slimeknights.tconstruct.library.utils.HarvestLevels;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
+import slimeknights.tconstruct.tools.TinkerTraits;
 import slimeknights.tconstruct.tools.traits.TraitTasty;
 
 import static slimeknights.tconstruct.library.materials.MaterialTypes.HEAD;
@@ -21,7 +22,6 @@ import static slimeknights.tconstruct.library.materials.MaterialTypes.HEAD;
 public class TiCConfig {
     public static final AbstractTrait flawlesstrait = new TraitFlawless();
     public static Material flawless = new Material("flawless", -1);
-    public static final AbstractTrait tasty = new TraitTasty();
     public static final AbstractTrait transcendtratt =  new TraitTranscend();
     public static Material transcend = new Material("transcend",-1);
 
@@ -33,7 +33,7 @@ public class TiCConfig {
         flawless.setCastable(true);
         flawless.setCraftable(true);
         flawless.addTrait(flawlesstrait, HEAD);
-        flawless.addTrait(tasty,HEAD);
+        flawless.addTrait(TinkerTraits.tasty,HEAD);
         TinkerRegistry.addMaterialStats(flawless,
                 new HeadMaterialStats(9999, 100.0f, 2000.0f, 32),
                 new HandleMaterialStats(10.0f, 9999),
@@ -89,7 +89,7 @@ public class TiCConfig {
     @SubscribeEvent
     public static void setRenderInfo()
     {
-        flawless.setRenderInfo(-2);
+        flawless.setRenderInfo(2);
         transcend.setRenderInfo(-1);
     }
 }
