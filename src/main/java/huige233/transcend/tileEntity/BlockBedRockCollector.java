@@ -4,7 +4,6 @@ import codechicken.lib.util.RotationUtils;
 import huige233.transcend.Main;
 import huige233.transcend.blocks.BlockBase;
 import huige233.transcend.gui.ModGuiElementLoader;
-import huige233.transcend.init.Props;
 import huige233.transcend.util.ItemUtils;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;

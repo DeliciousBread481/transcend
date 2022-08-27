@@ -1,17 +1,21 @@
 package huige233.transcend.items.tools;
 
+import codechicken.lib.math.MathHelper;
 import com.google.common.collect.Multimap;
 import huige233.transcend.Main;
 import huige233.transcend.init.ModBlock;
 import huige233.transcend.init.ModItems;
 import huige233.transcend.items.fireimmune;
+import huige233.transcend.util.ArmorUtils;
 import huige233.transcend.util.IHasModel;
 import huige233.transcend.util.Reference;
+import morph.avaritia.handler.AvaritiaEventHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -107,6 +111,14 @@ public class ToolPickaxe extends ItemPickaxe implements IHasModel {
             }
         }
         return false;
+    }
+    public boolean hitEntity(ItemStack stack, EntityLivingBase victim, EntityLivingBase player) {
+        EntityPlayer p = (EntityPlayer) victim;
+        if (!ArmorUtils.fullEquipped(p)) {
+            int i = 10;
+            victim.addVelocity(-MathHelper.sin((double)(player.rotationYaw * 3.1415927F / 180.0F)) * (double)i * 0.5, 2.0, MathHelper.cos((double)(player.rotationYaw * 3.1415927F / 180.0F)) * (double)i * 0.5);
+        }
+        return true;
     }
 
     public boolean hasCustomEntity(ItemStack stack) {
