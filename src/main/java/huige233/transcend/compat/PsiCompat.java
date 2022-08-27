@@ -23,9 +23,9 @@ public class PsiCompat {
         if(cadItem != null && cadItem.getItem() instanceof ICAD) {
             ICAD cad = (ICAD) cadItem.getItem();
             int storedPsi = cad.getStoredPsi(cadItem);
-            data.deductPsi(data.getAvailablePsi() + storedPsi, 200, true);
+            data.deductPsi(data.getAvailablePsi() + storedPsi, 2000, true);
         }else {
-            data.deductPsi(data.getAvailablePsi(), 200, true);
+            data.deductPsi(data.getAvailablePsi(), 2000, true);
         }
 
     }
