@@ -1,7 +1,6 @@
 package huige233.transcend.init;
 
 import huige233.transcend.Main;
-import huige233.transcend.compat.ThaumcraftCompat;
 import huige233.transcend.items.ItemBase;
 import huige233.transcend.items.ItemTranscendShield;
 import huige233.transcend.items.armor.ArmorBase;
@@ -14,24 +13,19 @@ import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Optional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ModItems {
-
-    //public static FLAWLESSARMOR flawless_helmet;
-   //public static FLAWLESSARMOR flawless_chestplate;
-    //public static FLAWLESSARMOR flawless_leggings;
-    //public static FLAWLESSARMOR flawless_boots;
-
     public static EnumRarity COSMIC_RARITY = EnumHelper.addRarity("COSMIC", TextFormatting.RED, "Cosmic");
     public static final List<Item> ITEMS = new ArrayList<Item>();
+
+    public static final Item QS = new ItemBase("qs",Main.TranscendTab);
+
     public static final Item TRANSCEND = new ItemBase("transcend", Main.TranscendTab);
     public static final Item FLAWLESS = new ItemBase("flawless", Main.TranscendTab);
-    public static final ItemArmor.ArmorMaterial flawless_armor = EnumHelper.addArmorMaterial("flawless_alloy","",0,new int[] {1000,1000,1000,1000},1000, SoundEvents.ITEM_ARMOR_EQUIP_CHAIN,1000.0f);
+    public static final ArmorMaterial flawless_armor = EnumHelper.addArmorMaterial("flawless_alloy","",0,new int[] {1000,1000,1000,1000},1000, SoundEvents.ITEM_ARMOR_EQUIP_CHAIN,1000.0f);
     public static final ArmorMaterial ARMOR_MATERIAL_FLAWLESS = EnumHelper.addArmorMaterial("FLAWLESS", Reference.MOD_ID+":flawless", 0, new int[]{1000 , 1000, 1000, 1000}, 100, SoundEvents.ITEM_ARMOR_EQUIP_CHAIN,1000.0f);
     public static final Item FLAWLESS_HELMET = new ArmorBase("flawless_helmet", ARMOR_MATERIAL_FLAWLESS, 1, EntityEquipmentSlot.HEAD, Main.TranscendTab);
     public static final Item FLAWLESS_CHESTPLATE = new ArmorBase("flawless_chestplate", ARMOR_MATERIAL_FLAWLESS, 1, EntityEquipmentSlot.CHEST, Main.TranscendTab);
