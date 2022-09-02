@@ -43,16 +43,18 @@ import vazkii.botania.api.mana.IManaTooltipDisplay;
 import java.util.List;
 import java.util.UUID;
 
+import static huige233.transcend.compat.botaniasword.setMana;
+import static huige233.transcend.compat.botaniasword.setStackCreative;
+
 @Optional.Interface(iface="vazkii.botania.api.mana.IManaItem",modid="botania")
 @Optional.Interface(iface="vazkii.botania.api.mana.IManaTooltipDisplay",modid="botania")
 @Optional.Interface(iface="vazkii.botania.api.mana.ICreativeManaProvider",modid="botania")
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
-public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProvider, IManaItem, IManaTooltipDisplay {
+public class ToolSword extends ItemSword implements IHasModel{
 
     protected static final int MAX_MANA = Integer.MAX_VALUE;
     private static final String TAG_CREATIVE = "creative";
     private static final String TAG_ONE_USE = "oneUse";
-
     private static final String TAG_MANA = "mana";
 
     public ToolSword(String name, CreativeTabs tab, ToolMaterial material) {
@@ -62,6 +64,16 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
         setCreativeTab(tab);
         ModItems.ITEMS.add(this);
     }
+
+    public void getSubItems(@NotNull CreativeTabs tab, @NotNull NonNullList<ItemStack> stack) {
+        if(tab == Main.TranscendTab && Loader.isModLoaded("botania")) {
+            ItemStack create = new ItemStack(ModItems.TRANSCEND_SWORD);
+            setMana(create, MAX_MANA);
+            setStackCreative(create);
+            stack.add(create);
+        }
+    }
+
 
     @Override
     public void registerModels() {
@@ -171,87 +183,6 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
             attrib.put(EntityPlayer.REACH_DISTANCE.getName(), new AttributeModifier(uuid, "Weapon modifier", 256, 0));
         }
         return attrib;
-    }
-
-    @Optional.Method(modid = "botania")
-    public void getSubItems(@NotNull CreativeTabs tab, @NotNull NonNullList<ItemStack> stack) {
-        if(tab == Main.TranscendTab) {
-            ItemStack create = new ItemStack(this);
-            setMana(create, MAX_MANA);
-            isCreative(create);
-            setStackCreative(create);
-            stack.add(create);
-        }
-    }
-
-    @Optional.Method(modid = "botania")
-    public static void setMana(ItemStack stack, int mana) {
-        ItemNBTHelper.setInt(stack, TAG_MANA, MAX_MANA-1);
-    }
-
-    @Optional.Method(modid = "botania")
-    public static void setStackCreative(ItemStack stack) {
-        ItemNBTHelper.setBoolean(stack, TAG_CREATIVE, true);
-    }
-
-    @Override
-    @Optional.Method(modid = "botania")
-    public int getMana(ItemStack stack) {
-        return ItemNBTHelper.getInt(stack, TAG_MANA, 0);
-    }
-
-    @Override
-    @Optional.Method(modid = "botania")
-    public int getMaxMana(ItemStack stack) {
-        return MAX_MANA-1;
-    }
-
-    @Override
-    @Optional.Method(modid = "botania")
-    public void addMana(ItemStack stack, int mana) {
-        setMana(stack, Math.min(getMana(stack) + mana, getMaxMana(stack)));
-    }
-
-    @Override
-    @Optional.Method(modid = "botania")
-    public boolean canReceiveManaFromPool(ItemStack stack, TileEntity pool) {
-        return !ItemNBTHelper.getBoolean(stack, TAG_ONE_USE, false);
-    }
-
-    @Override
-    @Optional.Method(modid = "botania")
-    public boolean canReceiveManaFromItem(ItemStack stack, ItemStack otherStack) {
-        return true;
-    }
-
-    @Override
-    @Optional.Method(modid = "botania")
-    public boolean canExportManaToPool(ItemStack stack, TileEntity pool) {
-        return true;
-    }
-
-    @Override
-    @Optional.Method(modid = "botania")
-    public boolean canExportManaToItem(ItemStack stack, ItemStack otherStack) {
-        return true;
-    }
-
-    @Override
-    @Optional.Method(modid = "botania")
-    public boolean isNoExport(ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    @Optional.Method(modid = "botania")
-    public float getManaFractionForDisplay(ItemStack stack) {
-        return (float) getMana(stack) / (float)getMaxMana(stack);
-    }
-
-    @Override
-    @Optional.Method(modid = "botania")
-    public boolean isCreative(ItemStack stack) {
-        return false;
     }
 
     @SideOnly(Side.CLIENT)
