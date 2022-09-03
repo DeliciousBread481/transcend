@@ -1,5 +1,8 @@
 package huige233.transcend.compat.tinkers;
 
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 import slimeknights.tconstruct.library.traits.AbstractTrait;
@@ -16,5 +19,11 @@ public class TraitTranscend extends AbstractTrait {
         toolTag.setInteger("FreeModifiers", 100);
         rootCompound.setBoolean("Unbreakable", true);
         TagUtil.setToolTag(rootCompound, toolTag);
+    }
+
+    public void onHit(ItemStack tool, EntityLivingBase player, EntityLivingBase target, float damageDealt, boolean wasCritical, boolean wasHit) {
+        if(player instanceof EntityPlayer) {
+
+        }
     }
 }

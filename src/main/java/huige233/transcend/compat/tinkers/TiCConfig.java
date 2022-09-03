@@ -1,12 +1,17 @@
 package huige233.transcend.compat.tinkers;
 
+import com.google.common.collect.Lists;
 import huige233.transcend.init.ModItems;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import slimeknights.tconstruct.library.TinkerRegistry;
+import slimeknights.tconstruct.library.client.MaterialRenderInfo;
 import slimeknights.tconstruct.library.materials.*;
 import slimeknights.tconstruct.library.smeltery.Cast;
 import slimeknights.tconstruct.library.tinkering.MaterialItem;
@@ -15,15 +20,25 @@ import slimeknights.tconstruct.library.traits.AbstractTrait;
 import slimeknights.tconstruct.library.utils.HarvestLevels;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 import slimeknights.tconstruct.tools.TinkerTraits;
-import slimeknights.tconstruct.tools.traits.TraitTasty;
+
+import java.util.List;
 
 import static slimeknights.tconstruct.library.materials.MaterialTypes.HEAD;
 
 public class TiCConfig {
     public static final AbstractTrait flawlesstrait = new TraitFlawless();
-    public static Material flawless = new Material("flawless", -1);
     public static final AbstractTrait transcendtratt =  new TraitTranscend();
-    public static Material transcend = new Material("transcend",-1);
+    public static final List<Material> materials = Lists.newArrayList();
+    public static Material flawless = mat("flawless", 0xfffff);
+    public static final Material transcend = mat("transcend",0x9e9e9e9);
+    private static Material mat(String name, int color) {
+        if (TinkerRegistry.getMaterial(name) == TinkerRegistry.getMaterial("unknown")){
+            Material mat = new Material(name, color);
+            materials.add(mat);
+            return mat;
+        }
+        return TinkerRegistry.getMaterial(name);
+    }
 
     @SubscribeEvent
     public static void setup() {
@@ -75,9 +90,7 @@ public class TiCConfig {
             if(toolPart instanceof MaterialItem)
             {
                 ItemStack stack = toolPart.getItemstackWithMaterial(material);
-
                 ItemStack originCast = Cast.setTagForPart(new ItemStack(TinkerSmeltery.cast), stack.getItem());
-
                 if(fluid != null)
                 {
                     TinkerRegistry.registerMelting(stack, fluid, toolPart.getCost());
@@ -86,11 +99,18 @@ public class TiCConfig {
             }
         }
     }
-    @SubscribeEvent
-    public static void setRenderInfo()
+
+    @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        if (event.getSide().isClient()) {
+            registerMaterialRendering();
+        }}
+
+    @SideOnly(Side.CLIENT)
+    static void registerMaterialRendering()
     {
-        flawless.setRenderInfo(2);
-        transcend.setRenderInfo(-1);
+        flawless.setRenderInfo(new MaterialRenderInfo.Metal(0xffffff, 0.5f, 0.5f, 0.2f));
+        transcend.setRenderInfo(new MaterialRenderInfo.Metal(0x9e9e9e, 0.5f, 0.5f, 0.2f));
     }
 }
 

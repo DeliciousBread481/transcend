@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModItems {
+
     public static EnumRarity COSMIC_RARITY = EnumHelper.addRarity("COSMIC", TextFormatting.RED, "Cosmic");
     public static final List<Item> ITEMS = new ArrayList<Item>();
 

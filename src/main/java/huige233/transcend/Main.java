@@ -2,7 +2,6 @@ package huige233.transcend;
 
 import huige233.transcend.gui.ModGuiElementLoader;
 import huige233.transcend.init.ModOre;
-import huige233.transcend.items.tools.ToolSword;
 import huige233.transcend.proxy.CommonProxy;
 import huige233.transcend.util.Reference;
 import huige233.transcend.world.Worldgen;
@@ -40,6 +39,7 @@ public class Main {
      * This is the first initialization event. Register tile entities here.
      * The registry events below will have fired prior to entry to this method.
      */
+
     @Mod.EventHandler
     public void preinit(FMLPreInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);

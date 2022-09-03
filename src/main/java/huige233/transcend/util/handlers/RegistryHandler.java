@@ -56,5 +56,4 @@ public class RegistryHandler {
     {
         event.getRegistry().registerAll( ModEnchantment.ENCHANTMENTS.toArray( new Enchantment[0] ) );
     }
-
 }
