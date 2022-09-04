@@ -7,6 +7,7 @@ import huige233.transcend.init.ModItems;
 import huige233.transcend.items.fireimmune;
 import huige233.transcend.lib.TranscendDamageSources;
 import huige233.transcend.util.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -19,26 +20,23 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
-import vazkii.botania.api.mana.ICreativeManaProvider;
-import vazkii.botania.api.mana.IManaItem;
-import vazkii.botania.api.mana.IManaTooltipDisplay;
 
 import java.util.List;
 import java.util.UUID;
@@ -66,11 +64,13 @@ public class ToolSword extends ItemSword implements IHasModel{
     }
 
     public void getSubItems(@NotNull CreativeTabs tab, @NotNull NonNullList<ItemStack> stack) {
-        if(tab == Main.TranscendTab && Loader.isModLoaded("botania")) {
-            ItemStack create = new ItemStack(ModItems.TRANSCEND_SWORD);
-            setMana(create, MAX_MANA);
-            setStackCreative(create);
-            stack.add(create);
+        if(tab == Main.TranscendTab){
+            if(Loader.isModLoaded("botania")) {
+                ItemStack create = new ItemStack(ModItems.TRANSCEND_SWORD);
+                setMana(create, MAX_MANA);
+                setStackCreative(create);
+                stack.add(create);
+            }
         }
     }
 
@@ -83,6 +83,20 @@ public class ToolSword extends ItemSword implements IHasModel{
     @SideOnly(Side.CLIENT)
     public boolean hasEffect(@NotNull ItemStack par1ItemStack) {
         return false;
+    }
+
+    @SubscribeEvent
+    public void onClientTick(ClientTickEvent event){
+        EntityPlayer player = Minecraft.getMinecraft().player;
+        if(ArmorUtils.fullEquipped(player)){
+            if(player.isDead){
+                player.isDead=false;
+            }
+            if(!player.world.playerEntities.contains(player)){
+                player.world.playerEntities.add(player);
+                player.world.onEntityAdded(player);
+            }
+        }
     }
 
     public boolean hitEntity(@NotNull ItemStack stack, @NotNull EntityLivingBase target, EntityLivingBase player) {
@@ -119,44 +133,57 @@ public class ToolSword extends ItemSword implements IHasModel{
     @Override
     public boolean onLeftClickEntity(@NotNull ItemStack stack, @NotNull EntityPlayer player, Entity entity) {
         if(!entity.world.isRemote) {
-            if(ItemNBTHelper.getBoolean(stack, "Destruction", false)) {
-                entity.setEntityInvulnerable(false);
-                entity.onKillCommand();
-                entity.isDead = true;
-                entity.hurtResistantTime=0;;
-            }
             if(entity instanceof EntityPlayer) {
                 EntityPlayer t = (EntityPlayer) entity;
-                if(t.capabilities.isCreativeMode && !t.isDead && !ArmorUtils.fullEquipped(t)) {
+                if(!ArmorUtils.fullEquipped(t)) {
+                    t.clearActivePotions();
                     t.inventory.dropAllItems();
                     t.attackEntityFrom((new TranscendDamageSources(player)).setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute(), Float.MAX_VALUE);
                     t.setHealth(0);
                     t.onDeath(new EntityDamageSource("transcend", player));
-                    return true;
+                } else {
+                    EntityLivingBase en = (EntityLivingBase) entity;
+                    en.setHealth(0.0f);
+                    en.clearActivePotions();
+                    en.attackEntityFrom((new TranscendDamageSources(player)).setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute(), Float.MAX_VALUE);
+                    en.onDeath(new EntityDamageSource("transcend",player));
                 }
+            }
+            if(ItemNBTHelper.getBoolean(stack, "Destruction", false)) {
+                if(entity instanceof EntityPlayer){
+                    SwordUtil.killPlayer((EntityPlayer) entity,player);
+                } else if (entity instanceof EntityLivingBase) {
+                    SwordUtil.killEntityLiving((EntityLivingBase) entity,player);
+                } else{
+                    SwordUtil.killEntity(entity);
+                }
+                entity.onKillCommand();
             }
         }
         return false;
     }
 
+
+
     @Override
     public @NotNull ActionResult<ItemStack> onItemRightClick(@NotNull World world, EntityPlayer player, @NotNull EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
-        if(player.isSneaking()) {
-            NBTTagCompound tags = stack.getTagCompound();
-            boolean destruction = ItemNBTHelper.getBoolean(stack,"Destruction",false);
-            if(tags == null) {
-                ItemNBTHelper.setBoolean(stack,"Destruction",false);
-                stack.setStackDisplayName(TextFormatting.RED + stack.getDisplayName());
-            } else {
-                if(!destruction) {
-                    ItemNBTHelper.setBoolean(stack,"Destruction",true);
+        if(!world.isRemote) {
+            if (!player.isSneaking()) {
+                boolean destruction = ItemNBTHelper.getBoolean(stack, "Destruction", false);
+                if (!destruction) {
+                    ItemNBTHelper.setBoolean(stack, "Destruction", true);
                     stack.setStackDisplayName(TextFormatting.RED + I18n.translateToLocal("item.transcend.sword.destruction.name"));
                     player.swingArm(hand);
                 } else {
-                    ItemNBTHelper.setBoolean(stack,"Destruction",false);
+                    ItemNBTHelper.setBoolean(stack, "Destruction", false);
                     stack.setStackDisplayName(TextFormatting.RED + I18n.translateToLocal("item.transcend_sword.name"));
                     player.swingArm(hand);
+                }
+            } else if (player.isSneaking()) {
+                if (ItemNBTHelper.getBoolean(stack, "Destruction", false)) {
+                    int count = SwordUtil.killRangeEntity(world, player);
+                    player.sendMessage(new TextComponentTranslation("transcend.sword.ranger_kill", 50, count));
                 }
             }
         }

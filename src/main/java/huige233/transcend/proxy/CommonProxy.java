@@ -19,9 +19,9 @@ public class CommonProxy {
     public void preInit( FMLPreInitializationEvent event )
     {
         if(Loader.isModLoaded("tconstruct")){
-                TiCConfig.setup();
-            }
+            TiCConfig.setup();
         }
+    }
 
 
     public void init( FMLInitializationEvent event )

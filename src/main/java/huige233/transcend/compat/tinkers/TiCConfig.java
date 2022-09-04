@@ -29,7 +29,7 @@ public class TiCConfig {
     public static final AbstractTrait flawlesstrait = new TraitFlawless();
     public static final AbstractTrait transcendtratt =  new TraitTranscend();
     public static final List<Material> materials = Lists.newArrayList();
-    public static Material flawless = mat("flawless", 0xfffff);
+    public static Material flawless = mat("flawless", 0x777777);
     public static final Material transcend = mat("transcend",0x9e9e9e9);
     private static Material mat(String name, int color) {
         if (TinkerRegistry.getMaterial(name) == TinkerRegistry.getMaterial("unknown")){
@@ -109,7 +109,7 @@ public class TiCConfig {
     @SideOnly(Side.CLIENT)
     static void registerMaterialRendering()
     {
-        flawless.setRenderInfo(new MaterialRenderInfo.Metal(0xffffff, 0.5f, 0.5f, 0.2f));
+        flawless.setRenderInfo(new MaterialRenderInfo.Metal(0x777777, 0.5f, 0.5f, 0.2f));
         transcend.setRenderInfo(new MaterialRenderInfo.Metal(0x9e9e9e, 0.5f, 0.5f, 0.2f));
     }
 }

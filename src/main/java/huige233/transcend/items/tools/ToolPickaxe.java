@@ -9,8 +9,6 @@ import huige233.transcend.items.fireimmune;
 import huige233.transcend.util.ArmorUtils;
 import huige233.transcend.util.IHasModel;
 import huige233.transcend.util.Reference;
-import morph.avaritia.handler.AvaritiaEventHandler;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -26,7 +24,6 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -35,6 +32,9 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 import java.util.Random;
 import java.util.UUID;
@@ -48,6 +48,8 @@ public class ToolPickaxe extends ItemPickaxe implements IHasModel {
         setCreativeTab(tab);
         ModItems.ITEMS.add(this);
     }
+
+    private int tick = 0;
 
     @Override
     public void registerModels() {
@@ -67,6 +69,7 @@ public class ToolPickaxe extends ItemPickaxe implements IHasModel {
         }
         return new ActionResult(EnumActionResult.PASS, stack);
     }
+
 
     @Override
     public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, EntityPlayer player) {

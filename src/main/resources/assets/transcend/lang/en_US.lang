@@ -44,7 +44,7 @@ tooltip.warp_sword1.desc=Should need Thaumcraft can use it
 tooltip.warp_sword2.desc=Warp Power has been unsealed
 tooltip.invulnerable=This tool can modify entity invincible attribute, hit entity will be invincible/uninvincible
 tooltip.TimeStop=This tool can Stop the entity time,hit entity will be stop/unstop it time
-
+transcend.sword.ranger_kill=Dealt a critical blow to %2$d creatures in %1$d blocks
 message.bedrock_ore_failed= "You failed to break the bedrock"
 
 death.attack.transcend=%s A power beyond all things will wipe you out

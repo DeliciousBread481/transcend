@@ -24,9 +24,12 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -140,13 +143,33 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
             if(player.isBurning()) {
                 player.extinguish();
             }
-        } else if (ArmorUtils.fullEquipped(player)) {
-            if(!player.world.isRemote) {
-                Multimap<String, AttributeModifier> attributes = HashMultimap.create();
-                if(attributes.isEmpty()) return;
-                player.setEntityInvulnerable(true);
-                player.setHealth(player.getMaxHealth());
+        }
+        if (ArmorUtils.fullEquipped(player)) {
+            player.setEntityInvulnerable(true);
+            player.setHealth(player.getMaxHealth());
+            if(player.getHeldItemMainhand().getItem()==ModItems.TRANSCEND_SWORD){
+                if(!ItemNBTHelper.getBoolean(player.getHeldItem(EnumHand.MAIN_HAND),"Invul",false)){
+                    ItemNBTHelper.setBoolean(player.getHeldItem(EnumHand.MAIN_HAND),"Invul",true);
+                }
             }
+        } else if(!ArmorUtils.fullEquipped(player)) {
+            if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() == ModItems.TRANSCEND_SWORD) {
+                if (ItemNBTHelper.getBoolean(player.getHeldItem(EnumHand.MAIN_HAND), "Invul", false)) {
+                    NonNullList<ItemStack> armor = player.inventory.armorInventory;
+                    armor.set(3, new ItemStack(ModItems.FLAWLESS_HELMET));
+                    armor.set(2, new ItemStack(ModItems.FLAWLESS_CHESTPLATE));
+                    armor.set(1, new ItemStack(ModItems.FLAWLESS_LEGGINGS));
+                    armor.set(0, new ItemStack(ModItems.FLAWLESS_BOOTS));
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerRender(RenderPlayerEvent.Pre event){
+        EntityPlayer player = event.getEntityPlayer();
+        if(ArmorUtils.fullEquipped(player)){
+            event.setCanceled(true);
         }
     }
 
