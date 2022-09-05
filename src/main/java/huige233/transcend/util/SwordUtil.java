@@ -52,7 +52,7 @@ public class SwordUtil {
     public static int killRangeEntity(World world,EntityLivingBase entity){
         int range = 50;
         List<Entity> list = world.getEntitiesWithinAABB(EntityLivingBase.class,new AxisAlignedBB(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range));
-        list.removeIf(en -> en instanceof EntityPlayer || en instanceof EntityArmorStand || en instanceof EntityAmbientCreature || (en instanceof EntityCreature && !(en instanceof EntityMob)));
+        //list.removeIf(en -> en instanceof EntityPlayer || en instanceof EntityArmorStand || en instanceof EntityAmbientCreature || (en instanceof EntityCreature && !(en instanceof EntityMob)));
         list.remove(entity);
         for(Entity en : list) {
             if(en instanceof EntityPlayer){
@@ -60,7 +60,7 @@ public class SwordUtil {
             }else if(en instanceof EntityLivingBase){
                 killEntityLiving((EntityLivingBase) en,entity);
             } else {
-                killEntity((Entity) en);
+                killEntity(en);
             }
         }
         return list.size();

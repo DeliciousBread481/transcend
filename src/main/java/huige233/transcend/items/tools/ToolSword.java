@@ -44,9 +44,6 @@ import java.util.UUID;
 import static huige233.transcend.compat.botaniasword.setMana;
 import static huige233.transcend.compat.botaniasword.setStackCreative;
 
-@Optional.Interface(iface="vazkii.botania.api.mana.IManaItem",modid="botania")
-@Optional.Interface(iface="vazkii.botania.api.mana.IManaTooltipDisplay",modid="botania")
-@Optional.Interface(iface="vazkii.botania.api.mana.ICreativeManaProvider",modid="botania")
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class ToolSword extends ItemSword implements IHasModel{
 
@@ -62,15 +59,13 @@ public class ToolSword extends ItemSword implements IHasModel{
         setCreativeTab(tab);
         ModItems.ITEMS.add(this);
     }
-
+    @Optional.Method(modid = "botania")
     public void getSubItems(@NotNull CreativeTabs tab, @NotNull NonNullList<ItemStack> stack) {
         if(tab == Main.TranscendTab){
-            if(Loader.isModLoaded("botania")) {
-                ItemStack create = new ItemStack(ModItems.TRANSCEND_SWORD);
-                setMana(create, MAX_MANA);
-                setStackCreative(create);
-                stack.add(create);
-            }
+            ItemStack create = new ItemStack(ModItems.TRANSCEND_SWORD);
+            setMana(create, MAX_MANA);
+            setStackCreative(create);
+            stack.add(create);
         }
     }
 
@@ -84,7 +79,7 @@ public class ToolSword extends ItemSword implements IHasModel{
     public boolean hasEffect(@NotNull ItemStack par1ItemStack) {
         return false;
     }
-
+/*
     @SubscribeEvent
     public void onClientTick(ClientTickEvent event){
         EntityPlayer player = Minecraft.getMinecraft().player;
@@ -98,7 +93,7 @@ public class ToolSword extends ItemSword implements IHasModel{
             }
         }
     }
-
+*/
     public boolean hitEntity(@NotNull ItemStack stack, @NotNull EntityLivingBase target, EntityLivingBase player) {
         if (!player.world.isRemote) {
             if (target instanceof EntityPlayer) {
