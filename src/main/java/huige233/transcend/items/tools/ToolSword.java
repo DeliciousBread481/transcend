@@ -1,5 +1,8 @@
 package huige233.transcend.items.tools;
 
+import baubles.common.Baubles;
+import cofh.redstoneflux.RedstoneFluxProps;
+import cofh.redstoneflux.api.IEnergyContainerItem;
 import com.google.common.collect.Multimap;
 import huige233.transcend.Main;
 import huige233.transcend.compat.ThaumcraftSword;
@@ -7,7 +10,8 @@ import huige233.transcend.init.ModItems;
 import huige233.transcend.items.fireimmune;
 import huige233.transcend.lib.TranscendDamageSources;
 import huige233.transcend.util.*;
-import net.minecraft.client.Minecraft;
+import ic2.api.item.ElectricItem;
+import ic2.core.IC2;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -15,25 +19,25 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
+import net.minecraft.network.play.server.SPacketCustomSound;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
@@ -41,8 +45,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.UUID;
 
-import static huige233.transcend.compat.botaniasword.setMana;
-import static huige233.transcend.compat.botaniasword.setStackCreative;
+import static com.brandon3055.draconicevolution.integration.BaublesHelper.getBaubles;
+
+@Optional.InterfaceList(@Optional.Interface(modid = RedstoneFluxProps.MOD_ID, iface = "cofh.redstoneflux.api.IEnergyContainerItem"))
+//@Optional.Interface(modid = IC2.MODID, iface = "ic2.api.item.ISpecialElectricItem") })
 
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class ToolSword extends ItemSword implements IHasModel{
@@ -59,16 +65,6 @@ public class ToolSword extends ItemSword implements IHasModel{
         setCreativeTab(tab);
         ModItems.ITEMS.add(this);
     }
-    @Optional.Method(modid = "botania")
-    public void getSubItems(@NotNull CreativeTabs tab, @NotNull NonNullList<ItemStack> stack) {
-        if(tab == Main.TranscendTab){
-            ItemStack create = new ItemStack(ModItems.TRANSCEND_SWORD);
-            setMana(create, MAX_MANA);
-            setStackCreative(create);
-            stack.add(create);
-        }
-    }
-
 
     @Override
     public void registerModels() {
@@ -79,80 +75,83 @@ public class ToolSword extends ItemSword implements IHasModel{
     public boolean hasEffect(@NotNull ItemStack par1ItemStack) {
         return false;
     }
-/*
-    @SubscribeEvent
-    public void onClientTick(ClientTickEvent event){
-        EntityPlayer player = Minecraft.getMinecraft().player;
-        if(ArmorUtils.fullEquipped(player)){
-            if(player.isDead){
-                player.isDead=false;
+    public boolean hitEntity(@NotNull ItemStack stack, @NotNull EntityLivingBase entity, EntityLivingBase player) {
+        if(!entity.world.isRemote){
+            if(ItemNBTHelper.getBoolean(stack,"Destruction",false)) {
+                if(entity instanceof EntityPlayer){
+                    if (ArmorUtils.fullEquipped((EntityPlayer) entity)) {
+                        player.sendMessage(new TextComponentTranslation("sword_to_armor"));
+                        return true;
+                    }
+                    SwordUtil.killPlayer((EntityPlayer) entity,player);
+                    entity.world.removeEntity(entity);
+                } else {
+                    SwordUtil.killEntity(entity);
+                    entity.world.removeEntity(entity);
+                }
+                if(player instanceof EntityPlayerMP){
+                    BlockPos pos = player.getPosition();
+                    ((EntityPlayerMP) player).connection.sendPacket(new SPacketCustomSound("transcend:killer", SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F));
+                }
             }
-            if(!player.world.playerEntities.contains(player)){
-                player.world.playerEntities.add(player);
-                player.world.onEntityAdded(player);
-            }
-        }
-    }
-*/
-    public boolean hitEntity(@NotNull ItemStack stack, @NotNull EntityLivingBase target, EntityLivingBase player) {
-        if (!player.world.isRemote) {
-            if (target instanceof EntityPlayer) {
-                EntityPlayer t = (EntityPlayer) target;
-                if (ArmorUtils.fullEquipped(t)) {
-                    target.setHealth(4);
+            if(entity instanceof EntityPlayer){
+                if (ArmorUtils.fullEquipped((EntityPlayer) entity)) {
+                    player.sendMessage(new TextComponentTranslation("sword_to_armor"));
                     return true;
                 }
-                if (Loader.isModLoaded("thaumcraft")) {
-                    ThaumcraftSword.damageEntity(target);
-                }
-                t.inventory.dropAllItems();
+                EntityPlayer p = (EntityPlayer) entity;
+                p.attackEntityFrom((new TranscendDamageSources(player)).setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute(), Float.MAX_VALUE);
+                p.getCombatTracker().trackDamage(new EntityDamageSource("transcend", player), Float.MAX_VALUE, Float.MAX_VALUE);
+                p.clearActivePotions();
+                p.inventory.dropAllItems();
+                p.setHealth(0.0f);
+                p.onDeath(new EntityDamageSource("transcend", player));
+                p.setDead();
+                player.isDead=true;
+            } else {
+                entity.clearActivePotions();
+                entity.attackEntityFrom((new TranscendDamageSources(player)).setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute(), Float.MAX_VALUE);
+                entity.getCombatTracker().trackDamage(new EntityDamageSource("transcend", player), Float.MAX_VALUE, Float.MAX_VALUE);
+                entity.setHealth(0.0f);
+                //entity.onDeath(new EntityDamageSource("transcend",player));
             }
-            target.attackEntityFrom((new TranscendDamageSources(player)).setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute(), Float.MAX_VALUE);
-            target.getCombatTracker().trackDamage(new EntityDamageSource("transcend", player), Float.MAX_VALUE, Float.MAX_VALUE);
-            target.maxHurtResistantTime=0;
-            target.hurtResistantTime=0;
-            target.hurtTime=0;
-            if(ItemNBTHelper.getBoolean(stack, "Destruction", false)) {
-                target.setEntityInvulnerable(false);
-                target.onKillCommand();
-                target.isDead = true;
-                target.hurtResistantTime=0;;
-                target.deathTime = 0;
+            entity.onKillCommand();
+            if (Loader.isModLoaded("thaumcraft")) {
+                ThaumcraftSword.damageEntity(entity);
             }
-            target.setHealth(0);
-            target.onDeath(new EntityDamageSource("transcend", player));
         }
         return true;
     }
 
     @Override
     public boolean onLeftClickEntity(@NotNull ItemStack stack, @NotNull EntityPlayer player, Entity entity) {
-        if(!entity.world.isRemote) {
-            if(entity instanceof EntityPlayer) {
-                EntityPlayer t = (EntityPlayer) entity;
-                if(!ArmorUtils.fullEquipped(t)) {
-                    t.clearActivePotions();
-                    t.inventory.dropAllItems();
-                    t.attackEntityFrom((new TranscendDamageSources(player)).setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute(), Float.MAX_VALUE);
-                    t.setHealth(0);
-                    t.onDeath(new EntityDamageSource("transcend", player));
-                } else {
-                    EntityLivingBase en = (EntityLivingBase) entity;
-                    en.setHealth(0.0f);
-                    en.clearActivePotions();
-                    en.attackEntityFrom((new TranscendDamageSources(player)).setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute(), Float.MAX_VALUE);
-                    en.onDeath(new EntityDamageSource("transcend",player));
-                }
-            }
-            if(ItemNBTHelper.getBoolean(stack, "Destruction", false)) {
+        if(!entity.world.isRemote){
+            if(ItemNBTHelper.getBoolean(stack,"Destruction",false)) {
                 if(entity instanceof EntityPlayer){
                     SwordUtil.killPlayer((EntityPlayer) entity,player);
-                } else if (entity instanceof EntityLivingBase) {
+                    entity.world.removeEntity(entity);
+                } else if(entity instanceof EntityLivingBase){
                     SwordUtil.killEntityLiving((EntityLivingBase) entity,player);
-                } else{
+                    entity.world.removeEntity(entity);
+                } else {
                     SwordUtil.killEntity(entity);
+                    entity.world.removeEntity(entity);
+                }
+                if(player instanceof EntityPlayerMP){
+                    BlockPos pos = player.getPosition();
+                    ((EntityPlayerMP) player).connection.sendPacket(new SPacketCustomSound("transcend:killer", SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F));
                 }
                 entity.onKillCommand();
+            }
+            if(entity instanceof EntityPlayer){
+                EntityPlayer p = (EntityPlayer) entity;
+                p.clearActivePotions();
+                p.inventory.dropAllItems();
+                p.setHealth(0.0f);
+                p.onDeath(new EntityDamageSource("transcend", player));
+            } else {
+                entity.attackEntityFrom((new TranscendDamageSources(player)).setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute(), Float.MAX_VALUE);
+                entity.setDead();
             }
         }
         return false;
@@ -182,15 +181,16 @@ public class ToolSword extends ItemSword implements IHasModel{
                 }
             }
         }
-        return super.onItemRightClick(world, player, hand);
+        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
     }
 
     public boolean hasCustomEntity (@NotNull ItemStack stack){
         return true;
     }
 
-    public void setDamage(@NotNull ItemStack stack, int damage) {
-        super.setDamage(stack, 0);
+    @Override
+    public int getDamage(ItemStack stack) {
+        return 0;
     }
 
     public Entity createEntity(@NotNull World world, @NotNull Entity location, @NotNull ItemStack itemstack) {
@@ -223,6 +223,70 @@ public class ToolSword extends ItemSword implements IHasModel{
                         event.getToolTip().set(x + 1, TextFormatting.BLUE + "+" + TextUtils.makeFabulous(I18n.translateToLocal("tip.transcend")) + " " + TextFormatting.BLUE + I18n.translateToLocal("attribute.name.generic.reachDistance"));
                     }
                     return;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onUpdate(ItemStack stack,World world,Entity entity,int itemSlot,boolean isSelected){
+        if(Loader.isModLoaded(IC2.MODID)){
+            ic2charge(stack,world,entity,itemSlot,isSelected);
+        }
+        if(Loader.isModLoaded(RedstoneFluxProps.MOD_ID)){
+            rfReceive(stack,world,entity,itemSlot,isSelected);
+        }
+    }
+
+    @Optional.Method(modid = RedstoneFluxProps.MOD_ID)
+    private void rfReceive(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
+        if (!entity.world.isRemote && entity instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) entity;
+            for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+                ItemStack receive = player.inventory.getStackInSlot(i);
+                if (!receive.isEmpty()) {
+                    if (receive.getItem() instanceof IEnergyContainerItem) {
+                        IEnergyContainerItem energy = (IEnergyContainerItem) receive.getItem();
+                        energy.receiveEnergy(receive, energy.getMaxEnergyStored(receive) - energy.getEnergyStored(receive), false);
+                    }
+                    if (receive.hasCapability(CapabilityEnergy.ENERGY, null)) {
+                        IEnergyStorage cap = (IEnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY, null);
+                        if ((cap != null) && (cap.canReceive())) {
+                            cap.receiveEnergy(Integer.MAX_VALUE, false);
+                        }
+                    }
+                }
+            }
+            if (Loader.isModLoaded(Baubles.MODID)) {
+                for (ItemStack receive : getBaubles(player)) {
+                    if (receive.getItem() instanceof IEnergyContainerItem) {
+                        IEnergyContainerItem energy = (IEnergyContainerItem) receive.getItem();
+                        energy.receiveEnergy(receive, energy.getMaxEnergyStored(receive) - energy.getEnergyStored(receive), false);
+                    }
+                    if (receive.hasCapability(CapabilityEnergy.ENERGY, null)) {
+                        IEnergyStorage cap = (IEnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY, null);
+                        if ((cap != null) && (cap.canReceive())) {
+                            cap.receiveEnergy(Integer.MAX_VALUE, false);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Optional.Method(modid = IC2.MODID)
+    private void ic2charge(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
+        if (!entity.world.isRemote && entity instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) entity;
+            for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+                ItemStack toCharge = player.inventory.getStackInSlot(i);
+                if (!toCharge.isEmpty()) {
+                    ElectricItem.manager.charge(toCharge, ElectricItem.manager.getMaxCharge(toCharge) - ElectricItem.manager.getCharge(toCharge), Integer.MAX_VALUE, true, false);
+                }
+            }
+            if (Loader.isModLoaded(Baubles.MODID)) {
+                for (ItemStack toCharge : getBaubles(player)) {
+                    ElectricItem.manager.charge(toCharge, ElectricItem.manager.getMaxCharge(toCharge) - ElectricItem.manager.getCharge(toCharge), Integer.MAX_VALUE, true, false);
                 }
             }
         }

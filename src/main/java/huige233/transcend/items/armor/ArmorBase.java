@@ -1,5 +1,7 @@
 package huige233.transcend.items.armor;
 
+import c4.conarm.common.armor.modifiers.accessories.AbstractTravelGoggles;
+import c4.conarm.lib.modifiers.IToggleable;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
@@ -29,10 +31,14 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -40,6 +46,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
+import slimeknights.tconstruct.library.utils.ModifierTagHolder;
+import thaumcraft.api.items.IGoggles;
 import thaumcraft.api.items.IRechargable;
 import thaumcraft.api.items.IVisDiscountGear;
 
@@ -50,7 +58,8 @@ import java.util.UUID;
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 @Optional.Interface(iface = "thaumcraft.api.items.IVisDiscountGear", modid = "thaumcraft")
 @Optional.Interface(iface = "thaumcraft.api.items.IRechargable", modid = "thaumcraft")
-public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear, IRechargable {
+@Optional.Interface(iface = "thaumcraft.api.items.IGoggles",modid = "thaumcraft")
+public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear, IRechargable, IGoggles {
     public ArmorBase(String name, ArmorMaterial materialIn, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn, CreativeTabs tab) {
         super(materialIn, renderIndexIn, equipmentSlotIn);
         setTranslationKey(name);
@@ -98,22 +107,30 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void PlayerDropsEvent(PlayerDropsEvent event){
+        if(ArmorUtils.fullEquipped(event.getEntityPlayer())){
+            event.setCanceled(true);
+        }
+    }
+
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void LivingAttackEvent(LivingAttackEvent event) {
         if (!(event.getEntityLiving() instanceof EntityPlayer) || event.isCanceled())
             return;
         EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-        if (player.world.isRemote)
-            return;
-        NonNullList<ItemStack> armor = player.inventory.armorInventory;
-        if (armor.get(3).getItem() == ModItems.FLAWLESS_HELMET && armor.get(2).getItem() == ModItems.FLAWLESS_CHESTPLATE && armor.get(1).getItem() == ModItems.FLAWLESS_LEGGINGS && armor.get(0).getItem() == ModItems.FLAWLESS_BOOTS) {
+        if (ArmorUtils.fullEquipped(player)) {
             Entity attacker = event.getSource().getTrueSource();
             if (attacker instanceof EntityPlayer) {
                 PsiCompat.onPlayerAttack(player, (EntityPlayer) attacker);
             }
             event.setCanceled(true);
         }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void AttackEvent(AttackEntityEvent event){
 
     }
 
@@ -152,6 +169,9 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
                     ItemNBTHelper.setBoolean(player.getHeldItem(EnumHand.MAIN_HAND),"Invul",true);
                 }
             }
+            if(player.isDead){
+                player.isDead=false;
+            }
         } else if(!ArmorUtils.fullEquipped(player)) {
             if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() == ModItems.TRANSCEND_SWORD) {
                 if (ItemNBTHelper.getBoolean(player.getHeldItem(EnumHand.MAIN_HAND), "Invul", false)) {
@@ -163,9 +183,16 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
                 }
             }
         }
+        if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() == ModItems.TRANSCEND_SWORD) {
+            if (ItemNBTHelper.getBoolean(player.getHeldItem(EnumHand.MAIN_HAND), "Invul", false)) {
+                if(player.isDead){
+                    player.isDead=false;
+                }
+            }
+        }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerRender(RenderPlayerEvent.Pre event){
         EntityPlayer player = event.getEntityPlayer();
         if(ArmorUtils.fullEquipped(player)){
@@ -255,6 +282,12 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
     @Override
     @Optional.Method(modid = "thaumcraft")
     public EnumChargeDisplay showInHud(ItemStack itemStack, EntityLivingBase entityLivingBase) {
-        return null;
+        return EnumChargeDisplay.PERIODIC;
+    }
+
+    @Override
+    @Optional.Method(modid = "thaumcraft")
+    public boolean showIngamePopups(ItemStack itemStack, EntityLivingBase entityLivingBase) {
+        return true;
     }
 }

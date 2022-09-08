@@ -1,13 +1,32 @@
 package huige233.transcend.compat;
 
+import huige233.transcend.Main;
+import huige233.transcend.init.ModItems;
 import huige233.transcend.util.ItemNBTHelper;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.fml.common.Optional;
+import org.jetbrains.annotations.NotNull;
 import vazkii.botania.api.mana.ICreativeManaProvider;
 import vazkii.botania.api.mana.IManaItem;
 import vazkii.botania.api.mana.IManaTooltipDisplay;
 
 public class botaniasword implements ICreativeManaProvider, IManaItem, IManaTooltipDisplay {
+    public botaniasword() {
+
+    }
+
+    public void getSubItems(@NotNull CreativeTabs tab,NonNullList<ItemStack> stack) {
+        if(tab == Main.TranscendTab){
+            ItemStack create = new ItemStack(ModItems.TRANSCEND_SWORD);
+            setMana(create, MAX_MANA);
+            isCreative(create);
+            setStackCreative(create);
+            stack.add(create);
+        }
+    }
     protected static final int MAX_MANA = Integer.MAX_VALUE;
     private static final String TAG_CREATIVE = "creative";
     private static final String TAG_ONE_USE = "oneUse";

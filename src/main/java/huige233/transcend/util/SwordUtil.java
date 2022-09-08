@@ -19,21 +19,23 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public class SwordUtil {
-    public static void killPlayer(EntityPlayer player, EntityLivingBase source){
-        ItemStack stack = source.getHeldItem(EnumHand.MAIN_HAND);
-        player.inventory.clearMatchingItems(null,-1,-1,null);
-        InventoryEnderChest ec = player.getInventoryEnderChest();
-        for(int i = 0;i < ec.getSizeInventory();i++){
-            ec.removeStackFromSlot(i);
+    public static void killPlayer(EntityPlayer player, EntityLivingBase source) {
+        if (!(player.world.isRemote || player.isDead || player.getHealth() == 0.0f)) {
+            player.inventory.clearMatchingItems(null, -1, -1, null);
+            InventoryEnderChest ec = player.getInventoryEnderChest();
+            for (int i = 0; i < ec.getSizeInventory(); i++) {
+                ec.removeStackFromSlot(i);
+            }
+            player.clearActivePotions();
+            player.inventory.dropAllItems();
+            DamageSource ds = source == null ? new DamageSource("infinity") : new EntityDamageSource("infinity", source);
+            DamageSource ds1 = source == null ? new DamageSource("transcend") : new EntityDamageSource("transcend", source);
+            player.getCombatTracker().trackDamage(ds, Float.MAX_VALUE, Float.MAX_VALUE);
+            player.getCombatTracker().trackDamage(ds1, Float.MAX_VALUE, Float.MAX_VALUE);
+            player.setHealth(0.0f);
+            player.onDeath(ds);
+            player.isDead = true;
         }
-        player.inventory.dropAllItems();
-        DamageSource ds = source == null ? new DamageSource("infinity") :new EntityDamageSource("infinity",source);
-        DamageSource ds1 = source == null ? new DamageSource("transcend") :new EntityDamageSource("transcend",source);
-        player.getCombatTracker().trackDamage(ds,Float.MIN_VALUE,Float.MAX_VALUE);
-        player.getCombatTracker().trackDamage(ds1,Float.MIN_VALUE,Float.MAX_VALUE);
-        player.setHealth(0.0f);
-        player.onDeath(ds);
-        player.isDead=true;
     }
     public static void killEntityLiving(EntityLivingBase entity,EntityLivingBase source){
         if(!(entity.world.isRemote || entity.isDead || entity.getHealth()==0.0f)){
@@ -41,7 +43,7 @@ public class SwordUtil {
             DamageSource ds = source == null ? new DamageSource("infinity") :new EntityDamageSource("infinity",source);
             DamageSource ds1 = source == null ? new DamageSource("transcend") :new EntityDamageSource("transcend",source);
             entity.getCombatTracker().trackDamage(ds,Float.MAX_VALUE,Float.MAX_VALUE);
-            entity.getCombatTracker().trackDamage(ds1,Float.MIN_VALUE,Float.MAX_VALUE);
+            entity.getCombatTracker().trackDamage(ds1,Float.MAX_VALUE,Float.MAX_VALUE);
             entity.setHealth(0.0f);
             entity.isDead=true;
         }
@@ -56,11 +58,17 @@ public class SwordUtil {
         list.remove(entity);
         for(Entity en : list) {
             if(en instanceof EntityPlayer){
+                if((ArmorUtils.fullEquipped((EntityPlayer) en))){
+                    list.remove(en);
+                }
                 killPlayer((EntityPlayer) en,entity);
+                entity.world.removeEntity(entity);
             }else if(en instanceof EntityLivingBase){
                 killEntityLiving((EntityLivingBase) en,entity);
+                entity.world.removeEntity(entity);
             } else {
                 killEntity(en);
+                entity.world.removeEntity(entity);
             }
         }
         return list.size();

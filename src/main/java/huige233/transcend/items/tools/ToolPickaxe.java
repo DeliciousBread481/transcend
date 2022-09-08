@@ -49,8 +49,6 @@ public class ToolPickaxe extends ItemPickaxe implements IHasModel {
         ModItems.ITEMS.add(this);
     }
 
-    private int tick = 0;
-
     @Override
     public void registerModels() {
         Main.proxy.registerItemRenderer(this, 0, "inventory");
@@ -116,11 +114,8 @@ public class ToolPickaxe extends ItemPickaxe implements IHasModel {
         return false;
     }
     public boolean hitEntity(ItemStack stack, EntityLivingBase victim, EntityLivingBase player) {
-        EntityPlayer p = (EntityPlayer) victim;
-        if (!ArmorUtils.fullEquipped(p)) {
-            int i = 10;
-            victim.addVelocity(-MathHelper.sin((double)(player.rotationYaw * 3.1415927F / 180.0F)) * (double)i * 0.5, 2.0, MathHelper.cos((double)(player.rotationYaw * 3.1415927F / 180.0F)) * (double)i * 0.5);
-        }
+        int i = 30;
+        victim.addVelocity(-MathHelper.sin((double)(player.rotationYaw * 3.1415927F / 180.0F)) * (double)i * 0.5, 2.0, MathHelper.cos((double)(player.rotationYaw * 3.1415927F / 180.0F)) * (double)i * 0.5);
         return true;
     }
 

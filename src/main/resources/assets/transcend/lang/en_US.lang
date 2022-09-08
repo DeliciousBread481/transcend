@@ -24,14 +24,14 @@ item.transcend.sword.destruction.name=Transcend Sword (Destruction of posture)
 item.invulnerable.name=Invulnerable Tool
 item.timestop.name=TimeStop Tool
 item.transcend_shield.name=Transcend Shield
-
+sword_to_armor=The other party exempted this attack
 material.flawless.name=Flawless Alloy
 material.transcend.name=Transcend Alloy
 modifier.flawless.name=Flawless
 modifier.transcend.name=Transcend
 modifier.flawless.desc=Flawless items never wear out, and endless power comes from the void.
 modifier.transcend.desc=Transcend power will eventually destroy everything, until then it is unstoppable.
-
+tile.CreateRFSource.name=Creative RF Source
 enchantment.flawless_enchantment=FLAWLESS
 
 tile.transcend_block.name=Transcend Block

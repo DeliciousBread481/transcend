@@ -103,6 +103,7 @@ mixin {
 
 dependencies {
     implementation 'org.jetbrains:annotations:23.0.0'
+    compile 'net.industrial-craft:industrialcraft-2:2.2.650-experimental:api'
     deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}"
     deobfCompile "com.github.mcjty:mcjtylib:${mc_short}-${mcjtylib_version}"
     deobfCompile "vazkii.botania:Botania:${botania_version}"

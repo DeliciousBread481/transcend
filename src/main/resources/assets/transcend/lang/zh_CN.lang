@@ -24,7 +24,7 @@ item.transcend.sword.destruction.name=超越之剑（毁灭姿态）
 item.invulnerable.name=无敌工具
 item.timestop.name=时停工具
 item.transcend_shield.name=超越盾牌
-
+sword_to_armor=对方豁免了本次伤害
 material.flawless.name=完美合金
 material.transcend.name=超越合金
 modifier.flawless.name=完美
@@ -53,3 +53,4 @@ container.bedrock_collector=基岩收集器
 tile.bedrock_collector.name=基岩收集器
 tile.cast_machine.name=基岩冶炼厂
 tile.void_block.name=虚空
+tile.CreateRFSource.name=Creative RF Source
