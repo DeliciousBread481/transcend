@@ -73,6 +73,6 @@ public class VirusGeneratorRecipes {
                 return ((Float)entry.getValue()).floatValue();
             }
         }
-        return 0.2F;
+        return 20.0F;
     }
 }

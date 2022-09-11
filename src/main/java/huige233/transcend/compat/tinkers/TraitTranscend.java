@@ -1,10 +1,23 @@
 package huige233.transcend.compat.tinkers;
 
+import huige233.transcend.compat.ThaumcraftSword;
+import huige233.transcend.lib.TranscendDamageSources;
+import huige233.transcend.util.ArmorUtils;
+import huige233.transcend.util.ItemNBTHelper;
+import huige233.transcend.util.SwordUtil;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketCustomSound;
+import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.Loader;
+import slimeknights.tconstruct.library.tools.ToolNBT;
 import slimeknights.tconstruct.library.traits.AbstractTrait;
 import slimeknights.tconstruct.library.utils.TagUtil;
 
@@ -16,14 +29,44 @@ public class TraitTranscend extends AbstractTrait {
     @Override
     public void applyEffect(NBTTagCompound rootCompound, NBTTagCompound modifierTag) {
         NBTTagCompound toolTag = TagUtil.getToolTag(rootCompound);
-        toolTag.setInteger("FreeModifiers", 100);
+        ToolNBT state = TagUtil.getToolStats(rootCompound);
+        state.durability = 999999;
+        state.attack = 999999.0f;
+        state.speed = 999999.0f;
+        int modifiers = toolTag.getInteger("FreeModifiers");
+        toolTag.setInteger("FreeModifiers", 100 + modifiers);
         rootCompound.setBoolean("Unbreakable", true);
         TagUtil.setToolTag(rootCompound, toolTag);
     }
 
-    public void onHit(ItemStack tool, EntityLivingBase player, EntityLivingBase target, float damageDealt, boolean wasCritical, boolean wasHit) {
-        if(player instanceof EntityPlayer) {
+    public int onToolDamage(ItemStack tool,int damage,int newdamage,EntityLivingBase entity){
+        return 0;
+    }
 
+    @Override
+    public void onHit(ItemStack tool, EntityLivingBase player, EntityLivingBase entity, float damage, boolean isCritical) {
+        if(!entity.world.isRemote){
+            if(entity instanceof EntityPlayer){
+                if (ArmorUtils.fullEquipped((EntityPlayer) entity)) {
+                    player.sendMessage(new TextComponentTranslation("sword_to_armor"));
+                }
+                EntityPlayer p = (EntityPlayer) entity;
+                p.attackEntityFrom((new TranscendDamageSources(player)).setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute(), Float.MAX_VALUE);
+                p.getCombatTracker().trackDamage(new EntityDamageSource("transcend", player), Float.MAX_VALUE, Float.MAX_VALUE);
+                p.clearActivePotions();
+                p.inventory.dropAllItems();
+                p.setHealth(0.0f);
+            } else {
+                entity.clearActivePotions();
+                entity.attackEntityFrom((new TranscendDamageSources(player)).setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute(), Float.MAX_VALUE);
+                entity.getCombatTracker().trackDamage(new EntityDamageSource("transcend", player), Float.MAX_VALUE, Float.MAX_VALUE);
+                entity.setHealth(0.0f);
+                //entity.onDeath(new EntityDamageSource("transcend",player));
+            }
+            entity.onKillCommand();
+            if (Loader.isModLoaded("thaumcraft")) {
+                ThaumcraftSword.damageEntity(entity);
+            }
         }
     }
 }

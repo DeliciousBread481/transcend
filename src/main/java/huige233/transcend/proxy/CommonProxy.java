@@ -3,6 +3,8 @@ package huige233.transcend.proxy;
 import huige233.transcend.compat.Avartiabreak;
 import huige233.transcend.compat.PsiCompat;
 import huige233.transcend.compat.tinkers.TiCConfig;
+import huige233.transcend.compat.tinkers.conarmConfig;
+import huige233.transcend.util.handlers.ModEventHandler;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
@@ -21,16 +23,21 @@ public class CommonProxy {
         if(Loader.isModLoaded("tconstruct")){
             TiCConfig.setup();
         }
+        if(Loader.isModLoaded("psi")){
+            MinecraftForge.EVENT_BUS.register(PsiCompat.class);
+        }
+        if(Loader.isModLoaded("avaritia")) {
+            Avartiabreak.enabled = true;
+        }
+
+        MinecraftForge.EVENT_BUS.register(new ModEventHandler());
     }
 
 
     public void init( FMLInitializationEvent event )
     {
-        if(Loader.isModLoaded("psi")){
-            MinecraftForge.EVENT_BUS.register(PsiCompat.class);
-        }
-        if(Loader.isModLoaded("avartia")) {
-            Avartiabreak.enabled = true;
+        if(Loader.isModLoaded("conarm")){
+            conarmConfig.setup();
         }
     }
 }

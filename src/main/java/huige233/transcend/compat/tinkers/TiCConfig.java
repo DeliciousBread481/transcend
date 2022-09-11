@@ -30,7 +30,7 @@ public class TiCConfig {
     public static final AbstractTrait transcendtratt =  new TraitTranscend();
     public static final List<Material> materials = Lists.newArrayList();
     public static Material flawless = mat("flawless", 0x777777);
-    public static final Material transcend = mat("transcend",0x9e9e9e9);
+    public static final Material transcend = mat("transcend",0xF8F8FF);
     private static Material mat(String name, int color) {
         if (TinkerRegistry.getMaterial(name) == TinkerRegistry.getMaterial("unknown")){
             Material mat = new Material(name, color);
@@ -47,8 +47,8 @@ public class TiCConfig {
         flawless.setRepresentativeItem(ModItems.FLAWLESS);
         flawless.setCastable(true);
         flawless.setCraftable(true);
-        flawless.addTrait(flawlesstrait, HEAD);
-        flawless.addTrait(TinkerTraits.tasty,HEAD);
+        flawless.addTrait(flawlesstrait);
+        flawless.addTrait(TinkerTraits.tasty);
         TinkerRegistry.addMaterialStats(flawless,
                 new HeadMaterialStats(9999, 100.0f, 2000.0f, 32),
                 new HandleMaterialStats(10.0f, 9999),
@@ -61,7 +61,7 @@ public class TiCConfig {
         transcend.setRepresentativeItem(ModItems.TRANSCEND);
         transcend.setCastable(true);
         transcend.setCraftable(true);
-        transcend.addTrait(transcendtratt, HEAD);
+        transcend.addTrait(transcendtratt);
         TinkerRegistry.addMaterialStats(transcend,
                 new HeadMaterialStats(9999, 100.0f, 9999.0f, 99),
                 new HandleMaterialStats(100.0f, 9999),
@@ -110,7 +110,7 @@ public class TiCConfig {
     static void registerMaterialRendering()
     {
         flawless.setRenderInfo(new MaterialRenderInfo.Metal(0x777777, 0.5f, 0.5f, 0.2f));
-        transcend.setRenderInfo(new MaterialRenderInfo.Metal(0x9e9e9e, 0.5f, 0.5f, 0.2f));
+        transcend.setRenderInfo(new MaterialRenderInfo.Metal(0xF8F8FF, 0.5f, 0.5f, 0.2f));
     }
 }
 

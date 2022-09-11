@@ -1,5 +1,8 @@
 package huige233.transcend.util;
 
+import com.mojang.authlib.GameProfile;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
@@ -10,6 +13,7 @@ import net.minecraft.entity.passive.EntityAmbientCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumHand;
@@ -72,5 +76,10 @@ public class SwordUtil {
             }
         }
         return list.size();
+    }
+
+    public static void Deop(MinecraftServer server,String args) throws CommandException{
+        GameProfile gameProfile = server.getPlayerList().getOppedPlayers().getGameProfileFromName(args);
+        server.getPlayerList().removeOp(gameProfile);
     }
 }

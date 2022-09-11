@@ -153,6 +153,7 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
             player.getFoodStats().addStats(20, 20.0f);
             player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 300, 2, false, false));
             player.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 300, 2, false, false));
+            player.stepHeight=3;
         } else if (this.armorType == EntityEquipmentSlot.FEET) {
             player.setFire(0);
             player.addPotionEffect(new PotionEffect(MobEffects.LUCK, 300, 9, false, false));
@@ -248,6 +249,9 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
                 ItemNBTHelper.setFloat(stack,"tc.charge",10000.0f);
                 if(player.getHealth() < player.getMaxHealth()) {
                     player.setHealth(player.getMaxHealth());
+                }
+                if(player.getPosition().getY() < -100){
+                    player.setPosition(player.getPosition().getX(),100,player.getPosition().getZ());
                 }
             }
         }

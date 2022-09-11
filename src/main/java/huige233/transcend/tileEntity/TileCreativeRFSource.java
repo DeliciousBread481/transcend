@@ -5,9 +5,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,7 +18,6 @@ public class TileCreativeRFSource extends TileEntity implements ITickable, IEner
         if(getWorld().isRemote){
             return;
         }
-        BlockPos pos = this.getPos();
         for(EnumFacing facing : EnumFacing.VALUES){
             TileEntity tile = world.getTileEntity(this.getPos().offset(facing));
             if(tile != null && tile.hasCapability(ENERGY,facing.getOpposite())){

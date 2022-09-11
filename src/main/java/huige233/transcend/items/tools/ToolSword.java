@@ -25,6 +25,7 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.server.SPacketCustomSound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -41,17 +42,23 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
+import vazkii.botania.api.mana.ICreativeManaProvider;
+import vazkii.botania.api.mana.IManaItem;
+import vazkii.botania.api.mana.IManaTooltipDisplay;
+import vazkii.botania.common.lib.LibMisc;
 
 import java.util.List;
 import java.util.UUID;
 
 import static com.brandon3055.draconicevolution.integration.BaublesHelper.getBaubles;
 
-@Optional.InterfaceList(@Optional.Interface(modid = RedstoneFluxProps.MOD_ID, iface = "cofh.redstoneflux.api.IEnergyContainerItem"))
-//@Optional.Interface(modid = IC2.MODID, iface = "ic2.api.item.ISpecialElectricItem") })
-
+@Optional.Interface(modid = RedstoneFluxProps.MOD_ID, iface = "cofh.redstoneflux.api.IEnergyContainerItem")
+@Optional.Interface(modid = IC2.MODID, iface = "ic2.api.item.ISpecialElectricItem")
+@Optional.Interface(modid = LibMisc.MOD_ID,iface = "vazkii.botania.api.mana.IManaTooltipDisplay")
+@Optional.Interface(modid = LibMisc.MOD_ID,iface = "vazkii.botania.api.mana.IManaItem")
+@Optional.Interface(modid = LibMisc.MOD_ID,iface = "vazkii.botania.api.mana.ICreativeManaProvider")
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
-public class ToolSword extends ItemSword implements IHasModel{
+public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProvider, IManaItem, IManaTooltipDisplay{
 
     protected static final int MAX_MANA = Integer.MAX_VALUE;
     private static final String TAG_CREATIVE = "creative";
@@ -123,11 +130,25 @@ public class ToolSword extends ItemSword implements IHasModel{
         return true;
     }
 
+    public void getSubItems(@NotNull CreativeTabs tab,NonNullList<ItemStack> stack) {
+        ItemStack create = new ItemStack(ModItems.TRANSCEND_SWORD);
+        if(tab == Main.TranscendTab && Loader.isModLoaded(LibMisc.MOD_ID)){
+            setMana(create, MAX_MANA);
+            isCreative(create);
+            setStackCreative(create);
+        }
+        stack.add(create);
+    }
+
     @Override
     public boolean onLeftClickEntity(@NotNull ItemStack stack, @NotNull EntityPlayer player, Entity entity) {
         if(!entity.world.isRemote){
             if(ItemNBTHelper.getBoolean(stack,"Destruction",false)) {
                 if(entity instanceof EntityPlayer){
+                    if (ArmorUtils.fullEquipped((EntityPlayer) entity)) {
+                        player.sendMessage(new TextComponentTranslation("sword_to_armor"));
+                        return false;
+                    }
                     SwordUtil.killPlayer((EntityPlayer) entity,player);
                     entity.world.removeEntity(entity);
                 } else if(entity instanceof EntityLivingBase){
@@ -144,6 +165,10 @@ public class ToolSword extends ItemSword implements IHasModel{
                 entity.onKillCommand();
             }
             if(entity instanceof EntityPlayer){
+                if (ArmorUtils.fullEquipped((EntityPlayer) entity)) {
+                    player.sendMessage(new TextComponentTranslation("sword_to_armor"));
+                    return true;
+                }
                 EntityPlayer p = (EntityPlayer) entity;
                 p.clearActivePotions();
                 p.inventory.dropAllItems();
@@ -295,6 +320,76 @@ public class ToolSword extends ItemSword implements IHasModel{
     public @NotNull EnumRarity getRarity(@NotNull ItemStack stack)
     {
         return(ModItems.COSMIC_RARITY);
+    }
+
+    @Optional.Method(modid = LibMisc.MOD_ID)
+    public static void setMana(ItemStack stack, int mana) {
+        ItemNBTHelper.setInt(stack, TAG_MANA, MAX_MANA-1);
+    }
+
+    @Optional.Method(modid = LibMisc.MOD_ID)
+    public static void setStackCreative(ItemStack stack) {
+        ItemNBTHelper.setBoolean(stack, TAG_CREATIVE, true);
+    }
+
+    @Optional.Method(modid = LibMisc.MOD_ID)
+    @Override
+    public int getMana(ItemStack stack) {
+        return ItemNBTHelper.getInt(stack, TAG_MANA, 0);
+    }
+
+    @Optional.Method(modid = LibMisc.MOD_ID)
+    @Override
+    public int getMaxMana(ItemStack stack) {
+        return MAX_MANA-1;
+    }
+
+    @Optional.Method(modid = LibMisc.MOD_ID)
+    @Override
+    public void addMana(ItemStack stack, int mana) {
+        setMana(stack, Math.min(getMana(stack) + mana, getMaxMana(stack)));
+    }
+
+    @Optional.Method(modid = LibMisc.MOD_ID)
+    @Override
+    public boolean canReceiveManaFromPool(ItemStack stack, TileEntity pool) {
+        return !ItemNBTHelper.getBoolean(stack, TAG_ONE_USE, false);
+    }
+
+    @Optional.Method(modid = LibMisc.MOD_ID)
+    @Override
+    public boolean canReceiveManaFromItem(ItemStack stack, ItemStack otherStack) {
+        return true;
+    }
+
+    @Optional.Method(modid = LibMisc.MOD_ID)
+    @Override
+    public boolean canExportManaToPool(ItemStack stack, TileEntity pool) {
+        return true;
+    }
+
+    @Optional.Method(modid = LibMisc.MOD_ID)
+    @Override
+    public boolean canExportManaToItem(ItemStack stack, ItemStack otherStack) {
+        return true;
+    }
+
+    @Optional.Method(modid = LibMisc.MOD_ID)
+    @Override
+    public boolean isNoExport(ItemStack stack) {
+        return true;
+    }
+
+    @Optional.Method(modid = LibMisc.MOD_ID)
+    @Override
+    public float getManaFractionForDisplay(ItemStack stack) {
+        return (float) getMana(stack) / (float)getMaxMana(stack);
+    }
+
+    @Optional.Method(modid = LibMisc.MOD_ID)
+    @Override
+    public boolean isCreative(ItemStack stack) {
+        return false;
     }
 }
 

@@ -1,6 +1,5 @@
 package huige233.transcend.items.tools;
 
-import codechicken.lib.math.MathHelper;
 import com.google.common.collect.Multimap;
 import huige233.transcend.Main;
 import huige233.transcend.init.ModBlock;
@@ -8,7 +7,9 @@ import huige233.transcend.init.ModItems;
 import huige233.transcend.items.fireimmune;
 import huige233.transcend.util.ArmorUtils;
 import huige233.transcend.util.IHasModel;
+import huige233.transcend.util.MathHelper;
 import huige233.transcend.util.Reference;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -26,16 +27,19 @@ import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
+import java.util.Iterator;
 import java.util.Random;
 import java.util.UUID;
 
@@ -68,6 +72,24 @@ public class ToolPickaxe extends ItemPickaxe implements IHasModel {
         return new ActionResult(EnumActionResult.PASS, stack);
     }
 
+    public float getDestroySpeed(ItemStack stack, IBlockState state) {
+        if (stack.getTagCompound() != null && stack.getTagCompound().getBoolean("hammer")) {
+            return 5.0F;
+        } else {
+            Iterator var3 = this.getToolClasses(stack).iterator();
+
+            String type;
+            do {
+                if (!var3.hasNext()) {
+                    return Math.max(super.getDestroySpeed(stack, state), 6.0F);
+                }
+
+                type = (String)var3.next();
+            } while(!state.getBlock().isToolEffective(type, state));
+
+            return this.efficiency;
+        }
+    }
 
     @Override
     public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, EntityPlayer player) {
@@ -113,9 +135,12 @@ public class ToolPickaxe extends ItemPickaxe implements IHasModel {
         }
         return false;
     }
+
     public boolean hitEntity(ItemStack stack, EntityLivingBase victim, EntityLivingBase player) {
         int i = 30;
-        victim.addVelocity(-MathHelper.sin((double)(player.rotationYaw * 3.1415927F / 180.0F)) * (double)i * 0.5, 2.0, MathHelper.cos((double)(player.rotationYaw * 3.1415927F / 180.0F)) * (double)i * 0.5);
+        if(!(victim instanceof EntityPlayer) || !ArmorUtils.fullEquipped((EntityPlayer) victim)) {
+            victim.addVelocity(-MathHelper.sin((double) (player.rotationYaw * 3.1415927F / 180.0F)) * (double) i * 0.5, 2.0, MathHelper.cos((double) (player.rotationYaw * 3.1415927F / 180.0F)) * (double) i * 0.5);
+        }
         return true;
     }
 

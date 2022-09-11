@@ -27,10 +27,16 @@ item.transcend_shield.name=超越盾牌
 sword_to_armor=对方豁免了本次伤害
 material.flawless.name=完美合金
 material.transcend.name=超越合金
+material.flawless_armor.name=完美合金
+material.transcend_armor.name=超越合金
 modifier.flawless.name=完美
 modifier.transcend.name=超越
 modifier.flawless.desc=Flawless物品永远不会磨损，无穷无尽的力量从虚空中而而来
 modifier.transcend.desc=Transcend的力量终将毁灭一切，在此之前它是不可阻挡的
+modifier.flawless_armor.name=完美
+modifier.transcend_armor.name=超越
+modifier.flawless_armor.desc=Flawless物品永远不会磨损，无穷无尽的力量从虚空中而而来
+modifier.transcend_armor.desc=Transcend的力量终将毁灭一切，在此之前它是不可阻挡的
 
 enchantment.flawless_enchantment=完美之力
 

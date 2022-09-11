@@ -12,6 +12,10 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.Random;
 
@@ -68,5 +72,15 @@ public class voidblock extends BlockBase {
     @Override
     public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
         return false;
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onBlockBreak(BlockEvent.BreakEvent event){
+        event.setCanceled(true);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onBlockPush(PlayerInteractEvent.LeftClickBlock event){
+        event.setCanceled(true);
     }
 }
