@@ -80,17 +80,13 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onPlayerDeath(LivingDeathEvent event) {
-        if (!(event.getEntityLiving() instanceof EntityPlayer) || event.isCanceled())
+        if (!(event.getEntityLiving() instanceof EntityPlayer) || event.getEntityLiving().world.isRemote) {
             return;
+        }
         EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-        if (!player.isServerWorld())
-            return;
-        NonNullList<ItemStack> armor = player.inventory.armorInventory;
-        if (armor.get(3).getItem() == ModItems.FLAWLESS_HELMET && armor.get(3).getItem() == ModItems.FLAWLESS_CHESTPLATE && armor.get(1).getItem() == ModItems.FLAWLESS_LEGGINGS && armor.get(0).getItem() == ModItems.FLAWLESS_BOOTS) {
-            if (player.getHealth() <= 0) {
-                event.setCanceled(true);
-                event.getEntityLiving().setHealth(player.getMaxHealth());
-            }
+        if (ArmorUtils.fullEquipped(player)) {
+            event.setCanceled(true);
+            event.getEntityLiving().setHealth(player.getMaxHealth());
         }
     }
 
