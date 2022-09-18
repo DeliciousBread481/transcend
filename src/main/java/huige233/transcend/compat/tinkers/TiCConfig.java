@@ -49,6 +49,7 @@ public class TiCConfig {
         flawless.setCraftable(true);
         flawless.addTrait(flawlesstrait);
         flawless.addTrait(TinkerTraits.tasty);
+        flawless.addTrait(TinkerTraits.autosmelt);
         TinkerRegistry.addMaterialStats(flawless,
                 new HeadMaterialStats(9999, 100.0f, 2000.0f, 32),
                 new HandleMaterialStats(10.0f, 9999),

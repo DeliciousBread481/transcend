@@ -51,7 +51,7 @@ public class ItemTranscendShield extends ItemAdapting {
         return true;
     }
     public EnumAction getItemUseAction(ItemStack stack) {
-        return EnumAction.BLOCK;
+        return EnumAction.BOW;
     }
     public int getMaxItemUseDuration(ItemStack stack){
         return 72000;

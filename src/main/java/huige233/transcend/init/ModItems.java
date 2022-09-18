@@ -51,4 +51,5 @@ public class ModItems {
     public static final ItemSword Invulnerable = new ItemInvulnerable("invulnerable",Invulnera);
     public static final ItemSword TimeStop = new ItemTimeStop("timestop",Invulnera);
     public static final Item TRANSCEND_SHIELD = new ItemTranscendShield("transcend_shield",Main.TranscendTab);
+    public static final Item ITEM_XP = new ItemXp("transcend_xp",Main.TranscendTab);
 }

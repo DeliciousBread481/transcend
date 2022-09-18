@@ -12,6 +12,9 @@ import net.minecraft.util.text.TextComponentTranslation;
 public class TranscendDamageSources extends EntityDamageSource{
         public TranscendDamageSources(Entity source) {
             super("flawless",source);
+            this.setDamageAllowedInCreativeMode();
+            this.setDamageBypassesArmor();
+            this.setDamageIsAbsolute();
         }
     @Override
     public ITextComponent getDeathMessage(EntityLivingBase entity) {

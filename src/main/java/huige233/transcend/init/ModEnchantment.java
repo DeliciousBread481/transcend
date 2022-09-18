@@ -22,10 +22,11 @@ public class ModEnchantment {
     public static final Enchantment TRANSCEND = new EnchantmentTRANSCENDEnchantment();
 
     @SubscribeEvent
-    public static void EnchantmentFunction(LivingUpdateEvent event) {
+    public static void EnchantmentFlawless(LivingUpdateEvent event) {
         EntityLivingBase living = event.getEntityLiving();
         int level = EnchantmentHelper.getMaxEnchantmentLevel(FLAWLESS, living);
         BlockPos pos = living.getPosition();
         World world = event.getEntity().world;
     }
+
 }

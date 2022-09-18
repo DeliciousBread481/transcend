@@ -3,15 +3,13 @@ package huige233.transcend.items.tools;
 import com.google.common.collect.Multimap;
 import huige233.transcend.Main;
 import huige233.transcend.init.ModBlock;
+import huige233.transcend.init.ModEnchantment;
 import huige233.transcend.init.ModItems;
 import huige233.transcend.items.fireimmune;
-import huige233.transcend.util.ArmorUtils;
-import huige233.transcend.util.IHasModel;
-import huige233.transcend.util.MathHelper;
-import huige233.transcend.util.Reference;
-import net.minecraft.block.Block;
+import huige233.transcend.util.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,21 +23,24 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.Random;
 import java.util.UUID;
 
@@ -61,34 +62,40 @@ public class ToolPickaxe extends ItemPickaxe implements IHasModel {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
-        //  if (player.isSneaking()) {
-        if (player.getHeldItem(hand).getItem() == ModItems.TRANSCEND_PICKAXE) {
-            if (EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack) < 10) {
-                stack.addEnchantment(Enchantments.FORTUNE, 10);
+        if (!player.isSneaking()) {
+            if (player.getHeldItem(hand).getItem() == ModItems.TRANSCEND_PICKAXE) {
+                if (EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack) != 10) {
+                    stack.addEnchantment(Enchantments.FORTUNE, 10);
+                    player.swingArm(hand);
+                }
             }
-            //  }
-            return new ActionResult(EnumActionResult.SUCCESS, stack);
+        } else if(player.isSneaking()){
+            boolean smelt = ItemNBTHelper.getBoolean(stack,"AutoSmelt",false);
+            if(!smelt){
+                ItemNBTHelper.setBoolean(stack,"AutoSmelt",true);
+                stack.setStackDisplayName(TextFormatting.RED + I18n.translateToLocal("transcend_pickaxe_smelt.name"));
+                player.swingArm(hand);
+            } else {
+                ItemNBTHelper.setBoolean(stack, "AutoSmelt", false);
+                stack.setStackDisplayName(TextFormatting.RED + I18n.translateToLocal("item.transcend_pickaxe.name"));
+                player.swingArm(hand);
+            }
         }
-        return new ActionResult(EnumActionResult.PASS, stack);
+        return new ActionResult(EnumActionResult.SUCCESS, stack);
     }
 
     public float getDestroySpeed(ItemStack stack, IBlockState state) {
-        if (stack.getTagCompound() != null && stack.getTagCompound().getBoolean("hammer")) {
-            return 5.0F;
-        } else {
+        if (stack.getTagCompound() != null ){
             Iterator var3 = this.getToolClasses(stack).iterator();
-
             String type;
             do {
                 if (!var3.hasNext()) {
                     return Math.max(super.getDestroySpeed(stack, state), 6.0F);
                 }
-
                 type = (String)var3.next();
             } while(!state.getBlock().isToolEffective(type, state));
-
-            return this.efficiency;
         }
+        return this.efficiency;
     }
 
     @Override
@@ -165,6 +172,38 @@ public class ToolPickaxe extends ItemPickaxe implements IHasModel {
             attrib.put(EntityPlayer.REACH_DISTANCE.getName(),new AttributeModifier(uuid,"Pickaxe modifier",256,0));
         }
         return attrib;
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onHarvestDrops(HarvestDropsEvent event) {
+        ListIterator<ItemStack> iter = event.getDrops().listIterator();
+        if(event.getHarvester() !=null){
+            ItemStack stack = event.getHarvester().getHeldItemMainhand();
+            boolean smelt = ItemNBTHelper.getBoolean(stack,"AutoSmelt",false);
+            if(smelt) {
+                while (iter.hasNext()) {
+                    ItemStack drop = (ItemStack) iter.next();
+                    ItemStack smelted = FurnaceRecipes.instance().getSmeltingResult(drop);
+                    if (!smelted.isEmpty()) {
+                        smelted = smelted.copy();
+                        smelted.setCount(drop.getCount());
+                        int fortuene = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack);
+                        if (fortuene > 0) {
+                            Random random = event.getWorld().rand;
+                            smelted.setCount(smelted.getCount() * random.nextInt(fortuene + 1) + 1);
+                        }
+                        iter.set(smelted);
+                        float xp = FurnaceRecipes.instance().getSmeltingExperience(smelted) * 10;
+                        if (xp < 1.0f && Math.random() < (double) xp) {
+                            ++xp;
+                        }
+                        if (xp >= 1.0f) {
+                            event.getState().getBlock().dropXpOnBlockBreak(event.getWorld(), event.getPos(), (int) xp);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public EnumRarity getRarity(ItemStack stack )

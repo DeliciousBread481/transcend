@@ -4,8 +4,11 @@ import huige233.transcend.compat.Avartiabreak;
 import huige233.transcend.compat.PsiCompat;
 import huige233.transcend.compat.tinkers.TiCConfig;
 import huige233.transcend.compat.tinkers.conarmConfig;
+import huige233.transcend.packet.PacketEndTimeStop;
 import huige233.transcend.util.handlers.ModEventHandler;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -17,6 +20,9 @@ public class CommonProxy {
     {
     }
 
+    public void handleEndTimeStopPacket(PacketEndTimeStop.Message message){}
+
+    public void playBlinkEffect(EntityPlayer player){}
 
     public void preInit( FMLPreInitializationEvent event )
     {
@@ -32,7 +38,6 @@ public class CommonProxy {
 
         MinecraftForge.EVENT_BUS.register(new ModEventHandler());
     }
-
 
     public void init( FMLInitializationEvent event )
     {

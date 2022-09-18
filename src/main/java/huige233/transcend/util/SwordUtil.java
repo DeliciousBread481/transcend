@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAmbientCreature;
@@ -18,6 +19,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -61,18 +63,20 @@ public class SwordUtil {
         //list.removeIf(en -> en instanceof EntityPlayer || en instanceof EntityArmorStand || en instanceof EntityAmbientCreature || (en instanceof EntityCreature && !(en instanceof EntityMob)));
         list.remove(entity);
         for(Entity en : list) {
+            BlockPos pos = en.getPosition();
+            world.addWeatherEffect(new EntityLightningBolt(world,pos.getX(),pos.getY(),pos.getZ(),false));
+            world.addWeatherEffect(new EntityLightningBolt(world,pos.getX(),pos.getY(),pos.getZ(),false));
+            world.addWeatherEffect(new EntityLightningBolt(world,pos.getX(),pos.getY(),pos.getZ(),false));
+            world.addWeatherEffect(new EntityLightningBolt(world,pos.getX(),pos.getY(),pos.getZ(),false));
             if(en instanceof EntityPlayer){
                 if((ArmorUtils.fullEquipped((EntityPlayer) en))){
                     list.remove(en);
                 }
                 killPlayer((EntityPlayer) en,entity);
-                entity.world.removeEntity(entity);
             }else if(en instanceof EntityLivingBase){
                 killEntityLiving((EntityLivingBase) en,entity);
-                entity.world.removeEntity(entity);
             } else {
                 killEntity(en);
-                entity.world.removeEntity(entity);
             }
         }
         return list.size();

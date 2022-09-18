@@ -1,9 +1,6 @@
 package huige233.transcend.items.armor;
 
-import c4.conarm.common.armor.modifiers.accessories.AbstractTravelGoggles;
-import c4.conarm.lib.modifiers.IToggleable;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import huige233.transcend.Main;
@@ -26,18 +23,16 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Optional;
@@ -46,14 +41,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
-import slimeknights.tconstruct.library.utils.ModifierTagHolder;
 import thaumcraft.api.items.IGoggles;
 import thaumcraft.api.items.IRechargable;
 import thaumcraft.api.items.IVisDiscountGear;
 
-
 import java.util.List;
 import java.util.UUID;
+
+import static net.minecraft.entity.EntityLivingBase.SWIM_SPEED;
 
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 @Optional.Interface(iface = "thaumcraft.api.items.IVisDiscountGear", modid = "thaumcraft")
@@ -80,7 +75,7 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onPlayerDeath(LivingDeathEvent event) {
-        if (!(event.getEntityLiving() instanceof EntityPlayer) || event.getEntityLiving().world.isRemote) {
+        if (!(event.getEntityLiving() instanceof EntityPlayer) || !event.getEntityLiving().world.isRemote) {
             return;
         }
         EntityPlayer player = (EntityPlayer) event.getEntityLiving();
@@ -89,7 +84,6 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
             event.getEntityLiving().setHealth(player.getMaxHealth());
         }
     }
-
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onPlayerHurt(LivingHurtEvent event) {
@@ -118,16 +112,17 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
         EntityPlayer player = (EntityPlayer) event.getEntityLiving();
         if (ArmorUtils.fullEquipped(player)) {
             Entity attacker = event.getSource().getTrueSource();
+            if(player.world.isRemote) {
+                DamageSource ds = attacker == null ? new DamageSource("infinity") : new EntityDamageSource("infinity", attacker);
+                DamageSource ds1 = attacker == null ? new DamageSource("transcend") : new EntityDamageSource("transcend", attacker);
+                player.getCombatTracker().trackDamage(ds, Float.MAX_VALUE, Float.MAX_VALUE);
+                player.getCombatTracker().trackDamage(ds1, Float.MAX_VALUE, Float.MAX_VALUE);
+            }
             if (attacker instanceof EntityPlayer) {
                 PsiCompat.onPlayerAttack(player, (EntityPlayer) attacker);
             }
             event.setCanceled(true);
         }
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void AttackEvent(AttackEntityEvent event){
-
     }
 
 
@@ -204,18 +199,26 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
         UUID uuid = new UUID(slot.toString().hashCode(), 0);
         if (slot == EntityEquipmentSlot.HEAD) {
             if(item == ModItems.FLAWLESS_HELMET) {
-                attrib.put(SharedMonsterAttributes.LUCK.getName(), new AttributeModifier(uuid, "Flawless", 1000, 0));
+                attrib.put(SWIM_SPEED.getName(),new AttributeModifier(uuid,"Flawless",0.2,1));
+                attrib.put(SharedMonsterAttributes.MAX_HEALTH.getName(), new AttributeModifier(uuid, "Flawless", 512, 0));
+                attrib.put(SharedMonsterAttributes.LUCK.getName(), new AttributeModifier(uuid, "Flawless", 250, 0));
             }
         } else if (slot == EntityEquipmentSlot.CHEST) {
             if(item == ModItems.FLAWLESS_CHESTPLATE) {
+                attrib.put(SharedMonsterAttributes.LUCK.getName(), new AttributeModifier(uuid, "Flawless", 250, 0));
+                attrib.put(SharedMonsterAttributes.MAX_HEALTH.getName(), new AttributeModifier(uuid, "Flawless", 512, 0));
                 attrib.put(SharedMonsterAttributes.KNOCKBACK_RESISTANCE.getName(), new AttributeModifier(uuid, "Flawless", 1000, 0));
             }
         } else if (slot == EntityEquipmentSlot.LEGS) {
             if(item == ModItems.FLAWLESS_LEGGINGS) {
-                attrib.put(SharedMonsterAttributes.MAX_HEALTH.getName(), new AttributeModifier(uuid, "Flawless", 980, 0));
+                attrib.put(SharedMonsterAttributes.LUCK.getName(), new AttributeModifier(uuid, "Flawless", 250, 0));
+                attrib.put(SharedMonsterAttributes.FLYING_SPEED.getName(),new AttributeModifier(uuid,"Flawless",0.2,1));
+                attrib.put(SharedMonsterAttributes.MAX_HEALTH.getName(), new AttributeModifier(uuid, "Flawless", 512, 0));
             }
         } else if (slot == EntityEquipmentSlot.FEET) {
             if(item == ModItems.FLAWLESS_BOOTS) {
+                attrib.put(SharedMonsterAttributes.LUCK.getName(), new AttributeModifier(uuid, "Flawless", 250, 0));
+                attrib.put(SharedMonsterAttributes.MAX_HEALTH.getName(), new AttributeModifier(uuid, "Flawless", 512, 0));
                 attrib.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(uuid, "Flawless", 0.2, 1));
             }
         }

@@ -4,6 +4,7 @@ import huige233.transcend.gui.ModGuiElementLoader;
 import huige233.transcend.init.ModOre;
 import huige233.transcend.proxy.CommonProxy;
 import huige233.transcend.util.Reference;
+import huige233.transcend.util.handlers.TranscendPacketHandler;
 import huige233.transcend.world.Worldgen;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -55,6 +56,7 @@ public class Main {
      */
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        TranscendPacketHandler.initPackets();
         proxy.init(event);
     }
 

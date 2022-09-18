@@ -18,15 +18,20 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.BaseAttribute;
+import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.server.SPacketCustomSound;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -47,6 +52,7 @@ import vazkii.botania.api.mana.IManaItem;
 import vazkii.botania.api.mana.IManaTooltipDisplay;
 import vazkii.botania.common.lib.LibMisc;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,6 +70,7 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
     private static final String TAG_CREATIVE = "creative";
     private static final String TAG_ONE_USE = "oneUse";
     private static final String TAG_MANA = "mana";
+    public static BaseAttribute transcendDamage = new RangedAttribute(null,"transcend.damage",0.0D,0.0D,Double.MAX_VALUE);
 
     public ToolSword(String name, CreativeTabs tab, ToolMaterial material) {
         super(material);
@@ -132,13 +139,15 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
 
     public void getSubItems(@NotNull CreativeTabs tab,NonNullList<ItemStack> stack) {
         ItemStack create = new ItemStack(ModItems.TRANSCEND_SWORD);
-        if(tab == Main.TranscendTab && Loader.isModLoaded(LibMisc.MOD_ID)){
+        if(tab == Main.TranscendTab && Loader.isModLoaded(LibMisc.MOD_ID)) {
             setMana(create, MAX_MANA);
             isCreative(create);
             setStackCreative(create);
+            stack.add(create);
         }
-        stack.add(create);
     }
+
+
 
     @Override
     public boolean onLeftClickEntity(@NotNull ItemStack stack, @NotNull EntityPlayer player, Entity entity) {
@@ -150,13 +159,13 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
                         return false;
                     }
                     SwordUtil.killPlayer((EntityPlayer) entity,player);
-                    entity.world.removeEntity(entity);
+                    //entity.world.removeEntity(entity);
                 } else if(entity instanceof EntityLivingBase){
                     SwordUtil.killEntityLiving((EntityLivingBase) entity,player);
-                    entity.world.removeEntity(entity);
+                    //entity.world.removeEntity(entity);
                 } else {
                     SwordUtil.killEntity(entity);
-                    entity.world.removeEntity(entity);
+                    //entity.world.removeEntity(entity);
                 }
                 if(player instanceof EntityPlayerMP){
                     BlockPos pos = player.getPosition();
@@ -222,12 +231,15 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
         return new fireimmune(world,location,itemstack);
     }
 
-    public @NotNull Multimap<String, AttributeModifier> getAttributeModifiers(@NotNull EntityEquipmentSlot slot, @NotNull ItemStack stack) {
-        Multimap<String, AttributeModifier> attrib = super.getAttributeModifiers(slot, stack);
+    @Nonnull
+    @Override
+    public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot slot) {
+        Multimap<String, AttributeModifier> attrib = super.getItemAttributeModifiers(slot);
         UUID uuid = new UUID((slot.toString()).hashCode(), 0);
         if(slot == EntityEquipmentSlot.MAINHAND) {
             attrib.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(uuid, "Weapon modifier", 0.99, 1));
             attrib.put(EntityPlayer.REACH_DISTANCE.getName(), new AttributeModifier(uuid, "Weapon modifier", 256, 0));
+            attrib.put(transcendDamage.getName(),new AttributeModifier(uuid,"Weapon modifier",9999,0));
         }
         return attrib;
     }
@@ -245,7 +257,8 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
                 if (((String) event.getToolTip().get(x)).contains(I18n.translateToLocal("attribute.name.generic.attackDamage")) || ((String) event.getToolTip().get(x)).contains(I18n.translateToLocal("Attack Damage"))) {
                     if (event.getItemStack().getItem() == ModItems.TRANSCEND_SWORD) {
                         event.getToolTip().set(x, TextFormatting.BLUE + "+" + TextUtils.makeFabulous(I18n.translateToLocal("tip.transcend")) + " " + TextFormatting.BLUE + I18n.translateToLocal("attribute.name.generic.attackDamage"));
-                        event.getToolTip().set(x + 1, TextFormatting.BLUE + "+" + TextUtils.makeFabulous(I18n.translateToLocal("tip.transcend")) + " " + TextFormatting.BLUE + I18n.translateToLocal("attribute.name.generic.reachDistance"));
+                        event.getToolTip().set(x + 1, TextFormatting.BLUE + "+" + TextUtils.makeFabulous(I18n.translateToLocal("tip.transcend")) + " " + TextFormatting.BLUE + I18n.translateToLocal("attribute.name.transcend.damage"));
+                        event.getToolTip().set(x + 2, TextFormatting.BLUE + "+" + TextUtils.makeFabulous(I18n.translateToLocal("tip.transcend")) + " " + TextFormatting.BLUE + I18n.translateToLocal("attribute.name.generic.reachDistance"));
                     }
                     return;
                 }

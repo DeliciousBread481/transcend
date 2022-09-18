@@ -2,15 +2,19 @@ package huige233.transcend.util.handlers;
 
 import huige233.transcend.init.ModItems;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -33,4 +37,25 @@ public class ModEventHandler {
             }
         }
     }
+
+    @SubscribeEvent
+    public void diggity(PlayerEvent.BreakSpeed event) {
+        if (!event.getEntityLiving().getHeldItem(EnumHand.MAIN_HAND).isEmpty()) {
+            ItemStack held = event.getEntityLiving().getHeldItem(EnumHand.MAIN_HAND);
+            if (held.getItem() == ModItems.TRANSCEND_PICKAXE) {
+                if (!event.getEntityLiving().onGround) {
+                    event.setNewSpeed(event.getNewSpeed() * 5.0F);
+                }
+
+                if (!event.getEntityLiving().isInsideOfMaterial(Material.WATER) && !EnchantmentHelper.getAquaAffinityModifier(event.getEntityLiving())) {
+                    event.setNewSpeed(event.getNewSpeed() * 5.0F);
+                }
+
+                if (held.getTagCompound() != null && (held.getTagCompound().getBoolean("hammer") || held.getTagCompound().getBoolean("destroyer"))) {
+                    event.setNewSpeed(event.getNewSpeed() * 0.5F);
+                }
+            }
+        }
+    }
+
 }
