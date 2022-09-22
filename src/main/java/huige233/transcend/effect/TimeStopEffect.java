@@ -3,11 +3,9 @@ package huige233.transcend.effect;
 import huige233.transcend.Main;
 import huige233.transcend.init.ModItems;
 import huige233.transcend.init.TranscendPotions;
-import huige233.transcend.packet.PacketEndTimeStop;
 import huige233.transcend.util.EntityUtils;
 import huige233.transcend.util.ISyncedPotion;
 import huige233.transcend.util.Reference;
-import huige233.transcend.util.handlers.TranscendPacketHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -123,26 +121,4 @@ public class TimeStopEffect extends effectbase implements ISyncedPotion {
     public static void onPlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event){
         if(event.player.updateBlocked) event.player.updateBlocked = false;
     }
-
-    /*
-    @SubscribeEvent
-    public static void onPotionExpiryEvent(PotionEvent.PotionExpiryEvent event){
-        if(event.getPotionEffect() != null && event.getPotionEffect().getPotion() == TranscendPotions.time_stop){
-            unblockByEntities(event.getEntityLiving());
-            if(!event.getEntity().world.isRemote){
-                TranscendPacketHandler.net.sendToDimension(new PacketEndTimeStop.Message(event.getEntityLiving()),event.getEntity().dimension);
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public static void onPotionRemoveEvent(PotionEvent.PotionRemoveEvent event){
-        if(event.getPotionEffect() != null && event.getPotionEffect().getPotion() == TranscendPotions.time_stop){
-            unblockByEntities(event.getEntityLiving());
-            if(!event.getEntity().world.isRemote){
-                TranscendPacketHandler.net.sendToDimension(new PacketEndTimeStop.Message(event.getEntityLiving()),event.getEntity().dimension);
-            }
-        }
-    }
-     */
 }

@@ -13,6 +13,7 @@ import huige233.transcend.util.ItemNBTHelper;
 import huige233.transcend.util.Reference;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -33,6 +34,7 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Optional;
@@ -82,6 +84,8 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
         if (ArmorUtils.fullEquipped(player)) {
             event.setCanceled(true);
             event.getEntityLiving().setHealth(player.getMaxHealth());
+            event.getEntityLiving().isDead = false;
+            event.getEntityLiving().deathTime = 0;
         }
     }
 
@@ -122,6 +126,15 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
                 PsiCompat.onPlayerAttack(player, (EntityPlayer) attacker);
             }
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void LivingSetAttackTargetEvent(LivingSetAttackTargetEvent event){
+        if(event.getTarget() instanceof EntityPlayer){
+            if(ArmorUtils.fullEquipped((EntityPlayer) event.getTarget())){
+                ((EntityLiving) event.getEntityLiving()).setAttackTarget(event.getEntityLiving());
+            }
         }
     }
 

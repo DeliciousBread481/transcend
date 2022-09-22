@@ -26,6 +26,7 @@ item.invulnerable.name=Invulnerable Tool
 item.timestop.name=TimeStop Tool
 item.transcend_shield.name=Transcend Shield
 item.transcend_xp.name=Xp (on)
+item.travel_staff.name=Travel Staff
 offXP=Xp (off)
 have_xp=Stored experience %d
 give_xp=Draw %d experience

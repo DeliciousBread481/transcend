@@ -1,10 +1,14 @@
 package huige233.transcend.util.handlers;
 
 import huige233.transcend.init.ModItems;
+import huige233.transcend.util.ArmorUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -17,6 +21,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ModEventHandler {
     @SubscribeEvent
@@ -53,6 +60,23 @@ public class ModEventHandler {
 
                 if (held.getTagCompound() != null && (held.getTagCompound().getBoolean("hammer") || held.getTagCompound().getBoolean("destroyer"))) {
                     event.setNewSpeed(event.getNewSpeed() * 0.5F);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void onClientTick(TickEvent.ClientTickEvent event){
+        EntityPlayer player = Minecraft.getMinecraft().player;
+        if(player!=null){
+            if(ArmorUtils.fullEquipped(player)) {
+                if (player.isDead) {
+                    player.isDead = false;
+                }
+                if (!player.world.playerEntities.contains(player)) {
+                    player.world.playerEntities.add(player);
+                    player.world.onEntityAdded(player);
                 }
             }
         }

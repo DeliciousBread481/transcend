@@ -10,6 +10,7 @@ import huige233.transcend.init.ModItems;
 import huige233.transcend.items.fireimmune;
 import huige233.transcend.lib.TranscendDamageSources;
 import huige233.transcend.util.*;
+import static huige233.transcend.util.handlers.BaublesHelper.getBaubles;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
 import net.minecraft.client.util.ITooltipFlag;
@@ -22,16 +23,13 @@ import net.minecraft.entity.ai.attributes.BaseAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.server.SPacketCustomSound;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -55,8 +53,6 @@ import vazkii.botania.common.lib.LibMisc;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
-
-import static com.brandon3055.draconicevolution.integration.BaublesHelper.getBaubles;
 
 @Optional.Interface(modid = RedstoneFluxProps.MOD_ID, iface = "cofh.redstoneflux.api.IEnergyContainerItem")
 @Optional.Interface(modid = IC2.MODID, iface = "ic2.api.item.ISpecialElectricItem")

@@ -40,6 +40,7 @@ public class SwordUtil {
             player.getCombatTracker().trackDamage(ds1, Float.MAX_VALUE, Float.MAX_VALUE);
             player.setHealth(0.0f);
             player.onDeath(ds);
+            player.extinguish();
             player.isDead = true;
         }
     }

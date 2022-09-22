@@ -25,6 +25,7 @@ transcend_pickaxe_smelt.name=超越之镐 (冶炼模式)
 item.invulnerable.name=无敌工具
 item.timestop.name=时停工具
 item.transcend_shield.name=超越盾牌
+item.travel_staff.name=旅行权杖
 sword_to_armor=对方豁免了本次伤害
 material.flawless.name=完美合金
 material.transcend.name=超越合金

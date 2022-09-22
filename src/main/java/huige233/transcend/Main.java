@@ -56,7 +56,7 @@ public class Main {
      */
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        TranscendPacketHandler.initPackets();
+        TranscendPacketHandler.init(event);
         proxy.init(event);
     }
 
