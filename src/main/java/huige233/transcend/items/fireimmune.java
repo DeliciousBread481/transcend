@@ -6,10 +6,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nonnull;
-
+@Mod.EventBusSubscriber
 public class fireimmune extends EntityItem {
     public fireimmune(World world, Entity location, ItemStack stack) {
         this(world, location.posX, location.posY, location.posZ, stack);

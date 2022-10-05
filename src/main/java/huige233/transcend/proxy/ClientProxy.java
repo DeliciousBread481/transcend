@@ -1,6 +1,7 @@
 package huige233.transcend.proxy;
 
 import huige233.transcend.effect.TimeStopEffect;
+import huige233.transcend.lib.HeartRenderHandler;
 import huige233.transcend.packet.PacketEndTimeStop;
 import huige233.transcend.render.RenderBlinkEffect;
 import huige233.transcend.util.TravelController;
@@ -16,6 +17,7 @@ import net.minecraft.util.text.Style;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class ClientProxy extends CommonProxy {
@@ -60,5 +62,9 @@ public class ClientProxy extends CommonProxy {
     {
         super.init(event);
         MinecraftForge.EVENT_BUS.register(TravelController.instance);
+    }
+
+    public void postInit(FMLPostInitializationEvent event) {
+        MinecraftForge.EVENT_BUS.register(new HeartRenderHandler());
     }
 }

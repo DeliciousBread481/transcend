@@ -6,6 +6,7 @@ import c4.conarm.lib.materials.CoreMaterialStats;
 import c4.conarm.lib.materials.PlatesMaterialStats;
 import c4.conarm.lib.materials.TrimMaterialStats;
 import com.google.common.collect.Lists;
+import huige233.transcend.init.ModItems;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import slimeknights.tconstruct.library.TinkerRegistry;
 import slimeknights.tconstruct.library.materials.Material;
@@ -31,20 +32,22 @@ public class conarmConfig {
 
     @SubscribeEvent
     public static void setup() {
-            ArmorMaterials.addArmorTrait(flawless,ArmorTraits.tasty);
-            ArmorMaterials.addArmorTrait(flawless,TraitArmorFlawless.a);
-            TinkerRegistry.addMaterialStats(flawless,
-                    new CoreMaterialStats(63,63),
-                    new PlatesMaterialStats(4,36,9.9f),
-                    new TrimMaterialStats(63.0f));
+        flawless.addItem(ModItems.FLAWLESS);
+        transcend.addItem(ModItems.TRANSCEND);
+        ArmorMaterials.addArmorTrait(flawless,ArmorTraits.tasty);
+        ArmorMaterials.addArmorTrait(flawless,TraitArmorFlawless.a);
+        TinkerRegistry.addMaterialStats(flawless,
+                new CoreMaterialStats(63,63),
+                new PlatesMaterialStats(4,36,9.9f),
+                new TrimMaterialStats(63.0f));
 
-            ArmorMaterials.addArmorTrait(transcend,TraitArmorTranscend.a);
-            TinkerRegistry.addMaterialStats(transcend,
-                    new CoreMaterialStats(999999,999999),
-                    new PlatesMaterialStats(999999,999999,9999.99f),
-                    new TrimMaterialStats(9999.99f));
+        ArmorMaterials.addArmorTrait(transcend,TraitArmorTranscend.a);
+        TinkerRegistry.addMaterialStats(transcend,
+                new CoreMaterialStats(999999,999999),
+                new PlatesMaterialStats(999999,999999,9999.99f),
+                new TrimMaterialStats(9999.99f));
 
-            TinkerRegistry.integrate(flawless).preInit();
-            TinkerRegistry.integrate(transcend).preInit();
+        TinkerRegistry.integrate(flawless).preInit();
+        TinkerRegistry.integrate(transcend).preInit();
     }
 }

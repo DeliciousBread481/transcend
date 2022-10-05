@@ -135,10 +135,12 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
 
     public void getSubItems(@NotNull CreativeTabs tab,NonNullList<ItemStack> stack) {
         ItemStack create = new ItemStack(ModItems.TRANSCEND_SWORD);
-        if(tab == Main.TranscendTab && Loader.isModLoaded(LibMisc.MOD_ID)) {
-            setMana(create, MAX_MANA);
-            isCreative(create);
-            setStackCreative(create);
+        if(tab == Main.TranscendTab){
+            if(Loader.isModLoaded(LibMisc.MOD_ID)) {
+                setMana(create, MAX_MANA);
+                isCreative(create);
+                setStackCreative(create);
+            }
             stack.add(create);
         }
     }
@@ -398,7 +400,7 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
     @Optional.Method(modid = LibMisc.MOD_ID)
     @Override
     public boolean isCreative(ItemStack stack) {
-        return false;
+        return true;
     }
 }
 

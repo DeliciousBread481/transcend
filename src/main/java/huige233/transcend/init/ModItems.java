@@ -1,6 +1,7 @@
 package huige233.transcend.init;
 
 import huige233.transcend.Main;
+import huige233.transcend.items.InfinityFood;
 import huige233.transcend.items.ItemBase;
 import huige233.transcend.items.ItemTranscendShield;
 import huige233.transcend.items.armor.ArmorBase;
@@ -21,9 +22,6 @@ public class ModItems {
 
     public static EnumRarity COSMIC_RARITY = EnumHelper.addRarity("COSMIC", TextFormatting.RED, "Cosmic");
     public static final List<Item> ITEMS = new ArrayList<Item>();
-
-    public static final Item QS = new ItemBase("qs",Main.TranscendTab);
-
     public static final Item TRANSCEND = new ItemBase("transcend", Main.TranscendTab);
     public static final Item FLAWLESS = new ItemBase("flawless", Main.TranscendTab);
     public static final ArmorMaterial flawless_armor = EnumHelper.addArmorMaterial("flawless_alloy","",0,new int[] {1000,1000,1000,1000},1000, SoundEvents.ITEM_ARMOR_EQUIP_CHAIN,1000.0f);
@@ -50,7 +48,8 @@ public class ModItems {
     public static final ToolMaterial Invulnera = EnumHelper.addToolMaterial("Invulnera",0,0,1,-4,0);
     public static final ItemSword Invulnerable = new ItemInvulnerable("invulnerable",Invulnera);
     public static final ItemSword TimeStop = new ItemTimeStop("timestop",Invulnera);
-    public static final Item TRANSCEND_SHIELD = new ItemTranscendShield("transcend_shield",Main.TranscendTab);
     public static final Item ITEM_XP = new ItemXp("transcend_xp",Main.TranscendTab);
     public static final Item TravelStaff = new ItemTravelStaff("travel_staff",Main.TranscendTab);
+    public static final ItemFood InfinityFood = new InfinityFood();
+    //public static final ItemSword a = new TranscendSword("tr",Main.TranscendTab,transcend_tool);
 }

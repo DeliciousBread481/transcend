@@ -6,6 +6,7 @@ import net.minecraft.util.text.TextFormatting;
 public class TextUtils {
     private static final TextFormatting[] fabulousness;
     private static final TextFormatting[] sanic;
+    private static final TextFormatting[] faust;
 
     public TextUtils() {
     }
@@ -16,6 +17,10 @@ public class TextUtils {
 
     public static String makeSANIC(String input) {
         return ludicrousFormatting(input, sanic, 50.0D, 1, 1);
+    }
+
+    public static String makeFaust(String input){
+        return ludicrousFormatting(input,faust,45.0D,1,1);
     }
 
     public static String ludicrousFormatting(String input, TextFormatting[] colours, double delay, int step, int posstep) {
@@ -39,5 +44,6 @@ public class TextUtils {
     static {
         fabulousness = new TextFormatting[]{TextFormatting.RED, TextFormatting.GOLD, TextFormatting.YELLOW, TextFormatting.GREEN, TextFormatting.AQUA, TextFormatting.BLUE, TextFormatting.LIGHT_PURPLE};
         sanic = new TextFormatting[]{TextFormatting.BLUE, TextFormatting.BLUE, TextFormatting.BLUE, TextFormatting.BLUE, TextFormatting.WHITE, TextFormatting.BLUE, TextFormatting.WHITE, TextFormatting.WHITE, TextFormatting.BLUE, TextFormatting.WHITE, TextFormatting.WHITE, TextFormatting.BLUE, TextFormatting.RED, TextFormatting.WHITE, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY};
+        faust = new TextFormatting[]{TextFormatting.BLUE,TextFormatting.BLUE,TextFormatting.GREEN,TextFormatting.GREEN,TextFormatting.AQUA,TextFormatting.AQUA,TextFormatting.YELLOW,TextFormatting.YELLOW,TextFormatting.WHITE,TextFormatting.WHITE,TextFormatting.BLUE,TextFormatting.BLUE,TextFormatting.GREEN,TextFormatting.GREEN,TextFormatting.AQUA,TextFormatting.AQUA,TextFormatting.YELLOW,TextFormatting.YELLOW,TextFormatting.WHITE,TextFormatting.WHITE,TextFormatting.BLUE,TextFormatting.BLUE,TextFormatting.GREEN,TextFormatting.GREEN,TextFormatting.AQUA,TextFormatting.AQUA,TextFormatting.YELLOW,TextFormatting.YELLOW,TextFormatting.WHITE,TextFormatting.WHITE,TextFormatting.BLUE,TextFormatting.BLUE,TextFormatting.GREEN,TextFormatting.GREEN,TextFormatting.AQUA,TextFormatting.AQUA,TextFormatting.YELLOW,TextFormatting.YELLOW,TextFormatting.WHITE,TextFormatting.WHITE};
     }
 }

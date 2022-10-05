@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "transcend:items/timestop"
+    "layer0": "transcend:items/infinity_food"
   },
   "overrides": [{
     "predicate": {
-      "transcend:faust": 1
+      "transcend:easter": 1
     },
-    "model": "transcend:item/faust"
+    "model": "transcend:item/az"
   }]
 }

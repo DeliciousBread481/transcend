@@ -4,6 +4,7 @@ import huige233.transcend.compat.Avartiabreak;
 import huige233.transcend.compat.PsiCompat;
 import huige233.transcend.compat.tinkers.TiCConfig;
 import huige233.transcend.compat.tinkers.conarmConfig;
+import huige233.transcend.lib.HeartRenderHandler;
 import huige233.transcend.packet.PacketEndTimeStop;
 import huige233.transcend.util.handlers.ModEventHandler;
 import net.minecraft.client.resources.I18n;
@@ -63,5 +64,7 @@ public class CommonProxy {
         if(Loader.isModLoaded("conarm")){
             conarmConfig.setup();
         }
+    }
+    public void postInit(FMLPostInitializationEvent event) {
     }
 }

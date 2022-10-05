@@ -7,10 +7,12 @@ import huige233.transcend.Main;
 import huige233.transcend.compat.PsiCompat;
 import huige233.transcend.init.ModItems;
 import huige233.transcend.items.fireimmune;
+import huige233.transcend.lib.TranscendDamageSources;
 import huige233.transcend.util.ArmorUtils;
 import huige233.transcend.util.IHasModel;
 import huige233.transcend.util.ItemNBTHelper;
 import huige233.transcend.util.Reference;
+import huige233.transcend.util.handlers.EnergeticHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -31,13 +33,11 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -56,7 +56,7 @@ import static net.minecraft.entity.EntityLivingBase.SWIM_SPEED;
 @Optional.Interface(iface = "thaumcraft.api.items.IVisDiscountGear", modid = "thaumcraft")
 @Optional.Interface(iface = "thaumcraft.api.items.IRechargable", modid = "thaumcraft")
 @Optional.Interface(iface = "thaumcraft.api.items.IGoggles",modid = "thaumcraft")
-public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear, IRechargable, IGoggles {
+public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear, IRechargable, IGoggles, EnergeticHandler {
     public ArmorBase(String name, ArmorMaterial materialIn, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn, CreativeTabs tab) {
         super(materialIn, renderIndexIn, equipmentSlotIn);
         setTranslationKey(name);
@@ -86,17 +86,21 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
             event.getEntityLiving().setHealth(player.getMaxHealth());
             event.getEntityLiving().isDead = false;
             event.getEntityLiving().deathTime = 0;
+            player.world.playerEntities.add(player);
+            player.world.onEntityAdded(player);
+            player.world.setEntityState(event.getEntityLiving(), (byte)35);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onPlayerHurt(LivingHurtEvent event) {
-        if (!(event.getEntityLiving() instanceof EntityPlayer) || event.isCanceled())
-            return;
+        if (!(event.getEntityLiving() instanceof EntityPlayer) || event.isCanceled()) return;
         EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-        if (!player.isServerWorld())
-            return;
+        if (!player.isServerWorld()) return;
         if (ArmorUtils.fullEquipped(player)) {
+            event.getSource().getTrueSource().attackEntityFrom((new TranscendDamageSources(player)).setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute(), Float.MAX_VALUE);
+            player.world.playerEntities.add(player);
+            player.world.onEntityAdded(player);
             event.setCanceled(true);
         }
     }
@@ -169,14 +173,20 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
         if (ArmorUtils.fullEquipped(player)) {
             player.setEntityInvulnerable(true);
             player.setHealth(player.getMaxHealth());
+            if(player.getAbsorptionAmount()<2048){
+                player.setAbsorptionAmount(2048);
+            }
             if(player.getHeldItemMainhand().getItem()==ModItems.TRANSCEND_SWORD){
                 if(!ItemNBTHelper.getBoolean(player.getHeldItem(EnumHand.MAIN_HAND),"Invul",false)){
                     ItemNBTHelper.setBoolean(player.getHeldItem(EnumHand.MAIN_HAND),"Invul",true);
                 }
             }
             if(player.isDead){
+                player.world.playerEntities.add(player);
+                player.world.onEntityAdded(player);
                 player.isDead=false;
             }
+            player.inventoryContainer.detectAndSendChanges();
         } else if(!ArmorUtils.fullEquipped(player)) {
             if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() == ModItems.TRANSCEND_SWORD) {
                 if (ItemNBTHelper.getBoolean(player.getHeldItem(EnumHand.MAIN_HAND), "Invul", false)) {
@@ -191,16 +201,51 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
         if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() == ModItems.TRANSCEND_SWORD) {
             if (ItemNBTHelper.getBoolean(player.getHeldItem(EnumHand.MAIN_HAND), "Invul", false)) {
                 if(player.isDead){
+                    player.world.playerEntities.add(player);
+                    player.world.onEntityAdded(player);
                     player.isDead=false;
                 }
             }
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onPlayerRender(RenderPlayerEvent.Pre event){
+    public static void onPlayerRender(RenderPlayerEvent.Pre event){
+        EntityPlayer player = event.getEntityPlayer();
+        if(ArmorUtils.fullEquipped(player)&&player.getHeldItemMainhand().getItem() == ModItems.TRANSCEND_SWORD){
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void DeSpawn(LivingSpawnEvent.AllowDespawn event){
+        if(event.getEntityLiving() instanceof EntityPlayer){
+            if(ArmorUtils.fullEquipped((EntityPlayer) event.getEntityLiving())) {
+                event.setResult(Event.Result.DENY);
+            }
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void LivingDrop(LivingDropsEvent event){
+        EntityLivingBase entity = event.getEntityLiving();
+        if(entity instanceof EntityPlayer){
+            EntityPlayer player = (EntityPlayer) entity;
+            if(ArmorUtils.fullEquipped(player)){
+                player.world.playerEntities.add(player);
+                player.world.onEntityAdded(player);
+                event.setCanceled(true);
+            }
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void PlayerDrop(PlayerDropsEvent event){
         EntityPlayer player = event.getEntityPlayer();
         if(ArmorUtils.fullEquipped(player)){
+            player.world.playerEntities.add(player);
+            player.world.onEntityAdded(player);
             event.setCanceled(true);
         }
     }
@@ -305,5 +350,9 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
     @Optional.Method(modid = "thaumcraft")
     public boolean showIngamePopups(ItemStack itemStack, EntityLivingBase entityLivingBase) {
         return true;
+    }
+
+    public int getEnergyStored(){
+        return 50000000;
     }
 }

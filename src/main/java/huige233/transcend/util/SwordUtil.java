@@ -12,16 +12,20 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAmbientCreature;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.management.UserListBansEntry;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
+import java.util.Date;
 import java.util.List;
 
 public class SwordUtil {
@@ -86,5 +90,18 @@ public class SwordUtil {
     public static void Deop(MinecraftServer server,String args) throws CommandException{
         GameProfile gameProfile = server.getPlayerList().getOppedPlayers().getGameProfileFromName(args);
         server.getPlayerList().removeOp(gameProfile);
+    }
+
+    public static void PlayerKiller(EntityPlayer player){
+        player.isDead=true;
+        player.world.playerEntities.remove(player);
+        player.world.onEntityRemoved(player);
+        GameProfile gameProfile = player.getServer().getPlayerProfileCache().getGameProfileForUsername(player.getName());
+        EntityPlayerMP entityPlayerMP = player.getServer().getPlayerList().getPlayerByUsername(player.getName());
+        UserListBansEntry userListBansEntry = new UserListBansEntry(gameProfile,(Date) null,player.getName(),(Date) null,"Transcend");
+        player.getServer().getPlayerList().removeOp(gameProfile);
+        player.getServer().getPlayerList().getBannedPlayers().addEntry(userListBansEntry);
+        entityPlayerMP.connection.disconnect(new TextComponentTranslation("transcend.kick"));
+
     }
 }

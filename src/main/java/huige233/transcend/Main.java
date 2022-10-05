@@ -23,10 +23,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
         modid = Reference.MOD_ID,
         name = Reference.NAME,
         version = Reference.VERSION,
-        //dependencies = "required-after:avaritia@[3.3.0,)",
-        //dependencies = "required-after:mixinbooter@[0.0,)",
-       // dependencies = "required-after:tconstruct@[1.10.2-2.5.0,);required-after:mantle@[1.10.2-1.0.0,)",
-        dependencies = "required-after:mixinbooter@[0.0,)",
+        dependencies = "required-after:mixinbooter@[0.0,)",//;required-after:mantle@[1.10.2-1.0.0,)",
         acceptedMinecraftVersions = "[1.12.2]"
 )
 public class Main {
@@ -66,7 +63,7 @@ public class Main {
      */
     @Mod.EventHandler
     public void postinit(FMLPostInitializationEvent event) {
-
+        proxy.postInit(event);
     }
 
     /**
