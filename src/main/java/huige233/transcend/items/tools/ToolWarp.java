@@ -15,9 +15,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -47,7 +49,11 @@ public class ToolWarp extends ItemSword implements IHasModel {
         if (Loader.isModLoaded("thaumcraft")) {
             ThaumcraftSword.warpsword(stack,target,attacker);
             stack.damageItem(1, attacker);
-            return true;
+        }
+        if(attacker.getEntityWorld() instanceof WorldServer){
+            if(!attacker.getEntityWorld().isRemote) {
+                ((WorldServer) attacker.getEntityWorld()).spawnParticle(EnumParticleTypes.LAVA, attacker.posX, attacker.posY, attacker.posZ, 0, 0, 0.);
+            }
         }
         stack.damageItem(1,attacker);
         return true;
