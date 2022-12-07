@@ -16,7 +16,7 @@ import java.util.Random;
 
 public class EnchantmentFLAWLESSEnchantment extends Enchantment {
     public EnchantmentFLAWLESSEnchantment() {
-        super(Rarity.RARE, EnumEnchantmentType.ARMOR_CHEST, new EntityEquipmentSlot[]{EntityEquipmentSlot.CHEST});
+        super(Rarity.RARE, EnumEnchantmentType.ARMOR, new EntityEquipmentSlot[]{EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET});
         this.setName("flawless_enchantment");
         this.setRegistryName(new ResourceLocation(Reference.MOD_ID +":flawless_enchantment"));
         ModEnchantment.ENCHANTMENTS.add(this);
@@ -40,11 +40,7 @@ public class EnchantmentFLAWLESSEnchantment extends Enchantment {
         return super.canApplyTogether(ench) && ench != Enchantments.THORNS;
     }
     public static boolean shouldHit(int level, Random rnd){
-        if(level == 1){
-            return rnd.nextFloat() < 1.0F;
-        }else{
-            return false;
-        }
+            return true;
     }
 
 

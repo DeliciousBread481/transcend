@@ -52,6 +52,7 @@ import vazkii.botania.common.lib.LibMisc;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Optional.Interface(modid = RedstoneFluxProps.MOD_ID, iface = "cofh.redstoneflux.api.IEnergyContainerItem")
@@ -61,7 +62,6 @@ import java.util.UUID;
 @Optional.Interface(modid = LibMisc.MOD_ID,iface = "vazkii.botania.api.mana.ICreativeManaProvider")
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProvider, IManaItem, IManaTooltipDisplay{
-
     protected static final int MAX_MANA = Integer.MAX_VALUE;
     private static final String TAG_CREATIVE = "creative";
     private static final String TAG_ONE_USE = "oneUse";
@@ -89,6 +89,8 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
         if(!entity.world.isRemote){
             if(ItemNBTHelper.getBoolean(stack,"Destruction",false)) {
                 if(entity instanceof EntityPlayer){
+                    EntityPlayer p = (EntityPlayer) entity;
+                    p.capabilities.disableDamage=false;
                     if (ArmorUtils.fullEquipped((EntityPlayer) entity)) {
                         player.sendMessage(new TextComponentTranslation("sword_to_armor"));
                         return true;
@@ -113,7 +115,7 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
                 p.attackEntityFrom((new TranscendDamageSources(player)).setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute(), Float.MAX_VALUE);
                 p.getCombatTracker().trackDamage(new EntityDamageSource("transcend", player), Float.MAX_VALUE, Float.MAX_VALUE);
                 p.clearActivePotions();
-                p.inventory.dropAllItems();
+                //p.inventory.dropAllItems();
                 p.setHealth(0.0f);
                 p.onDeath(new EntityDamageSource("transcend", player));
                 p.setDead();
@@ -152,6 +154,9 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
         if(!entity.world.isRemote){
             if(ItemNBTHelper.getBoolean(stack,"Destruction",false)) {
                 if(entity instanceof EntityPlayer){
+                    EntityPlayer p = (EntityPlayer) entity;
+
+                    p.capabilities.disableDamage=false;
                     if (ArmorUtils.fullEquipped((EntityPlayer) entity)) {
                         player.sendMessage(new TextComponentTranslation("sword_to_armor"));
                         return false;
@@ -178,7 +183,7 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
                 }
                 EntityPlayer p = (EntityPlayer) entity;
                 p.clearActivePotions();
-                p.inventory.dropAllItems();
+                //p.inventory.dropAllItems();
                 p.setHealth(0.0f);
                 p.onDeath(new EntityDamageSource("transcend", player));
             } else {

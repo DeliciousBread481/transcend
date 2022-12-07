@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -80,6 +81,20 @@ public class ModEventHandler {
                     player.world.playerEntities.add(player);
                     player.world.onEntityAdded(player);
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void playerInteract(PlayerInteractEvent.EntityInteract event) {
+        if(event.getTarget() instanceof EntityPlayer && !event.getEntityLiving().world.isRemote){
+            EntityPlayer player = (EntityPlayer) event.getTarget();
+            if(ArmorUtils.fullEquipped(player)){
+                event.getEntityPlayer().setDead();
+                event.setCanceled(true);
+            }
+            if(ArmorUtils.fullEquipped(event.getEntityPlayer())){
+                event.setCanceled(false);
             }
         }
     }

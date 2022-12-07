@@ -1,6 +1,7 @@
 package huige233.transcend.blocks;
 
 import huige233.transcend.Main;
+import huige233.transcend.util.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -26,6 +27,7 @@ import java.util.Random;
 public class voidblock extends BlockBase {
     public voidblock(String name, Material material) {
         super(name, material);
+        setTranslationKey(Reference.MOD_ID+".voidblock");
         setSoundType(SoundType.METAL);
         setCreativeTab(Main.TranscendTab);
         setHardness(-1.0F);

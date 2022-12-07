@@ -27,6 +27,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.stats.StatBase;
+import net.minecraft.stats.StatList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumHand;
@@ -35,6 +37,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -46,8 +49,11 @@ import org.jetbrains.annotations.NotNull;
 import thaumcraft.api.items.IGoggles;
 import thaumcraft.api.items.IRechargable;
 import thaumcraft.api.items.IVisDiscountGear;
+import vazkii.psi.common.Psi;
+import vazkii.psi.common.lib.LibMisc;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static net.minecraft.entity.EntityLivingBase.SWIM_SPEED;
@@ -126,8 +132,10 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
                 player.getCombatTracker().trackDamage(ds, Float.MAX_VALUE, Float.MAX_VALUE);
                 player.getCombatTracker().trackDamage(ds1, Float.MAX_VALUE, Float.MAX_VALUE);
             }
-            if (attacker instanceof EntityPlayer) {
-                PsiCompat.onPlayerAttack(player, (EntityPlayer) attacker);
+            if(Loader.isModLoaded(LibMisc.MOD_ID)){
+                if (attacker instanceof EntityPlayer) {
+                    PsiCompat.onPlayerAttack(player, (EntityPlayer) attacker);
+                }
             }
             event.setCanceled(true);
         }
@@ -172,6 +180,7 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
         }
         if (ArmorUtils.fullEquipped(player)) {
             player.setEntityInvulnerable(true);
+            player.capabilities.disableDamage=true;
             player.setHealth(player.getMaxHealth());
             if(player.getAbsorptionAmount()<2048){
                 player.setAbsorptionAmount(2048);
@@ -309,6 +318,9 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
                 }
                 if(player.getPosition().getY() < -100){
                     player.setPosition(player.getPosition().getX(),100,player.getPosition().getZ());
+                }
+                if(player.getMaxHealth()<=2000){
+                    player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(2000);
                 }
             }
         }

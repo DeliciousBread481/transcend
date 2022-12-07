@@ -6,8 +6,10 @@ import huige233.transcend.util.IHasModel;
 import huige233.transcend.util.Reference;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -36,6 +38,9 @@ public class InfinityFood extends ItemFood implements IHasModel {
     public ItemStack onItemUseFinish(ItemStack stack, World world, EntityLivingBase entity) {
         if (entity instanceof EntityPlayer){
             stack.grow(1);
+        }
+        if(isEaster(stack)){
+            entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 100, 1));
         }
         return super.onItemUseFinish(stack,world,entity);
     }

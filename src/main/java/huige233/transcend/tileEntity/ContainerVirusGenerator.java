@@ -18,6 +18,7 @@ public class ContainerVirusGenerator extends Container {
 
     public ContainerVirusGenerator(InventoryPlayer player, TileEntityVirusGenerator tileentity)
     {
+        Integer.parseInt("123");
         this.tileentity = tileentity;
         IItemHandler handler = tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
         this.addSlotToContainer(new SlotItemHandler(handler, 0, 26, 11));

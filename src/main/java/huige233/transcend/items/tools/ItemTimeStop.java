@@ -72,11 +72,11 @@ public class ItemTimeStop extends ItemSword implements IHasModel {
         ItemStack stack =  player.getHeldItem(hand);
         if(!world.isRemote) {
             if (player.isSneaking()) {
+                player.addPotionEffect(new PotionEffect(TranscendPotions.time_stop,300,44,false,false));
                 if(isFaust(stack)){
-                    player.sendMessage(new TextComponentTranslation(TextUtils.makeFaust(I18n.translateToLocal("tooltip.faust"))));
+                    player.getServer().getPlayerList().sendMessage(new TextComponentTranslation(TextUtils.makeFaust(I18n.translateToLocal("tooltip.faust"))));
                     //Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("chat.faust"));
                 }
-                player.addPotionEffect(new PotionEffect(TranscendPotions.time_stop,300,44,false,false));
             }
         }
         return new ActionResult(EnumActionResult.SUCCESS, stack);
