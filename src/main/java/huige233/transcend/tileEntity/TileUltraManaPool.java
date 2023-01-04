@@ -90,6 +90,7 @@ public class TileUltraManaPool extends TileMod implements IManaPool, IKeyLocked,
     boolean isDoingTransfer = false;
     int ticksDoingTransfer = 0;
 
+    public int manaCap = -1;
     private String inputKey = "";
     private final String outputKey = "";
 

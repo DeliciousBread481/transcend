@@ -71,7 +71,7 @@ public class RenderTileUltraManaPool extends TileEntitySpecialRenderer<TileUltra
         GlStateManager.enableRescaleNormal();
 
         int mana = pool == null ? forceManaNumber : pool.getCurrentMana();
-        int cap = pool == null ? -1 : pool.mana;
+        int cap = pool == null ? -1 : pool.manaCap;
         if(cap == -1)
             cap = TileUltraManaPool.MAX_MANA;
 
