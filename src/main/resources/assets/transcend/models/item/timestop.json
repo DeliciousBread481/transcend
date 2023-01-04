@@ -3,10 +3,12 @@
   "textures": {
     "layer0": "transcend:items/timestop"
   },
-  "overrides": [{
-    "predicate": {
-      "transcend:faust": 1
-    },
-    "model": "transcend:item/faust"
-  }]
+  "overrides": [
+    {
+      "predicate": {
+        "transcend:faust": 1
+      },
+      "model": "transcend:item/faust"
+    }
+  ]
 }

@@ -1,4 +1,5 @@
 package huige233.transcend.util;
+
 import javax.annotation.Nonnull;
 
 import net.minecraft.block.Block;

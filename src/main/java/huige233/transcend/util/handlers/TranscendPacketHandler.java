@@ -1,5 +1,7 @@
 package huige233.transcend.util.handlers;
 
+import huige233.transcend.network.message.MessageTr;
+import huige233.transcend.packet.PacketTJump;
 import huige233.transcend.packet.PacketTravelEvent;
 import huige233.transcend.util.Reference;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -30,6 +32,7 @@ public class TranscendPacketHandler {
 
     public static void init(FMLInitializationEvent event){
         INSTANCE.registerMessage(PacketTravelEvent.Handler.class,PacketTravelEvent.class,nextID(),Side.SERVER);
+        INSTANCE.registerMessage(PacketTJump.class,PacketTJump.PacketJump.class,nextID(),Side.SERVER);
     }
 
     private static <REQ extends IMessage, REPLY extends IMessage> void registerMessage(

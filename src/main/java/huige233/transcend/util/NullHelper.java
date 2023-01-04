@@ -1,4 +1,5 @@
 package huige233.transcend.util;
+
 import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;

@@ -41,7 +41,7 @@ public class fireimmune extends EntityItem {
 
     @Override
     public boolean attackEntityFrom(@Nonnull DamageSource source, float amount) {
-        if (source.getDamageType().equals(DamageSource.OUT_OF_WORLD.damageType)) {
+        if (source.equals(DamageSource.OUT_OF_WORLD)) {
             return true;
         }
         // prevent any damage besides out of world

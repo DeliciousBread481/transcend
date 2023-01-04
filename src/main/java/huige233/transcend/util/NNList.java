@@ -1,4 +1,5 @@
 package huige233.transcend.util;
+
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collection;

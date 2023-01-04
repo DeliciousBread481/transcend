@@ -4,13 +4,13 @@ import huige233.transcend.Main;
 import huige233.transcend.blocks.BlockBase;
 import huige233.transcend.gui.ModGuiElementLoader;
 import huige233.transcend.init.ModBlock;
-import huige233.transcend.util.Reference;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -21,7 +21,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.block.state.BlockStateContainer;
 
 import java.util.Random;
 

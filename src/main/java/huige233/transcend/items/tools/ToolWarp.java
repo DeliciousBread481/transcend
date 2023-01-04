@@ -60,21 +60,10 @@ public class ToolWarp extends ItemSword implements IHasModel {
     }
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag){
-        tooltip.add(TextFormatting.DARK_GRAY+I18n.translateToLocal("tooltip.warp_sword1.desc"));
-    }
-
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public void onTooltip(ItemTooltipEvent event){
         if(Loader.isModLoaded("thaumcraft")){
-            if(event.getItemStack().getItem() instanceof ToolWarp){
-                for(int x=0;x<event.getToolTip().size();x++){
-                    if(event.getToolTip().get(x).contains(I18n.translateToLocal("tooltip.warp_sword1.desc"))){
-                        event.getToolTip().set(x, TextFormatting.GOLD+I18n.translateToLocal("tooltip.warp_sword2.desc"));
-                        return;
-                    }
-                }
-            }
+            tooltip.add(TextFormatting.DARK_GRAY+I18n.translateToLocal("tooltip.warp_sword2.desc"));
+        }else {
+            tooltip.add(TextFormatting.DARK_GRAY + I18n.translateToLocal("tooltip.warp_sword1.desc"));
         }
     }
 

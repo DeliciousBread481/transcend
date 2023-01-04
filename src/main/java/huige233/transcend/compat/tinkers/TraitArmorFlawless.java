@@ -3,23 +3,17 @@ package huige233.transcend.compat.tinkers;
 import c4.conarm.common.armor.utils.ArmorTagUtil;
 import c4.conarm.lib.armor.ArmorNBT;
 import c4.conarm.lib.traits.AbstractArmorTrait;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Lists;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import slimeknights.tconstruct.library.utils.TagUtil;
-
-import java.util.List;
 
 public class TraitArmorFlawless extends AbstractArmorTrait {
     public static final TraitArmorFlawless a = new TraitArmorFlawless();

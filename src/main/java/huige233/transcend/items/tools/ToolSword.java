@@ -10,9 +10,9 @@ import huige233.transcend.init.ModItems;
 import huige233.transcend.items.fireimmune;
 import huige233.transcend.lib.TranscendDamageSources;
 import huige233.transcend.util.*;
-import static huige233.transcend.util.handlers.BaublesHelper.getBaubles;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -28,6 +28,7 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.server.SPacketCustomSound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -52,8 +53,9 @@ import vazkii.botania.common.lib.LibMisc;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
+
+import static huige233.transcend.util.handlers.BaublesHelper.getBaubles;
 
 @Optional.Interface(modid = RedstoneFluxProps.MOD_ID, iface = "cofh.redstoneflux.api.IEnergyContainerItem")
 @Optional.Interface(modid = IC2.MODID, iface = "ic2.api.item.ISpecialElectricItem")
@@ -80,7 +82,6 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
     public void registerModels() {
         Main.proxy.registerItemRenderer(this, 0, "inventory");
     }
-
     @SideOnly(Side.CLIENT)
     public boolean hasEffect(@NotNull ItemStack par1ItemStack) {
         return false;
@@ -288,7 +289,7 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
                 if (!receive.isEmpty()) {
                     if (receive.getItem() instanceof IEnergyContainerItem) {
                         IEnergyContainerItem energy = (IEnergyContainerItem) receive.getItem();
-                        energy.receiveEnergy(receive, energy.getMaxEnergyStored(receive) - energy.getEnergyStored(receive), false);
+                        energy.receiveEnergy(receive, Integer.MAX_VALUE, false);
                     }
                     if (receive.hasCapability(CapabilityEnergy.ENERGY, null)) {
                         IEnergyStorage cap = (IEnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY, null);

@@ -3,17 +3,13 @@ package huige233.transcend.blocks;
 import huige233.transcend.Main;
 import huige233.transcend.init.ModBlock;
 import huige233.transcend.init.ModItems;
-import huige233.transcend.items.fireimmune;
 import huige233.transcend.util.IHasModel;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 import java.util.Random;
 

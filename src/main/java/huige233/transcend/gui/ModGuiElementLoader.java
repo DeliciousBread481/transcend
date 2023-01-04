@@ -40,8 +40,8 @@ public class ModGuiElementLoader implements IGuiHandler {
         {
             case GUI_VIRUS_GENERATOR:
                 return new GuiVirusGenerator(player.inventory,(TileEntityVirusGenerator) world.getTileEntity(new BlockPos(x,y,z)));
-                case GUI_COLLECTOR:
-                    return new GuiCollector(player.inventory,(TileEntityCollerctor) world.getTileEntity(new BlockPos(x,y,z)));
+            case GUI_COLLECTOR:
+                return new GuiCollector(player.inventory,(TileEntityCollerctor) world.getTileEntity(new BlockPos(x,y,z)));
             default:
                 return null;
         }

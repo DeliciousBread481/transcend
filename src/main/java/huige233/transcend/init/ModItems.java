@@ -5,6 +5,9 @@ import huige233.transcend.items.InfinityFood;
 import huige233.transcend.items.ItemBase;
 import huige233.transcend.items.ItemTranscendShield;
 import huige233.transcend.items.armor.ArmorBase;
+import huige233.transcend.items.compat.AnvilCompat;
+import huige233.transcend.items.compat.FragmentLan;
+import huige233.transcend.items.compat.ThunderSkin;
 import huige233.transcend.items.tools.*;
 import huige233.transcend.util.Reference;
 import net.minecraft.init.SoundEvents;
@@ -51,5 +54,9 @@ public class ModItems {
     public static final Item ITEM_XP = new ItemXp("transcend_xp",Main.TranscendTab);
     public static final Item TravelStaff = new ItemTravelStaff("travel_staff",Main.TranscendTab);
     public static final ItemFood InfinityFood = new InfinityFood();
+    public static final Item OP_Cuff = new ItemOPCuffs("op_cuff",Invulnera);
+    public static final Item AnvilCompat = new AnvilCompat();
+    public static final Item FragmentLan = new FragmentLan();
+    public static final Item ThunderSkin = new ThunderSkin();
     //public static final ItemSword a = new TranscendSword("tr",Main.TranscendTab,transcend_tool);
 }

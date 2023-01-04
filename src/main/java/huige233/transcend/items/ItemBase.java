@@ -1,7 +1,6 @@
 package huige233.transcend.items;
 
 import huige233.transcend.Main;
-import huige233.transcend.compat.ThaumcraftCompat;
 import huige233.transcend.init.ModItems;
 import huige233.transcend.util.IHasModel;
 import net.minecraft.creativetab.CreativeTabs;
@@ -10,7 +9,6 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Loader;
 
 public class ItemBase extends Item implements IHasModel {
     private boolean isRangedWeapon = false;

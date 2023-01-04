@@ -9,7 +9,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Enchantments;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Random;
@@ -43,13 +42,12 @@ public class EnchantmentFLAWLESSEnchantment extends Enchantment {
             return true;
     }
 
-
     public void onUserHurt(EntityLivingBase user, Entity attacker, int level){
         Random random = user.getRNG();
         if(shouldHit(level,random)){
             if(attacker != null) {
                 //attacker.attackEntityFrom(DamageSource.causeMobDamage(user), hp*10.0f);
-                attacker.attackEntityFrom(new TranscendDamageSources(user).setDamageAllowedInCreativeMode(), Float.MAX_VALUE);
+                attacker.attackEntityFrom(new TranscendDamageSources(user).setDamageAllowedInCreativeMode().setDamageIsAbsolute(), Float.MAX_VALUE);
             }
         }
     }

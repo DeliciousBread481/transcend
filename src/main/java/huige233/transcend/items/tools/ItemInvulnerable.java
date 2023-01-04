@@ -32,6 +32,8 @@ public class ItemInvulnerable extends ItemSword {
     public boolean onLeftClickEntity(@NotNull ItemStack stack, @NotNull EntityPlayer player, Entity entity) {
         if (!player.world.isRemote) {
             entity.setEntityInvulnerable(!entity.getIsInvulnerable());
+            //get creative tab item
+            ItemStack itemStack = player.inventory.getCurrentItem();
             return true;
         }
         return false;

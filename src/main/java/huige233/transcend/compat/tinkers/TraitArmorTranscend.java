@@ -1,6 +1,5 @@
 package huige233.transcend.compat.tinkers;
 
-import c4.conarm.common.armor.traits.TraitVoltaic;
 import c4.conarm.common.armor.utils.ArmorTagUtil;
 import c4.conarm.lib.armor.ArmorNBT;
 import c4.conarm.lib.traits.AbstractArmorTrait;
@@ -15,8 +14,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import slimeknights.tconstruct.library.modifiers.ModifierNBT;
-import slimeknights.tconstruct.library.utils.ModifierTagHolder;
 import slimeknights.tconstruct.library.utils.TagUtil;
 
 import java.util.List;

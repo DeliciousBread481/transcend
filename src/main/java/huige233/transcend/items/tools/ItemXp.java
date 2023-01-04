@@ -4,7 +4,6 @@ import huige233.transcend.Main;
 import huige233.transcend.init.ModItems;
 import huige233.transcend.items.ItemBase;
 import huige233.transcend.items.fireimmune;
-import huige233.transcend.util.ItemNBTHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,13 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
-import huige233.transcend.util.XpUtil;
 
 public class ItemXp extends ItemBase {
     public ItemXp(String name, CreativeTabs tab){

@@ -1,32 +1,41 @@
 package huige233.transcend.util.handlers;
 
 import huige233.transcend.init.ModItems;
+import huige233.transcend.items.compat.AnvilCompat;
 import huige233.transcend.util.ArmorUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.AnvilUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.AnvilRepairEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.Random;
+
+import static huige233.transcend.util.handlers.BaublesHelper.getBaubles;
 
 public class ModEventHandler {
     @SubscribeEvent
@@ -69,6 +78,18 @@ public class ModEventHandler {
     }
 
     @SubscribeEvent
+    public void attack(AttackEntityEvent event){
+        if(!event.getTarget().world.isRemote){
+            if(event.getTarget() instanceof EntityPlayer){
+                EntityPlayer p = (EntityPlayer) event.getTarget();
+                if(ArmorUtils.fullEquipped(p)){
+                    event.setCanceled(true);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onClientTick(TickEvent.ClientTickEvent event){
         EntityPlayer player = Minecraft.getMinecraft().player;
@@ -95,6 +116,20 @@ public class ModEventHandler {
             }
             if(ArmorUtils.fullEquipped(event.getEntityPlayer())){
                 event.setCanceled(false);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void AnvilRepairEvent(AnvilRepairEvent event){
+        EntityPlayer player = event.getEntityPlayer();
+        if(!player.world.isRemote){
+            if(Loader.isModLoaded("baubles")){
+                for(ItemStack a : getBaubles(player)){
+                    if(a.getItem() instanceof AnvilCompat){
+                        event.setBreakChance(0.0f);
+                    }
+                }
             }
         }
     }

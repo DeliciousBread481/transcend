@@ -2,27 +2,19 @@ package huige233.transcend.items.tools;
 
 import huige233.transcend.Main;
 import huige233.transcend.init.ModItems;
-import huige233.transcend.lib.TranscendDamageSources;
-import huige233.transcend.util.ArmorUtils;
 import huige233.transcend.util.IHasModel;
-import huige233.transcend.util.ItemNBTHelper;
-import huige233.transcend.util.SwordUtil;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
-import net.minecraft.network.play.server.SPacketCustomSound;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 

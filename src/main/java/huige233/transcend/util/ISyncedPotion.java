@@ -14,6 +14,7 @@ public interface ISyncedPotion {
 
     double SYNC_RADIUS = 64;
 
+
     default boolean shouldSync(EntityLivingBase host){
         return true;
     }
@@ -29,8 +30,6 @@ public interface ISyncedPotion {
             if(!event.getEntityLiving().world.isRemote){
                 event.getEntityLiving().world.playerEntities.stream()
                         .filter(p -> p.getDistanceSq(event.getEntityLiving()) < SYNC_RADIUS * SYNC_RADIUS)
-                        // Apparently unchecked casting in a lambda expression doesn't generate a warning. Who knew?
-                        // (We know this cast is safe though)
                         .forEach(p -> ((EntityPlayerMP)p).connection.sendPacket(new SPacketEntityEffect(
                                 event.getEntity().getEntityId(), event.getPotionEffect())));
             }

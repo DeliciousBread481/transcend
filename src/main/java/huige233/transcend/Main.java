@@ -1,5 +1,6 @@
 package huige233.transcend;
 
+import huige233.transcend.command.CommandOpCuff;
 import huige233.transcend.gui.ModGuiElementLoader;
 import huige233.transcend.init.ModOre;
 import huige233.transcend.proxy.CommonProxy;
@@ -16,6 +17,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -23,7 +25,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
         modid = Reference.MOD_ID,
         name = Reference.NAME,
         version = Reference.VERSION,
-        dependencies = "required-after:mixinbooter@[0.0,)",//;required-after:mantle@[1.10.2-1.0.0,)",
+        dependencies = "required-after:mixinbooter@[0.0,);required-after:baubles@[1.5.2,)",
         acceptedMinecraftVersions = "[1.12.2]"
 )
 public class Main {
@@ -57,6 +59,10 @@ public class Main {
         proxy.init(event);
     }
 
+    @Mod.EventHandler
+    public void onServerStarting(FMLServerStartingEvent event) {
+        event.registerServerCommand(new CommandOpCuff());
+    }
 
     /**
      * This is the final initialization event. Register actions from other mods here

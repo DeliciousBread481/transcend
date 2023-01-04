@@ -7,7 +7,6 @@ import baubles.api.cap.IBaublesItemHandler;
 import huige233.transcend.Main;
 import huige233.transcend.items.ItemBase;
 import huige233.transcend.items.fireimmune;
-import huige233.transcend.util.ArmorUtils;
 import huige233.transcend.util.ItemNBTHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -22,7 +21,6 @@ import net.minecraftforge.fml.common.Optional;
 import thaumcraft.api.items.IRechargable;
 import thaumcraft.api.items.IVisDiscountGear;
 import thaumcraft.api.items.RechargeHelper;
-import thaumcraft.common.items.ItemTCBase;
 
 @Optional.Interface(iface = "thaumcraft.common.items.ItemTCBase", modid = "thaumcraft")
 @Optional.Interface(iface = "thaumcraft.api.items.IVisDiscountGear", modid = "thaumcraft")
