@@ -2,7 +2,6 @@ package huige233.transcend.tileEntity;
 
 import huige233.transcend.blocks.BlockBase;
 import huige233.transcend.util.ITileBlock;
-import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
@@ -10,12 +9,14 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -23,6 +24,7 @@ import net.minecraft.world.ChunkCache;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import vazkii.botania.api.BotaniaAPI;
@@ -30,9 +32,9 @@ import vazkii.botania.api.internal.VanillaPacketDispatcher;
 import vazkii.botania.api.lexicon.ILexiconable;
 import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.api.state.BotaniaStateProps;
+import vazkii.botania.api.state.enums.PoolVariant;
 import vazkii.botania.api.wand.IWandHUD;
 import vazkii.botania.api.wand.IWandable;
-
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,13 +49,13 @@ public class BlockUltraManaPool extends BlockBase implements IWandHUD, IWandable
         setResistance(10.0f);
         setSoundType(SoundType.STONE);
         BotaniaAPI.blacklistBlockFromMagnet(this, Short.MAX_VALUE);
-        setDefaultState(blockState.getBaseState().withProperty(BotaniaStateProps.COLOR, EnumDyeColor.WHITE));
+        setDefaultState(blockState.getBaseState().withProperty(BotaniaStateProps.POOL_VARIANT, PoolVariant.DEFAULT).withProperty(BotaniaStateProps.COLOR, EnumDyeColor.WHITE));
     }
 
     @Nonnull
     @Override
     public BlockStateContainer createBlockState(){
-        return new BlockStateContainer(this, BotaniaStateProps.COLOR);
+        return new BlockStateContainer(this, BotaniaStateProps.POOL_VARIANT,BotaniaStateProps.COLOR);
     }
 
     @Override
@@ -64,7 +66,10 @@ public class BlockUltraManaPool extends BlockBase implements IWandHUD, IWandable
     @Nonnull
     @Override
     public IBlockState getStateFromMeta(int meta){
-        return getDefaultState();
+        if (meta > PoolVariant.values().length) {
+            meta = 0;
+        }
+        return getDefaultState().withProperty(BotaniaStateProps.POOL_VARIANT,PoolVariant.values()[meta]);
     }
 
     @Nonnull
@@ -178,6 +183,13 @@ public class BlockUltraManaPool extends BlockBase implements IWandHUD, IWandable
         return true;
     }
 
+    @Nonnull
+    @Override
+    public EnumBlockRenderType getRenderType(IBlockState state){
+        if(state.getValue(BotaniaStateProps.POOL_VARIANT) == PoolVariant.FABULOUS) return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+        else return EnumBlockRenderType.MODEL;
+    }
+
     @Override
     public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos)
     {
@@ -199,11 +211,12 @@ public class BlockUltraManaPool extends BlockBase implements IWandHUD, IWandable
         return true;
     }
 
-    public static LexiconEntry dreaming_pool;
+    public static LexiconEntry pool;
+    public static LexiconEntry rainbowRod;
     @Override
     public LexiconEntry getEntry(World world, BlockPos pos, EntityPlayer player, ItemStack lexicon)
     {
-        return dreaming_pool;
+        return world.getBlockState(pos).getValue(BotaniaStateProps.POOL_VARIANT) == PoolVariant.FABULOUS ? rainbowRod : pool;
     }
 
     @Nonnull
@@ -213,7 +226,13 @@ public class BlockUltraManaPool extends BlockBase implements IWandHUD, IWandable
         return side == EnumFacing.DOWN ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
+    public void registerModels() {
+        ModelLoader.setCustomStateMapper(this, new StateMap.Builder().ignore(BotaniaStateProps.COLOR).build());
+    }
+
+        @Override
     public Class<TileUltraManaPool> getTileClass()
     {
         return TileUltraManaPool.class;

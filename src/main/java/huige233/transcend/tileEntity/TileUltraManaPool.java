@@ -42,6 +42,7 @@ import vazkii.botania.api.mana.ManaNetworkEvent;
 import vazkii.botania.api.mana.spark.ISparkAttachable;
 import vazkii.botania.api.mana.spark.ISparkEntity;
 import vazkii.botania.api.recipe.RecipeManaInfusion;
+import vazkii.botania.api.state.BotaniaStateProps;
 import vazkii.botania.client.core.handler.HUDHandler;
 import vazkii.botania.client.core.helper.RenderHelper;
 import vazkii.botania.client.lib.LibResources;
@@ -99,7 +100,7 @@ public class TileUltraManaPool extends TileMod implements IManaPool, IKeyLocked,
     public boolean shouldRefresh(World world, BlockPos pos, @Nonnull IBlockState oldState, @Nonnull IBlockState newState) {
         if (oldState.getBlock() != newState.getBlock()) return true;
         if (oldState.getBlock() != ModBlock.ULTRAMANAPOOL || newState.getBlock() != ModBlock.ULTRAMANAPOOL) return true;
-        return false;
+        return oldState.getValue(BotaniaStateProps.POOL_VARIANT) != newState.getValue(BotaniaStateProps.POOL_VARIANT);
     }
 
     @Override
@@ -418,7 +419,6 @@ public class TileUltraManaPool extends TileMod implements IManaPool, IKeyLocked,
             Entity e = (Entity) sparks.get(0);
             return (ISparkEntity) e;
         }
-
         return null;
     }
 

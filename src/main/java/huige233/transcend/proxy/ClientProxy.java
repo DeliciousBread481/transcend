@@ -4,7 +4,12 @@ import huige233.transcend.effect.TimeStopEffect;
 import huige233.transcend.lib.HeartRenderHandler;
 import huige233.transcend.packet.PacketEndTimeStop;
 import huige233.transcend.render.RenderBlinkEffect;
+import huige233.transcend.tileEntity.RenderTileUltraManaPool;
+import huige233.transcend.tileEntity.TileUltraManaPool;
+import huige233.transcend.util.IHUDRenderable;
 import huige233.transcend.util.TravelController;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
@@ -12,13 +17,20 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.profiler.Profiler;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.Style;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ClientProxy extends CommonProxy {
     public void registerItemRenderer( Item item, int meta, String id )
@@ -55,6 +67,7 @@ public class ClientProxy extends CommonProxy {
 
     public void preInit( FMLPreInitializationEvent event )
     {
+        ClientRegistry.bindTileEntitySpecialRenderer(TileUltraManaPool.class,new RenderTileUltraManaPool());
         super.preInit(event);
     }
 
@@ -67,4 +80,25 @@ public class ClientProxy extends CommonProxy {
     public void postInit(FMLPostInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(new HeartRenderHandler());
     }
+
+    @SubscribeEvent
+    public void onDrawScreenPost(RenderGameOverlayEvent.Post event){
+        Minecraft mc = Minecraft.getMinecraft();
+        Profiler profiler = mc.profiler;
+        ItemStack main = mc.player.getHeldItemMainhand();
+        ItemStack offhand = mc.player.getHeldItemOffhand();
+
+        if(event.getType() == RenderGameOverlayEvent.ElementType.ALL){
+            profiler.startSection("mana_pool_hud");
+            RayTraceResult pos = mc.objectMouseOver;
+            if(pos != null){
+                IBlockState state = pos.typeOfHit == RayTraceResult.Type.BLOCK ? mc.world.getBlockState(pos.getBlockPos()) : null;
+                Block block = state == null ? null : state.getBlock();
+                TileEntity tile = pos.typeOfHit == RayTraceResult.Type.BLOCK ? mc.world.getTileEntity(pos.getBlockPos()) : null;
+
+                if(tile instanceof IHUDRenderable) ((IHUDRenderable) tile).renderHUDPlz(mc,event.getResolution());
+            }
+        }
+    }
+
 }
