@@ -35,6 +35,7 @@ import vazkii.botania.api.state.BotaniaStateProps;
 import vazkii.botania.api.state.enums.PoolVariant;
 import vazkii.botania.api.wand.IWandHUD;
 import vazkii.botania.api.wand.IWandable;
+import vazkii.botania.client.core.handler.ModelHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -230,6 +231,7 @@ public class BlockUltraManaPool extends BlockBase implements IWandHUD, IWandable
     @Override
     public void registerModels() {
         ModelLoader.setCustomStateMapper(this, new StateMap.Builder().ignore(BotaniaStateProps.COLOR).build());
+        ModelHandler.registerBlockToState(this, PoolVariant.values().length);
     }
 
         @Override
