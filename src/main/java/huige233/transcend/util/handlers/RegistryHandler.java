@@ -33,9 +33,6 @@ public class RegistryHandler {
     @SubscribeEvent
     public static void onBlockRegister(RegistryEvent.Register<Block> event) {
         event.getRegistry().registerAll(ModBlock.BLOCKS.toArray(new Block[0]));
-        if(Loader.isModLoaded("botania")){
-            event.getRegistry().registerAll(new BlockUltraManaPool());
-        }
         TileEntityHandler.registerTileEntities();
     }
 
