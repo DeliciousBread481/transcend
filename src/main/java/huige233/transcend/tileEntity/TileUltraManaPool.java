@@ -7,6 +7,7 @@ import java.util.List;
 import com.google.common.base.Predicates;
 import huige233.transcend.init.ModBlock;
 import huige233.transcend.util.IHUDRenderable;
+import huige233.transcend.util.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -117,6 +118,7 @@ public class TileUltraManaPool extends TileMod implements IManaPool, IKeyLocked,
         if (old != this.mana) {
             world.updateComparatorOutputLevel(pos, world.getBlockState(pos).getBlock());
             markDispatchable();
+            markDirty();
         }
     }
 
@@ -292,6 +294,7 @@ public class TileUltraManaPool extends TileMod implements IManaPool, IKeyLocked,
         ticks++;
     }
 
+    @Override
     public void writePacketNBT(NBTTagCompound cmp) {
         cmp.setInteger(TAG_MANA, mana);
         cmp.setBoolean(TAG_OUTPUTTING, outputting);
@@ -305,6 +308,7 @@ public class TileUltraManaPool extends TileMod implements IManaPool, IKeyLocked,
         cmp.setString(TAG_OUTPUT_KEY, outputKey);
     }
 
+    @Override
     public void readPacketNBT(NBTTagCompound cmp) {
         mana = cmp.getInteger(TAG_MANA);
         outputting = cmp.getBoolean(TAG_OUTPUTTING);
@@ -349,7 +353,7 @@ public class TileUltraManaPool extends TileMod implements IManaPool, IKeyLocked,
     public void renderHUD(Minecraft mc, ScaledResolution res) {
         {
             ItemStack pool = new ItemStack(ModBlock.ULTRAMANAPOOL);
-            String name = I18n.format(pool.getTranslationKey().replaceAll("tile.", "tile." + LibResources.PREFIX_MOD) + ".name");
+            String name = I18n.format(pool.getTranslationKey().replaceAll("tile.", "tile." + Reference.MOD_ID + ":") + ".name");
             int color = 0x4444FF;
             HUDHandler.drawSimpleManaHUD(color, knownMana, MAX_MANA, name, res);
 
@@ -434,7 +438,7 @@ public class TileUltraManaPool extends TileMod implements IManaPool, IKeyLocked,
         if (space > 0)
             return space;
         else if (world.getBlockState(pos.down()).getBlock() == ModBlocks.manaVoid)
-            return MAX_MANA;
+            return manaCap;
         else
             return 0;
     }
@@ -458,7 +462,7 @@ public class TileUltraManaPool extends TileMod implements IManaPool, IKeyLocked,
     @Override
     public void renderHUDPlz(Minecraft mc, ScaledResolution res) {
         ItemStack stack = mc.player.getHeldItemMainhand();
-        RecipeManaInfusion recipe = TilePool.getMatchingRecipe(stack, getWorld().getBlockState(getPos()));
+        RecipeManaInfusion recipe = TilePool.getMatchingRecipe(stack, getWorld().getBlockState(getPos().down()));
         if (recipe != null) {
             int x = res.getScaledWidth() / 2 - 11;
             int y = res.getScaledHeight() / 2 + 10;

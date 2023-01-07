@@ -2,9 +2,11 @@ package huige233.transcend.items;
 
 import huige233.transcend.Main;
 import huige233.transcend.init.ModItems;
+import huige233.transcend.util.ArmorUtils;
 import huige233.transcend.util.IHasModel;
 import huige233.transcend.util.Reference;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemFood;
@@ -12,11 +14,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.player.PlayerDropsEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
 import java.util.Locale;
 
+@Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class InfinityFood extends ItemFood implements IHasModel {
     public InfinityFood(){
         super(20,10.f,false);
@@ -59,5 +67,15 @@ public class InfinityFood extends ItemFood implements IHasModel {
     public static boolean isEaster(ItemStack stack){
         String name = stack.getDisplayName().toLowerCase(Locale.ROOT).trim();
         return name.equals("azazel sakura");
+    }
+
+    @SubscribeEvent
+    public static void PlayerDropsEvent(LivingDropsEvent event){
+        List<EntityItem> list = event.getDrops();
+        for(EntityItem item:list){
+            if(item.getItem().getItem() instanceof InfinityFood){
+                event.setCanceled(true);
+            }
+        }
     }
 }

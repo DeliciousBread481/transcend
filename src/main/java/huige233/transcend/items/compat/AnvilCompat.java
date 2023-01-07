@@ -90,9 +90,9 @@ public class AnvilCompat extends ItemBase implements IBauble {
 
     @SideOnly(Side.CLIENT)
     public void addInformation(@NotNull ItemStack stack, World world, List<String> tooltip, @NotNull ITooltipFlag flag){
-        tooltip.add(TextFormatting.YELLOW + (I18n.translateToLocal("tooltip.anvil_compat.desc1")));
-        tooltip.add(TextFormatting.YELLOW + (I18n.translateToLocal("tooltip.anvil_compat.desc2")));
-        tooltip.add(TextFormatting.YELLOW + (I18n.translateToLocal("tooltip.anvil_compat.desc3")));
+        tooltip.add(TextFormatting.GRAY + (I18n.translateToLocal("tooltip.anvil_compat.desc1")));
+        tooltip.add(TextFormatting.GRAY + (I18n.translateToLocal("tooltip.anvil_compat.desc2")));
+        tooltip.add(TextFormatting.GRAY + (I18n.translateToLocal("tooltip.anvil_compat.desc3")));
     }
 
     @Override

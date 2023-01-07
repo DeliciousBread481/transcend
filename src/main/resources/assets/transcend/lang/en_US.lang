@@ -68,6 +68,8 @@ tooltip.anvil_compat.desc1=我于荒漠中等待、于废墟中燃烧
 tooltip.anvil_compat.desc2=金铁为水——土石化蜡——肉身成烟
 tooltip.anvil_compat.desc3=来入我内，不复续存
 tooltip.fragment_lan.desc=你可以遮住双眼，随便你。遮也无用。
+tooltip.thunder_skin.desc1=轰雷之皮允诺过：我们不休止不会休止之物。
+tooltip.thunder_skin.desc2=为了保护我们所知世界的表皮，不息之心无尽地搏动着。
 FragmentLan.noDeath=启让你逃过一劫
 FragmentLan.on=启示之力已就绪
 Anvil.Attack=铸造之力已就绪
@@ -83,6 +85,9 @@ container.bedrock_collector=BedRock Collector
 tile.bedrock_collector.name=BedRock Collector
 tile.cast_machine.name=BedRock Cast
 tile.void_block.name=Void
+tile.ultra_mana_pool.name=Ultra Mana Pool
+
+tile.transcend:ultra_mana_pool.name=Super Pro Plus Ultra Mana Pool
 
 potion.transcend:time_stop=Time Stop
 transcend.kick=The power beyond everything kicks you out

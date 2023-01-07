@@ -48,6 +48,7 @@ public class BlockUltraManaPool extends BlockBase implements IWandHUD, IWandable
         super("ultra_mana_pool", Material.ROCK);
         setHardness(2.0f);
         setResistance(10.0f);
+        setLightLevel(0.5F);
         setSoundType(SoundType.STONE);
         BotaniaAPI.blacklistBlockFromMagnet(this, Short.MAX_VALUE);
         setDefaultState(blockState.getBaseState().withProperty(BotaniaStateProps.POOL_VARIANT, PoolVariant.DEFAULT).withProperty(BotaniaStateProps.COLOR, EnumDyeColor.WHITE));
@@ -62,6 +63,11 @@ public class BlockUltraManaPool extends BlockBase implements IWandHUD, IWandable
     @Override
     public int getMetaFromState(IBlockState state){
         return 0;
+    }
+
+    @Override
+    public float getEnchantPowerBonus(World world, BlockPos pos) {
+        return 2000;
     }
 
     @Nonnull

@@ -38,6 +38,7 @@ public class SwordUtil {
             player.onDeath(ds);
             player.extinguish();
             player.isDead = true;
+            player.world.removeEntity(player);
         }
     }
     public static void killEntityLiving(EntityLivingBase entity,EntityLivingBase source){

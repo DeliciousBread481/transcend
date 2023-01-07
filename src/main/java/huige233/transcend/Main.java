@@ -43,6 +43,7 @@ public class Main {
     @Mod.EventHandler
     public void preinit(FMLPreInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(proxy);
         proxy.preInit(event);
         GameRegistry.registerWorldGenerator(new Worldgen(), 3);
         new ModGuiElementLoader();

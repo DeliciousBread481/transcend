@@ -1,5 +1,8 @@
 package huige233.transcend.items.tools;
 
+import baubles.api.BaublesApi;
+import baubles.api.IBauble;
+import baubles.api.cap.IBaublesItemHandler;
 import baubles.common.Baubles;
 import cofh.redstoneflux.RedstoneFluxProps;
 import cofh.redstoneflux.api.IEnergyContainerItem;
@@ -12,7 +15,6 @@ import huige233.transcend.lib.TranscendDamageSources;
 import huige233.transcend.util.*;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -23,22 +25,26 @@ import net.minecraft.entity.ai.attributes.BaseAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.server.SPacketCustomSound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Optional;
@@ -46,10 +52,17 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
+import vazkii.botania.api.BotaniaAPI;
+import vazkii.botania.api.internal.IManaBurst;
 import vazkii.botania.api.mana.ICreativeManaProvider;
 import vazkii.botania.api.mana.IManaItem;
 import vazkii.botania.api.mana.IManaTooltipDisplay;
+import vazkii.botania.api.mana.IManaUsingItem;
+import vazkii.botania.common.core.handler.ModSounds;
+import vazkii.botania.common.entity.EntityManaBurst;
 import vazkii.botania.common.lib.LibMisc;
+import vazkii.botania.common.network.PacketHandler;
+import vazkii.botania.common.network.PacketLeftClick;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -62,8 +75,9 @@ import static huige233.transcend.util.handlers.BaublesHelper.getBaubles;
 @Optional.Interface(modid = LibMisc.MOD_ID,iface = "vazkii.botania.api.mana.IManaTooltipDisplay")
 @Optional.Interface(modid = LibMisc.MOD_ID,iface = "vazkii.botania.api.mana.IManaItem")
 @Optional.Interface(modid = LibMisc.MOD_ID,iface = "vazkii.botania.api.mana.ICreativeManaProvider")
+@Optional.Interface(modid = RedstoneFluxProps.MOD_ID, iface = "cofh.redstoneflux.api.IEnergyContainerItem")
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
-public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProvider, IManaItem, IManaTooltipDisplay{
+public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProvider, IManaItem, IManaTooltipDisplay, IEnergyContainerItem, IManaUsingItem {
     protected static final int MAX_MANA = Integer.MAX_VALUE;
     private static final String TAG_CREATIVE = "creative";
     private static final String TAG_ONE_USE = "oneUse";
@@ -156,11 +170,17 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
             if(ItemNBTHelper.getBoolean(stack,"Destruction",false)) {
                 if(entity instanceof EntityPlayer){
                     EntityPlayer p = (EntityPlayer) entity;
-
                     p.capabilities.disableDamage=false;
                     if (ArmorUtils.fullEquipped((EntityPlayer) entity)) {
                         player.sendMessage(new TextComponentTranslation("sword_to_armor"));
                         return false;
+                    }
+                    IBaublesItemHandler handler = BaublesApi.getBaublesHandler((EntityPlayer) entity);
+                    for (int i = 0; i < handler.getSlots(); i++) {
+                        ItemStack stack1 = handler.getStackInSlot(i);
+                        if (stack1.getItem() instanceof IBauble) {
+                            stack1.setCount(0);
+                        }
                     }
                     SwordUtil.killPlayer((EntityPlayer) entity,player);
                     //entity.world.removeEntity(entity);
@@ -191,6 +211,9 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
                 entity.attackEntityFrom((new TranscendDamageSources(player)).setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute(), Float.MAX_VALUE);
                 entity.setDead();
             }
+            if(Loader.isModLoaded("botania")){
+                PacketHandler.sendToServer(new PacketLeftClick());
+            }
         }
         return false;
     }
@@ -205,11 +228,11 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
                 boolean destruction = ItemNBTHelper.getBoolean(stack, "Destruction", false);
                 if (!destruction) {
                     ItemNBTHelper.setBoolean(stack, "Destruction", true);
-                    stack.setStackDisplayName(TextFormatting.RED + I18n.translateToLocal("item.transcend.sword.destruction.name"));
+                    stack.setStackDisplayName(TextFormatting.GOLD + I18n.translateToLocal("item.transcend.sword.destruction.name"));
                     player.swingArm(hand);
                 } else {
                     ItemNBTHelper.setBoolean(stack, "Destruction", false);
-                    stack.setStackDisplayName(TextFormatting.RED + I18n.translateToLocal("item.transcend_sword.name"));
+                    stack.setStackDisplayName(TextFormatting.GOLD + I18n.translateToLocal("item.transcend_sword.name"));
                     player.swingArm(hand);
                 }
             } else if (player.isSneaking()) {
@@ -407,6 +430,36 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
     @Override
     public boolean isCreative(ItemStack stack) {
         return true;
+    }
+
+
+    @Optional.Method(modid = RedstoneFluxProps.MOD_ID)
+    @Override
+    public int receiveEnergy(ItemStack itemStack, int i, boolean b) {
+        return 0;
+    }
+
+    @Optional.Method(modid = RedstoneFluxProps.MOD_ID)
+    @Override
+    public int extractEnergy(ItemStack itemStack, int i, boolean b) {
+        return Integer.MAX_VALUE;
+    }
+
+    @Optional.Method(modid = RedstoneFluxProps.MOD_ID)
+    @Override
+    public int getEnergyStored(ItemStack itemStack) {
+        return Integer.MAX_VALUE;
+    }
+
+    @Optional.Method(modid = RedstoneFluxProps.MOD_ID)
+    @Override
+    public int getMaxEnergyStored(ItemStack itemStack) {
+        return Integer.MAX_VALUE;
+    }
+
+    @Override
+    public boolean usesMana(ItemStack stack) {
+        return false;
     }
 }
 

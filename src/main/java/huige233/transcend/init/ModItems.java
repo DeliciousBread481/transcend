@@ -23,7 +23,7 @@ import java.util.List;
 
 public class ModItems {
 
-    public static EnumRarity COSMIC_RARITY = EnumHelper.addRarity("COSMIC", TextFormatting.RED, "Cosmic");
+    public static EnumRarity COSMIC_RARITY = EnumHelper.addRarity("COSMIC", TextFormatting.GOLD, "Cosmic");
     public static final List<Item> ITEMS = new ArrayList<Item>();
     public static final Item TRANSCEND = new ItemBase("transcend", Main.TranscendTab);
     public static final Item FLAWLESS = new ItemBase("flawless", Main.TranscendTab);

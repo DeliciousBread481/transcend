@@ -8,5 +8,6 @@ public class TileEntityHandler {
         GameRegistry.registerTileEntity(TileEntityVirusGenerator.class,new ResourceLocation("transcend:tileEntityVirusGenerator"));
         GameRegistry.registerTileEntity(TileEntityCollerctor.class,new ResourceLocation("transcend:tileEntityCollector"));
         GameRegistry.registerTileEntity(TileCreativeRFSource.class,new ResourceLocation("transcend:TileCreativeRFSource"));
+        GameRegistry.registerTileEntity(TileUltraManaPool.class,new ResourceLocation("transcend:TileUltraManaPool"));
     }
 }
