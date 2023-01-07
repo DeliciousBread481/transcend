@@ -25,7 +25,6 @@ import net.minecraft.entity.ai.attributes.BaseAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
@@ -33,18 +32,14 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.server.SPacketCustomSound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Optional;
@@ -52,14 +47,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
-import vazkii.botania.api.BotaniaAPI;
-import vazkii.botania.api.internal.IManaBurst;
 import vazkii.botania.api.mana.ICreativeManaProvider;
 import vazkii.botania.api.mana.IManaItem;
 import vazkii.botania.api.mana.IManaTooltipDisplay;
 import vazkii.botania.api.mana.IManaUsingItem;
-import vazkii.botania.common.core.handler.ModSounds;
-import vazkii.botania.common.entity.EntityManaBurst;
 import vazkii.botania.common.lib.LibMisc;
 import vazkii.botania.common.network.PacketHandler;
 import vazkii.botania.common.network.PacketLeftClick;
@@ -75,6 +66,7 @@ import static huige233.transcend.util.handlers.BaublesHelper.getBaubles;
 @Optional.Interface(modid = LibMisc.MOD_ID,iface = "vazkii.botania.api.mana.IManaTooltipDisplay")
 @Optional.Interface(modid = LibMisc.MOD_ID,iface = "vazkii.botania.api.mana.IManaItem")
 @Optional.Interface(modid = LibMisc.MOD_ID,iface = "vazkii.botania.api.mana.ICreativeManaProvider")
+@Optional.Interface(modid = LibMisc.MOD_ID,iface = "vazkii.botania.api.mana.IManaUsingItem")
 @Optional.Interface(modid = RedstoneFluxProps.MOD_ID, iface = "cofh.redstoneflux.api.IEnergyContainerItem")
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProvider, IManaItem, IManaTooltipDisplay, IEnergyContainerItem, IManaUsingItem {
@@ -217,8 +209,6 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
         }
         return false;
     }
-
-
 
     @Override
     public @NotNull ActionResult<ItemStack> onItemRightClick(@NotNull World world, EntityPlayer player, @NotNull EnumHand hand) {
@@ -457,6 +447,7 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
         return Integer.MAX_VALUE;
     }
 
+    @Optional.Method(modid = LibMisc.MOD_ID)
     @Override
     public boolean usesMana(ItemStack stack) {
         return false;

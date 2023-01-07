@@ -27,6 +27,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -67,7 +68,9 @@ public class ClientProxy extends CommonProxy {
 
     public void preInit( FMLPreInitializationEvent event )
     {
-        ClientRegistry.bindTileEntitySpecialRenderer(TileUltraManaPool.class,new RenderTileUltraManaPool());
+        if(Loader.isModLoaded("botania")){
+            ClientRegistry.bindTileEntitySpecialRenderer(TileUltraManaPool.class, new RenderTileUltraManaPool());
+        }
         super.preInit(event);
     }
 

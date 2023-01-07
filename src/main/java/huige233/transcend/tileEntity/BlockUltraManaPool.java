@@ -25,6 +25,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import vazkii.botania.api.BotaniaAPI;
@@ -36,11 +37,15 @@ import vazkii.botania.api.state.enums.PoolVariant;
 import vazkii.botania.api.wand.IWandHUD;
 import vazkii.botania.api.wand.IWandable;
 import vazkii.botania.client.core.handler.ModelHandler;
+import vazkii.botania.common.lib.LibMisc;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+@Optional.Interface(modid = LibMisc.MOD_ID,iface = "vazkii.botania.api.wand.IWandHUD")
+@Optional.Interface(modid = LibMisc.MOD_ID,iface = "vazkii.botania.api.wand.IWandable")
+@Optional.Interface(modid = LibMisc.MOD_ID,iface = "vazkii.botania.api.lexicon.ILexiconable")
 public class BlockUltraManaPool extends BlockBase implements IWandHUD, IWandable, ILexiconable, ITileBlock<TileUltraManaPool> {
     private static final AxisAlignedBB AABB = new AxisAlignedBB(0, 0, 0, 1, 0.5, 1);
 

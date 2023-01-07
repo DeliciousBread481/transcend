@@ -3,18 +3,20 @@ package huige233.transcend.init;
 import huige233.transcend.blocks.BlockBase;
 import huige233.transcend.blocks.bedrockorz;
 import huige233.transcend.blocks.voidblock;
-import huige233.transcend.compat.ThaumcraftCompat;
 import huige233.transcend.tileEntity.BlockBedRockCollector;
 import huige233.transcend.tileEntity.BlockCreativeRFSource;
 import huige233.transcend.tileEntity.BlockUltraManaPool;
 import huige233.transcend.tileEntity.BlockVirusGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Mod.EventBusSubscriber
 public class ModBlock {
     public static final List<Block> BLOCKS = new ArrayList<Block>();
     public static final Block TRANSCEND_BLOCK = new BlockBase("transcend_block", Material.ROCK);
@@ -25,5 +27,13 @@ public class ModBlock {
     public static final Block CAST_MACHINE = new BlockVirusGenerator("cast_machine");
     public static final Block NETHER_STAR_BLOCK = new BlockBase("nether_star_block", Material.ROCK).setHardness(5.0F);
     public static final Block CREATIVERFSOURCE = new BlockCreativeRFSource();
-    public static final Block ULTRAMANAPOOL = new BlockUltraManaPool();
+    public static Block ULTRAMANAPOOL = null;
+
+    @SubscribeEvent
+    public static void onBlockRegister(RegistryEvent.Register<Block> event) {
+        if(Loader.isModLoaded("botania")){
+            ULTRAMANAPOOL = new BlockUltraManaPool();
+            event.getRegistry().registerAll(ULTRAMANAPOOL);
+        }
+    }
 }

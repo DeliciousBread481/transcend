@@ -107,6 +107,7 @@ public class ToolWarp extends ItemSword implements IHasModel, ILensEffect {
         return attrib;
     }
 
+    @Optional.Method(modid = LibMisc.MOD_ID)
     @SubscribeEvent
     public void attackEntity(AttackEntityEvent event){
         if(!event.getEntityPlayer().world.isRemote){
@@ -143,11 +144,13 @@ public class ToolWarp extends ItemSword implements IHasModel, ILensEffect {
         return burst;
     }
 
+    @Optional.Method(modid = LibMisc.MOD_ID)
     @Override
     public void apply(ItemStack stack, BurstProperties props) {
 
     }
 
+    @Optional.Method(modid = LibMisc.MOD_ID)
     @Override
     public boolean collideBurst(IManaBurst burst, RayTraceResult pos, boolean isManaBlock, boolean dead, ItemStack stack) {
         return dead;
@@ -190,6 +193,7 @@ public class ToolWarp extends ItemSword implements IHasModel, ILensEffect {
         return r << 16 | g << 8 | b;
     }
 
+    @Optional.Method(modid = LibMisc.MOD_ID)
     @Override
     public boolean doParticles(IManaBurst burst, ItemStack stack) {
         return true;
