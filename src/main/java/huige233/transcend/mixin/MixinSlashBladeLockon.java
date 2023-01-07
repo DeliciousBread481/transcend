@@ -26,7 +26,7 @@ public class MixinSlashBladeLockon {
 //    }
 
     @Inject(method = "faceEntity", at = @At("HEAD"), cancellable = true,remap = false)
-    private static void InjectFaceEntity(EntityLivingBase owner, Entity par1Entity, float par2, float par3, CallbackInfo ci) {
+    private void InjectFaceEntity(EntityLivingBase owner, Entity par1Entity, float par2, float par3, CallbackInfo ci) {
         if (par1Entity instanceof EntityPlayer && ArmorUtils.fullEquipped((EntityPlayer) par1Entity)) {
             TargetEntityId.set(ItemSlashBlade.getItemTagCompound(owner.getHeldItemMainhand()), 0);
             ci.cancel();
