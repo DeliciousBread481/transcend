@@ -101,7 +101,7 @@ public class TileUltraManaPool extends TileMod implements IManaPool, IKeyLocked,
     @Override
     public boolean shouldRefresh(World world, BlockPos pos, @Nonnull IBlockState oldState, @Nonnull IBlockState newState) {
         if (oldState.getBlock() != newState.getBlock()) return true;
-        if (oldState.getBlock() != ModBlock.ULTRAMANAPOOL || newState.getBlock() != ModBlock.ULTRAMANAPOOL) return true;
+        if (oldState.getBlock() != (BlockUltraManaPool)ModBlock.ULTRAMANAPOOL || newState.getBlock() != ModBlock.ULTRAMANAPOOL) return true;
         return oldState.getValue(BotaniaStateProps.POOL_VARIANT) != newState.getValue(BotaniaStateProps.POOL_VARIANT);
     }
 
@@ -352,7 +352,7 @@ public class TileUltraManaPool extends TileMod implements IManaPool, IKeyLocked,
     @SideOnly(Side.CLIENT)
     public void renderHUD(Minecraft mc, ScaledResolution res) {
         {
-            ItemStack pool = new ItemStack(ModBlock.ULTRAMANAPOOL);
+            ItemStack pool = new ItemStack((BlockUltraManaPool)ModBlock.ULTRAMANAPOOL);
             String name = I18n.format(pool.getTranslationKey().replaceAll("tile.", "tile." + Reference.MOD_ID + ":") + ".name");
             int color = 0x4444FF;
             HUDHandler.drawSimpleManaHUD(color, knownMana, MAX_MANA, name, res);

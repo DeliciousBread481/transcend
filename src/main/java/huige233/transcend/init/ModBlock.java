@@ -3,12 +3,14 @@ package huige233.transcend.init;
 import huige233.transcend.blocks.BlockBase;
 import huige233.transcend.blocks.bedrockorz;
 import huige233.transcend.blocks.voidblock;
+import huige233.transcend.compat.ThaumcraftCompat;
 import huige233.transcend.tileEntity.BlockBedRockCollector;
 import huige233.transcend.tileEntity.BlockCreativeRFSource;
 import huige233.transcend.tileEntity.BlockUltraManaPool;
 import huige233.transcend.tileEntity.BlockVirusGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraftforge.fml.common.Loader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,5 +25,5 @@ public class ModBlock {
     public static final Block CAST_MACHINE = new BlockVirusGenerator("cast_machine");
     public static final Block NETHER_STAR_BLOCK = new BlockBase("nether_star_block", Material.ROCK).setHardness(5.0F);
     public static final Block CREATIVERFSOURCE = new BlockCreativeRFSource();
-    public static final BlockUltraManaPool ULTRAMANAPOOL = new BlockUltraManaPool();
+    public static final Block ULTRAMANAPOOL = new BlockUltraManaPool();
 }

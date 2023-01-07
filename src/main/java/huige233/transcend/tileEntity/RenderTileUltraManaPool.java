@@ -30,7 +30,7 @@ public class RenderTileUltraManaPool extends TileEntitySpecialRenderer<TileUltra
     @Override
     public void render(@Nonnull TileUltraManaPool pool, double d0, double d1, double d2, float f, int digProgress, float unused) {
         if(pool != null && (!pool.getWorld().isBlockLoaded(pool.getPos(), false)
-                || pool.getWorld().getBlockState(pool.getPos()).getBlock() != ModBlock.ULTRAMANAPOOL))
+                || pool.getWorld().getBlockState(pool.getPos()).getBlock() != (BlockUltraManaPool)ModBlock.ULTRAMANAPOOL))
             return;
 
         GlStateManager.pushMatrix();
@@ -62,7 +62,7 @@ public class RenderTileUltraManaPool extends TileEntitySpecialRenderer<TileUltra
             int red = (color & 0xFF0000) >> 16;
             int green = (color & 0xFF00) >> 8;
             int blue = color & 0xFF;
-            IBakedModel model = Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getModelForState(pool == null ? ModBlock.ULTRAMANAPOOL.getDefaultState().withProperty(BotaniaStateProps.POOL_VARIANT, forceVariant) : pool.getWorld().getBlockState(pool.getPos()));
+            IBakedModel model = Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getModelForState(pool == null ? ((BlockUltraManaPool)ModBlock.ULTRAMANAPOOL).getDefaultState().withProperty(BotaniaStateProps.POOL_VARIANT, forceVariant) : pool.getWorld().getBlockState(pool.getPos()));
             Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(model, 1.0F, red / 255F, green / 255F, blue / 255F);
         }
 
