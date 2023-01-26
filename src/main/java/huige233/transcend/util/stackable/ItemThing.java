@@ -1,7 +1,6 @@
 package huige233.transcend.util.stackable;
 
-import huige233.transcend.util.NNList;
-import huige233.transcend.util.NNList.NNIterator;
+import huige233.transcend.util.other.NNList;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;

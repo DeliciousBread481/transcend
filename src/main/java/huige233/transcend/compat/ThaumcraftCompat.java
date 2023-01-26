@@ -5,8 +5,8 @@ import baubles.api.BaublesApi;
 import baubles.api.IBauble;
 import baubles.api.cap.IBaublesItemHandler;
 import huige233.transcend.Main;
+import huige233.transcend.items.FireImmune;
 import huige233.transcend.items.ItemBase;
-import huige233.transcend.items.fireimmune;
 import huige233.transcend.util.ItemNBTHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -108,6 +108,6 @@ public class ThaumcraftCompat extends ItemBase implements IBauble, IVisDiscountG
     }
 
     public Entity createEntity(World world,Entity location, ItemStack itemstack) {
-        return new fireimmune(world,location,itemstack);
+        return new FireImmune(world,location,itemstack);
     }
 }

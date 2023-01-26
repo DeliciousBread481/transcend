@@ -1,6 +1,6 @@
 package huige233.transcend.lib;
 
-import huige233.transcend.util.MathHelper;
+import huige233.transcend.util.other.MathHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;

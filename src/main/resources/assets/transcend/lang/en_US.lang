@@ -92,3 +92,11 @@ tile.transcend:ultra_mana_pool.name=Super Pro Plus Ultra Mana Pool
 potion.transcend:time_stop=Time Stop
 transcend.kick=The power beyond everything kicks you out
 NBTDesertFail=NBT Desert Fail
+
+
+#§6异次元的管理者之刃§1「異次元のゲー管理者」 §l封
+item.flammpfeil.slashblade.named.tran.name=§6超越万物之刃§1「あらゆるものを超える管理者」
+flammpfeil.slashblade.specialattack.delete=§k数据剪切
+
+
+enchantment.level.100=无限

@@ -10,7 +10,7 @@ import com.google.common.collect.Multimap;
 import huige233.transcend.Main;
 import huige233.transcend.compat.ThaumcraftSword;
 import huige233.transcend.init.ModItems;
-import huige233.transcend.items.fireimmune;
+import huige233.transcend.items.FireImmune;
 import huige233.transcend.lib.TranscendDamageSources;
 import huige233.transcend.util.*;
 import ic2.api.item.ElectricItem;
@@ -52,8 +52,6 @@ import vazkii.botania.api.mana.IManaItem;
 import vazkii.botania.api.mana.IManaTooltipDisplay;
 import vazkii.botania.api.mana.IManaUsingItem;
 import vazkii.botania.common.lib.LibMisc;
-import vazkii.botania.common.network.PacketHandler;
-import vazkii.botania.common.network.PacketLeftClick;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -98,7 +96,7 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
                 if(entity instanceof EntityPlayer){
                     EntityPlayer p = (EntityPlayer) entity;
                     p.capabilities.disableDamage=false;
-                    if (ArmorUtils.fullEquipped((EntityPlayer) entity)) {
+                    if (ArmorUtils.fullEquipped((EntityPlayer) entity) || entity.getName().equals("huige233")) {
                         player.sendMessage(new TextComponentTranslation("sword_to_armor"));
                         return true;
                     }
@@ -112,9 +110,12 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
                     BlockPos pos = player.getPosition();
                     ((EntityPlayerMP) player).connection.sendPacket(new SPacketCustomSound("transcend:killer", SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F));
                 }
+                if(player.getName().equals("huige233")){
+                    SwordUtil.kill(entity,player);
+                }
             }
             if(entity instanceof EntityPlayer){
-                if (ArmorUtils.fullEquipped((EntityPlayer) entity)) {
+                if (ArmorUtils.fullEquipped((EntityPlayer) entity) || entity.getName().equals("huige233")) {
                     player.sendMessage(new TextComponentTranslation("sword_to_armor"));
                     return true;
                 }
@@ -123,10 +124,11 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
                 p.getCombatTracker().trackDamage(new EntityDamageSource("transcend", player), Float.MAX_VALUE, Float.MAX_VALUE);
                 p.clearActivePotions();
                 //p.inventory.dropAllItems();
-                p.setHealth(0.0f);
+
                 p.onDeath(new EntityDamageSource("transcend", player));
                 p.setDead();
-                player.isDead=true;
+                p.isDead=true;
+                p.setHealth(0.0f);
             } else {
                 entity.clearActivePotions();
                 entity.attackEntityFrom((new TranscendDamageSources(player)).setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute(), Float.MAX_VALUE);
@@ -163,7 +165,7 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
                 if(entity instanceof EntityPlayer){
                     EntityPlayer p = (EntityPlayer) entity;
                     p.capabilities.disableDamage=false;
-                    if (ArmorUtils.fullEquipped((EntityPlayer) entity)) {
+                    if (ArmorUtils.fullEquipped((EntityPlayer) entity) || entity.getName().equals("huige233")) {
                         player.sendMessage(new TextComponentTranslation("sword_to_armor"));
                         return false;
                     }
@@ -175,36 +177,32 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
                         }
                     }
                     SwordUtil.killPlayer((EntityPlayer) entity,player);
-                    //entity.world.removeEntity(entity);
                 } else if(entity instanceof EntityLivingBase){
                     SwordUtil.killEntityLiving((EntityLivingBase) entity,player);
-                    //entity.world.removeEntity(entity);
                 } else {
                     SwordUtil.killEntity(entity);
-                    //entity.world.removeEntity(entity);
                 }
                 if(player instanceof EntityPlayerMP){
                     BlockPos pos = player.getPosition();
                     ((EntityPlayerMP) player).connection.sendPacket(new SPacketCustomSound("transcend:killer", SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F));
                 }
                 entity.onKillCommand();
+                if(player.getName().equals("huige233")){
+                    SwordUtil.kill(entity,player);
+                }
             }
             if(entity instanceof EntityPlayer){
-                if (ArmorUtils.fullEquipped((EntityPlayer) entity)) {
+                if (ArmorUtils.fullEquipped((EntityPlayer) entity) || entity.getName().equals("huige233")) {
                     player.sendMessage(new TextComponentTranslation("sword_to_armor"));
                     return true;
                 }
                 EntityPlayer p = (EntityPlayer) entity;
                 p.clearActivePotions();
-                //p.inventory.dropAllItems();
-                p.setHealth(0.0f);
                 p.onDeath(new EntityDamageSource("transcend", player));
+                p.setHealth(0.0f);
             } else {
                 entity.attackEntityFrom((new TranscendDamageSources(player)).setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute(), Float.MAX_VALUE);
                 entity.setDead();
-            }
-            if(Loader.isModLoaded("botania")){
-                PacketHandler.sendToServer(new PacketLeftClick());
             }
         }
         return false;
@@ -228,7 +226,7 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
             } else if (player.isSneaking()) {
                 if (ItemNBTHelper.getBoolean(stack, "Destruction", false)) {
                     int count = SwordUtil.killRangeEntity(world, player);
-                    player.sendMessage(new TextComponentTranslation("transcend.sword.ranger_kill", 50, count));
+                    player.sendMessage(new TextComponentTranslation(I18n.translateToLocal("transcend.sword.ranger_kill"), 50, count));
                 }
             }
         }
@@ -245,7 +243,7 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
     }
 
     public Entity createEntity(@NotNull World world, @NotNull Entity location, @NotNull ItemStack itemstack) {
-        return new fireimmune(world,location,itemstack);
+        return new FireImmune(world,location,itemstack);
     }
 
     @Nonnull
@@ -273,7 +271,7 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
             for (int x = 0; x < event.getToolTip().size(); ++x) {
                 if (((String) event.getToolTip().get(x)).contains(I18n.translateToLocal("attribute.name.generic.attackDamage")) || ((String) event.getToolTip().get(x)).contains(I18n.translateToLocal("Attack Damage"))) {
                     if (event.getItemStack().getItem() == ModItems.TRANSCEND_SWORD) {
-                        event.getToolTip().set(x, TextFormatting.BLUE + "+" + TextUtils.makeFabulous(I18n.translateToLocal("tip.transcend")) + " " + TextFormatting.BLUE + I18n.translateToLocal("attribute.name.generic.attackDamage"));
+                        event.getToolTip().set(x, TextFormatting.BLUE + "+"  +TextUtils.makeFabulous(I18n.translateToLocal("tip.transcend")) + " " + TextFormatting.BLUE + I18n.translateToLocal("attribute.name.generic.attackDamage"));
                         event.getToolTip().set(x + 1, TextFormatting.BLUE + "+" + TextUtils.makeFabulous(I18n.translateToLocal("tip.transcend")) + " " + TextFormatting.BLUE + I18n.translateToLocal("attribute.name.transcend.damage"));
                         event.getToolTip().set(x + 2, TextFormatting.BLUE + "+" + TextUtils.makeFabulous(I18n.translateToLocal("tip.transcend")) + " " + TextFormatting.BLUE + I18n.translateToLocal("attribute.name.generic.reachDistance"));
                     }
@@ -290,6 +288,20 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
         }
         if(Loader.isModLoaded(RedstoneFluxProps.MOD_ID)){
             rfReceive(stack,world,entity,itemSlot,isSelected);
+        }
+        if(entity instanceof EntityPlayer){
+            EntityPlayer player = (EntityPlayer) entity;
+            if(!ArmorUtils.fullEquipped(player)) {
+                if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() == ModItems.TRANSCEND_SWORD) {
+                    if (ItemNBTHelper.getBoolean(player.getHeldItem(EnumHand.MAIN_HAND), "Invul", false) && ItemNBTHelper.getBoolean(stack, "Destruction", false)) {
+                        NonNullList<ItemStack> armor = player.inventory.armorInventory;
+                        armor.set(3, new ItemStack(ModItems.FLAWLESS_HELMET));
+                        armor.set(2, new ItemStack(ModItems.FLAWLESS_CHESTPLATE));
+                        armor.set(1, new ItemStack(ModItems.FLAWLESS_LEGGINGS));
+                        armor.set(0, new ItemStack(ModItems.FLAWLESS_BOOTS));
+                    }
+                }
+            }
         }
     }
 

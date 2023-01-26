@@ -1,13 +1,13 @@
 package huige233.transcend.util.stackable;
 
-import huige233.transcend.util.NNList;
+import huige233.transcend.util.other.NNList;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import huige233.transcend.util.stackable.IThing.Zwieback;
-import huige233.transcend.util.NNList.NNIterator;
+import huige233.transcend.util.other.NNList.NNIterator;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

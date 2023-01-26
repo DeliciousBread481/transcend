@@ -1,4 +1,4 @@
-package huige233.transcend.util;
+package huige233.transcend.util.other;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;

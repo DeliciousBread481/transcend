@@ -4,8 +4,12 @@ import com.google.common.collect.Multimap;
 import huige233.transcend.Main;
 import huige233.transcend.init.ModBlock;
 import huige233.transcend.init.ModItems;
-import huige233.transcend.items.fireimmune;
-import huige233.transcend.util.*;
+import huige233.transcend.items.FireImmune;
+import huige233.transcend.util.ArmorUtils;
+import huige233.transcend.util.IHasModel;
+import huige233.transcend.util.ItemNBTHelper;
+import huige233.transcend.util.Reference;
+import huige233.transcend.util.other.MathHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -158,7 +162,7 @@ public class ToolPickaxe extends ItemPickaxe implements IHasModel {
     }
 
     public Entity createEntity(World world,Entity location, ItemStack itemstack) {
-        return new fireimmune(world,location,itemstack);
+        return new FireImmune(world,location,itemstack);
     }
 
     public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {

@@ -1,7 +1,7 @@
 package huige233.transcend.util.stackable;
 
-import huige233.transcend.util.NNList;
-import huige233.transcend.util.NullHelper;
+import huige233.transcend.util.other.NNList;
+import huige233.transcend.util.other.NullHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

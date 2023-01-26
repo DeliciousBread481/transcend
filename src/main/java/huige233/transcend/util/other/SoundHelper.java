@@ -1,4 +1,4 @@
-package huige233.transcend.util;
+package huige233.transcend.util.other;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;

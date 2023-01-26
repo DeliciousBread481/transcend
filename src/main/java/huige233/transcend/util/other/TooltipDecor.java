@@ -1,5 +1,7 @@
-package huige233.transcend.util;
+package huige233.transcend.util.other;
 
+import huige233.transcend.util.Reference;
+import huige233.transcend.util.other.GuiHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;

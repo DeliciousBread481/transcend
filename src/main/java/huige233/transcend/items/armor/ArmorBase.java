@@ -6,7 +6,7 @@ import com.google.common.collect.Multimap;
 import huige233.transcend.Main;
 import huige233.transcend.compat.PsiCompat;
 import huige233.transcend.init.ModItems;
-import huige233.transcend.items.fireimmune;
+import huige233.transcend.items.FireImmune;
 import huige233.transcend.lib.TranscendDamageSources;
 import huige233.transcend.util.ArmorUtils;
 import huige233.transcend.util.IHasModel;
@@ -86,6 +86,7 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
                 event.getEntityLiving().setHealth(player.getMaxHealth());
                 event.getEntityLiving().isDead = false;
                 event.getEntityLiving().deathTime = 0;
+                player.preparePlayerToSpawn();
                 player.world.playerEntities.add(player);
                 player.world.onEntityAdded(player);
                 player.world.setEntityState(event.getEntityLiving(), (byte) 35);
@@ -144,7 +145,6 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
         }
     }
 
-
     @Override
     public void onArmorTick(@NotNull World world, @NotNull EntityPlayer player, @NotNull ItemStack itemStack) {
         if (this.armorType == EntityEquipmentSlot.HEAD) {
@@ -175,6 +175,7 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
         if (ArmorUtils.fullEquipped(player)) {
             player.setEntityInvulnerable(true);
             player.capabilities.disableDamage=true;
+            //player.noClip=player.capabilities.isFlying;   player.setNoGravity(true);
             player.setHealth(player.getMaxHealth());
             if(player.getAbsorptionAmount()<1000){
                 player.setAbsorptionAmount(2000);
@@ -292,7 +293,7 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
     }
 
     public Entity createEntity(World world,Entity location, ItemStack itemstack) {
-        return new fireimmune(world,location,itemstack);
+        return new FireImmune(world,location,itemstack);
     }
 
     @SideOnly(Side.CLIENT)

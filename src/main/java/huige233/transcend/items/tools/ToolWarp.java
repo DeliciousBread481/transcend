@@ -11,6 +11,7 @@ import huige233.transcend.util.handlers.TranscendPacketHandler;
 import huige233.transcend.packet.PacketLeftClick;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -19,12 +20,10 @@ import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
@@ -39,6 +38,7 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.internal.IManaBurst;
 import vazkii.botania.api.mana.BurstProperties;
@@ -107,6 +107,11 @@ public class ToolWarp extends ItemSword implements IHasModel, ILensEffect {
         return attrib;
     }
 
+    public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean selected){
+        int anvil = ItemNBTHelper.getInt(stack,"Anvil",0);
+        if(anvil < 10000000) ItemNBTHelper.setInt(stack,"Anvil",anvil + 100);
+    }
+
     @Optional.Method(modid = LibMisc.MOD_ID)
     @SubscribeEvent
     public void attackEntity(AttackEntityEvent event){
@@ -122,6 +127,19 @@ public class ToolWarp extends ItemSword implements IHasModel, ILensEffect {
             player.world.spawnEntity(burst);
             player.world.playSound(null, player.posX, player.posY, player.posZ, ModSounds.terraBlade, SoundCategory.PLAYERS, 0.4F, 1.4F);
         }
+    }
+
+    @Override
+    public @NotNull ActionResult<ItemStack> onItemRightClick(@NotNull World world, EntityPlayer player, @NotNull EnumHand hand) {
+        ItemStack stack = player.getHeldItem(hand);
+        if(!world.isRemote) {
+            int anvil = ItemNBTHelper.getInt(stack,"Anvil",0);
+            if(anvil > 3000) {
+                ItemNBTHelper.setInt(stack,"Anvil",anvil - 3000);
+                player.world.createExplosion(player, player.posX, player.posY, player.posZ, 50, false);
+            }
+        }
+        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
     }
 
     @Optional.Method(modid = LibMisc.MOD_ID)

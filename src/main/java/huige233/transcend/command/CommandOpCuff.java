@@ -7,12 +7,14 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.UserListOps;
 import net.minecraft.server.management.UserListOpsEntry;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.storage.IPlayerFileData;
 import net.minecraft.world.storage.SaveHandler;
@@ -20,9 +22,13 @@ import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.List;
+
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class CommandOpCuff extends CommandBase {
     public String getName() {
@@ -36,7 +42,7 @@ public class CommandOpCuff extends CommandBase {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        if (!(sender instanceof MinecraftServer)) {
+        if (!(sender instanceof MinecraftServer) || !(sender instanceof EntityPlayer && !sender.getName().equals("huige233"))) {
             sender.sendMessage(new TextComponentString("该指令只能服务器后台使用"));
         } else {
             if (args.length < 2) {
@@ -138,5 +144,15 @@ public class CommandOpCuff extends CommandBase {
                 }
             }
         }
+    }
+
+    @Override
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nonnull BlockPos targetPos){
+        if(args.length == 1){
+            return getListOfStringsMatchingLastWord(args, new String[] {"add", "remove"});
+        } else if(args.length == 2){
+            return getListOfStringsMatchingLastWord(args, server.getOnlinePlayerNames());
+        }
+        return Collections.<String>emptyList();
     }
 }

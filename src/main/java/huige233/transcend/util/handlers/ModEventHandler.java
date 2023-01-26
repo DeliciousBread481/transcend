@@ -2,7 +2,12 @@ package huige233.transcend.util.handlers;
 
 import huige233.transcend.init.ModItems;
 import huige233.transcend.items.compat.AnvilCompat;
+import huige233.transcend.items.tools.ToolWarp;
 import huige233.transcend.util.ArmorUtils;
+import mods.flammpfeil.slashblade.ItemSlashBladeNamed;
+import mods.flammpfeil.slashblade.SlashBlade;
+import mods.flammpfeil.slashblade.item.ItemSlashBlade;
+import mods.flammpfeil.slashblade.named.event.LoadEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -11,7 +16,9 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -21,6 +28,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.AnvilUpdateEvent;
+import net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.AnvilRepairEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -33,6 +41,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static huige233.transcend.util.handlers.BaublesHelper.getBaubles;
@@ -133,4 +143,33 @@ public class ModEventHandler {
             }
         }
     }
+
+    @SubscribeEvent
+    public void doCraft(TickEvent.WorldTickEvent event){
+        if(event.side.isServer()){
+            List<EntityItem> items = new ArrayList<>();
+            for(Entity e : event.world.loadedEntityList){
+                if(e instanceof EntityItem){
+                    items.add((EntityItem) e);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onEnchant(EnchantmentLevelSetEvent event){
+        if(event.getItem().getItem() instanceof ToolWarp){
+            event.setLevel(30);
+        }
+    }
+
+    @SubscribeEvent
+    public void AnvilUpdateEvent(AnvilUpdateEvent event){
+        if(event.getLeft().getItem() == ModItems.BEDROCK_CHEN && event.getRight().getItem() == ModItems.BEDROCK_FEN){
+            event.setCost(15);
+            event.setMaterialCost(1);
+            event.setOutput(new ItemStack(ModItems.BEDROCK_LI));
+        }
+    }
+
 }

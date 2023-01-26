@@ -3,7 +3,7 @@ package huige233.transcend.items.tools;
 import WayofTime.bloodmagic.BloodMagic;
 import huige233.transcend.Main;
 import huige233.transcend.init.ModItems;
-import huige233.transcend.items.fireimmune;
+import huige233.transcend.items.FireImmune;
 import huige233.transcend.util.IHasModel;
 import huige233.transcend.util.ItemNBTHelper;
 import huige233.transcend.util.SoulNetWorkUtil;
@@ -51,7 +51,7 @@ public class ToolAxe extends ItemAxe implements IHasModel {
     }
 
     public Entity createEntity(World world,Entity location, ItemStack itemstack) {
-        return new fireimmune(world,location,itemstack);
+        return new FireImmune(world,location,itemstack);
     }
 
     public void onUpdate(ItemStack tool,World world,Entity entity,int itemSlot,boolean isSelected){

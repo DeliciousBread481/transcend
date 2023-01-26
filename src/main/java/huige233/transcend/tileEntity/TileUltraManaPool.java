@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.google.common.base.Predicates;
 import huige233.transcend.init.ModBlock;
-import huige233.transcend.util.IHUDRenderable;
+import huige233.transcend.util.other.IHUDRenderable;
 import huige233.transcend.util.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -46,7 +46,6 @@ import vazkii.botania.api.recipe.RecipeManaInfusion;
 import vazkii.botania.api.state.BotaniaStateProps;
 import vazkii.botania.client.core.handler.HUDHandler;
 import vazkii.botania.client.core.helper.RenderHelper;
-import vazkii.botania.client.lib.LibResources;
 import vazkii.botania.common.Botania;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.block.tile.TileMod;
@@ -108,7 +107,7 @@ public class TileUltraManaPool extends TileMod implements IManaPool, IKeyLocked,
     @Override
     public boolean isFull() {
         Block block = world.getBlockState(pos.down()).getBlock();
-        return block != ModBlocks.manaVoid && getCurrentMana() >= MAX_MANA;
+        return block != ModBlocks.manaVoid && getCurrentMana() == MAX_MANA;
     }
 
     @Override

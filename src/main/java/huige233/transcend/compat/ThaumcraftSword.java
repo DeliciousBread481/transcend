@@ -35,7 +35,7 @@ public class ThaumcraftSword{
                 ThaumcraftApi.internalMethods.addWarpToPlayer(t, 3, EnumWarpType.TEMPORARY);
                 stack.damageItem(1, a);
             }
-            if(r.nextDouble() < 0.2) {
+            if(r.nextDouble() > 0.8) {
                 ThaumcraftApi.internalMethods.addWarpToPlayer(a, 3, EnumWarpType.NORMAL);
             }
             if(r.nextDouble()<0.5) {

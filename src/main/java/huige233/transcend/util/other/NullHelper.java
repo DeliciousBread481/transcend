@@ -1,4 +1,6 @@
-package huige233.transcend.util;
+package huige233.transcend.util.other;
+
+import huige233.transcend.util.other.NNList;
 
 import java.util.function.Supplier;
 

@@ -1,6 +1,6 @@
 package huige233.transcend.util.handlers;
 
-import huige233.transcend.util.MathHelper;
+import huige233.transcend.util.other.MathHelper;
 import huige233.transcend.util.Vector.Vector3d;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

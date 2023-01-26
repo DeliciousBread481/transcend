@@ -8,7 +8,7 @@ import huige233.transcend.items.ItemBase;
 import huige233.transcend.util.IHasModel;
 import static huige233.transcend.util.handlers.BaublesHelper.getBaubles;
 
-import huige233.transcend.util.TravelController;
+import huige233.transcend.util.other.TravelController;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
 import net.minecraft.creativetab.CreativeTabs;

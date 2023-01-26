@@ -28,7 +28,7 @@ public class TiCConfig {
     public static final AbstractTrait transcendtratt =  new TraitTranscend();
     public static final List<Material> materials = Lists.newArrayList();
     public static Material flawless = mat("flawless", 0x777777);
-    public static final Material transcend = mat("transcend",0xF8F8FF);
+    public static Material transcend = mat("transcend",0xF8F8FF);
     private static Material mat(String name, int color) {
         if (TinkerRegistry.getMaterial(name) == TinkerRegistry.getMaterial("unknown")){
             Material mat = new Material(name, color);

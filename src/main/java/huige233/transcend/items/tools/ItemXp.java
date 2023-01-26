@@ -2,8 +2,8 @@ package huige233.transcend.items.tools;
 
 import huige233.transcend.Main;
 import huige233.transcend.init.ModItems;
+import huige233.transcend.items.FireImmune;
 import huige233.transcend.items.ItemBase;
-import huige233.transcend.items.fireimmune;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,7 +29,7 @@ public class ItemXp extends ItemBase {
     }
 
     public Entity createEntity(World world, Entity location,ItemStack stack){
-        return new fireimmune(world,location,stack);
+        return new FireImmune(world,location,stack);
     }
 
     public EnumRarity  getRarity(ItemStack stack){

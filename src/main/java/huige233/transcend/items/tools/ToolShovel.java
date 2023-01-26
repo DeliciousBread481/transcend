@@ -2,7 +2,7 @@ package huige233.transcend.items.tools;
 
 import huige233.transcend.Main;
 import huige233.transcend.init.ModItems;
-import huige233.transcend.items.fireimmune;
+import huige233.transcend.items.FireImmune;
 import huige233.transcend.util.IHasModel;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -34,7 +34,7 @@ public class ToolShovel extends ItemSpade implements IHasModel {
     }
 
     public Entity createEntity(World world,Entity location, ItemStack itemstack) {
-        return new fireimmune(world,location,itemstack);
+        return new FireImmune(world,location,itemstack);
     }
 
     public EnumRarity getRarity(ItemStack stack )

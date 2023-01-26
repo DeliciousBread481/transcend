@@ -49,7 +49,7 @@ public class RenderBlinkEffect {
                 GlStateManager.color(1, 1, 1, alpha);
                 GlStateManager.disableAlpha();
 
-               TranscendClientEventHandler.renderScreenOverlay(event.getResolution(), TEXTURE);
+                TranscendClientEventHandler.renderScreenOverlay(event.getResolution(), TEXTURE);
 
                 GlStateManager.enableAlpha();
                 GlStateManager.color(1, 1, 1, 1);

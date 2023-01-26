@@ -38,17 +38,10 @@ public class EnchantmentFLAWLESSEnchantment extends Enchantment {
     protected boolean canApplyTogether(Enchantment ench) {
         return super.canApplyTogether(ench) && ench != Enchantments.THORNS;
     }
-    public static boolean shouldHit(int level, Random rnd){
-            return true;
-    }
 
     public void onUserHurt(EntityLivingBase user, Entity attacker, int level){
-        Random random = user.getRNG();
-        if(shouldHit(level,random)){
-            if(attacker != null) {
-                //attacker.attackEntityFrom(DamageSource.causeMobDamage(user), hp*10.0f);
-                attacker.attackEntityFrom(new TranscendDamageSources(user).setDamageAllowedInCreativeMode().setDamageIsAbsolute(), Float.MAX_VALUE);
-            }
+        if(user != null) {
+            attacker.attackEntityFrom(new TranscendDamageSources(user).setDamageAllowedInCreativeMode().setDamageIsAbsolute().setDamageBypassesArmor(),Float.MAX_VALUE);
         }
     }
 }

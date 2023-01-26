@@ -4,7 +4,7 @@ import huige233.transcend.Main;
 import huige233.transcend.init.ModItems;
 import huige233.transcend.init.TranscendPotions;
 import huige233.transcend.util.EntityUtils;
-import huige233.transcend.util.ISyncedPotion;
+import huige233.transcend.util.handlers.ISyncedPotion;
 import huige233.transcend.util.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -51,9 +51,9 @@ public class TimeStopEffect extends effectbase implements ISyncedPotion {
                 if (entity.onGround) entity.motionY = 0;
             }
             if (entity.updateBlocked) {
-                double x = entity.posX + entity.motionX * 1d / (double) interval;
-                double y = entity.posY + entity.motionY * 1d / (double) interval;
-                double z = entity.posZ + entity.motionZ * 1d / (double) interval;
+                double x = entity.posX + entity.motionX / (double) interval;
+                double y = entity.posY + entity.motionY / (double) interval;
+                double z = entity.posZ + entity.motionZ / (double) interval;
 
                 entity.prevPosX = entity.posX;
                 entity.prevPosY = entity.posY;
@@ -63,13 +63,13 @@ public class TimeStopEffect extends effectbase implements ISyncedPotion {
                 entity.posY = y;
                 entity.posZ = z;
             } else {
-                entity.posX += entity.motionX * 1d / (double) interval;
-                entity.posY += entity.motionY * 1d / (double) interval;
-                entity.posZ += entity.motionZ * 1d / (double) interval;
+                entity.posX += entity.motionX / (double) interval;
+                entity.posY += entity.motionY / (double) interval;
+                entity.posZ += entity.motionZ / (double) interval;
 
-                double x = entity.posX - entity.motionX * 1d / (double) interval;
-                double y = entity.posY - entity.motionY * 1d / (double) interval;
-                double z = entity.posZ - entity.motionZ * 1d / (double) interval;
+                double x = entity.posX - entity.motionX / (double) interval;
+                double y = entity.posY - entity.motionY / (double) interval;
+                double z = entity.posZ - entity.motionZ / (double) interval;
 
                 entity.prevPosX = x;
                 entity.prevPosY = y;

@@ -1,4 +1,4 @@
-package huige233.transcend.util;
+package huige233.transcend.util.handlers;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;

@@ -1,6 +1,6 @@
 package huige233.transcend.util.stackable;
 
-import huige233.transcend.util.NNList;
+import huige233.transcend.util.other.NNList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.block.Block;

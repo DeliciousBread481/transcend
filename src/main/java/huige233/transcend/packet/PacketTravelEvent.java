@@ -1,7 +1,7 @@
 package huige233.transcend.packet;
 
 import huige233.transcend.event.TeleportEntityEvent;
-import huige233.transcend.util.NullHelper;
+import huige233.transcend.util.other.NullHelper;
 import huige233.transcend.util.Vector.Vector3d;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
