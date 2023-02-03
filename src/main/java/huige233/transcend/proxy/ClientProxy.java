@@ -1,6 +1,7 @@
 package huige233.transcend.proxy;
 
 import huige233.transcend.effect.TimeStopEffect;
+import huige233.transcend.entity.BoltRegistry;
 import huige233.transcend.lib.HeartRenderHandler;
 import huige233.transcend.packet.PacketEndTimeStop;
 import huige233.transcend.render.RenderBlinkEffect;

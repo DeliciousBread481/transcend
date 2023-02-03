@@ -13,6 +13,7 @@ import huige233.transcend.util.IHasModel;
 import huige233.transcend.util.ItemNBTHelper;
 import huige233.transcend.util.Reference;
 import huige233.transcend.util.handlers.EnergeticHandler;
+import huige233.transcend.util.handlers.ModEventHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -190,6 +191,7 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
                 player.world.playerEntities.add(player);
                 player.world.onEntityAdded(player);
                 player.isDead=false;
+                player.deathTime=0;
             }
             player.inventoryContainer.detectAndSendChanges();
         } else if(!ArmorUtils.fullEquipped(player)) {
@@ -209,6 +211,7 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
                     player.world.playerEntities.add(player);
                     player.world.onEntityAdded(player);
                     player.isDead=false;
+                    player.deathTime=0;
                 }
             }
         }

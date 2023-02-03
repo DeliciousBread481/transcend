@@ -4,10 +4,9 @@ import huige233.transcend.Main;
 import huige233.transcend.compat.slash.Delete;
 import huige233.transcend.compat.slash.SlashUpdateEvent;
 import mods.flammpfeil.slashblade.ItemSlashBladeNamed;
-import mods.flammpfeil.slashblade.SlashBlade;
 import mods.flammpfeil.slashblade.item.ItemSlashBlade;
+import mods.flammpfeil.slashblade.specialeffect.SpecialEffects;
 import net.minecraft.client.Minecraft;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,7 +29,7 @@ public class TranscendSlash extends ItemSlashBladeNamed {
         this.firstload = false;
         setMaxDamage(40);
         setTranslationKey("flammpfeil.slashblade.named");
-        setCreativeTab(Main.TranscendTab);
+        //setCreativeTab(Main.TranscendTab);
     }
 
     public void onUpdate(ItemStack stack, World world, Entity entity, int i, boolean b){
@@ -39,10 +38,12 @@ public class TranscendSlash extends ItemSlashBladeNamed {
         if(entity instanceof EntityPlayer) this.isUsing = false;
         ItemSlashBlade.specialAttacks.put(Integer.valueOf(678),new Delete());
         NBTTagCompound tag = stack.getTagCompound();
+        tag.setInteger("HideFlags",6);
         ItemSlashBladeNamed.NamedBlades.add("flammpfeil.slashblade.named.tran");
         ItemSlashBladeNamed.CurrentItemName.set(tag, "flammpfeil.slashblade.named.tran");
         ItemSlashBladeNamed.CustomMaxDamage.set(tag, Integer.valueOf(32767));
         ItemSlashBladeNamed.IsDefaultBewitched.set(tag, Boolean.valueOf(true));
+        ItemSlashBlade.SummonedSwordColor.set(tag, 0x4091FF);
         ItemSlashBlade.setBaseAttackModifier(tag, 32767.0F);
         ItemSlashBlade.SpecialAttackType.set(tag, Integer.valueOf(678));
         ItemSlashBlade.TextureName.set(tag, "named/transcend/texture");
@@ -50,11 +51,14 @@ public class TranscendSlash extends ItemSlashBladeNamed {
         ItemSlashBlade.RepairCount.set(tag, Integer.valueOf(100000));
         ItemSlashBlade.KillCount.set(tag, Integer.valueOf(1000000));
         ItemSlashBlade.ProudSoul.set(tag, Integer.valueOf(1000000));
+        SpecialEffects.addEffect(stack, "SETranscend",1000);
         if(!this.firstload){
             this.firstload = true;
             stack.setTagCompound(tag);
         }
-        if (EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, stack) <= 0) stack.addEnchantment(Enchantments.INFINITY, 100);
+        if (EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, stack) <= 0) stack.addEnchantment(Enchantments.INFINITY, 127);
+        if (EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER, stack) <= 0) stack.addEnchantment(Enchantments.POWER, 127);
+        if(EnchantmentHelper.getEnchantmentLevel(Enchantments.PUNCH, stack) <= 0) stack.addEnchantment(Enchantments.PUNCH, 127);
         tag.setBoolean("Unbreakable", true);
     }
 
@@ -77,6 +81,7 @@ public class TranscendSlash extends ItemSlashBladeNamed {
         if (player.getActivePotionEffect(potion) != null)
             player.removePotionEffect(potion);
     }
+
 
     public void setDamage(ItemStack itemStack, int Damage) {
         super.setDamage(itemStack, 0);

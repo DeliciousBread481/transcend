@@ -95,8 +95,12 @@ NBTDesertFail=NBT Desert Fail
 
 
 #§6异次元的管理者之刃§1「異次元のゲー管理者」 §l封
-item.flammpfeil.slashblade.named.tran.name=§6超越万物之刃§1「あらゆるものを超える管理者」
-flammpfeil.slashblade.specialattack.delete=§k数据剪切
+item.flammpfeil.slashblade.named.tran.name=§6超越万物之刃§b「あらゆるものを超える管理者」
+flammpfeil.slashblade.specialattack.delete=§6Delete
 
+flammpfeil.slashblade.named.stredgeuniverse=§c宇§6宙§e最§2强§b之§3刃§1「万物终结·无尽星空」
+item.flammpfeil.slashblade.named.stredgeuniverse.name=§c宇§6宙§e最§2强§b之§3刃§1「万物终结·无尽星空」
+flammpfeil.slashblade.specialattack.meteoritesword=§4终焉·陨星键
 
-enchantment.level.100=无限
+enchantment.level.127=§bInfinity
+slashblade.seffect.name.SETranscend=§c超§6越§e万§2物

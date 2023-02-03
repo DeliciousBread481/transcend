@@ -14,7 +14,7 @@ public class TranscendDamageSources extends EntityDamageSource{
             this.setDamageAllowedInCreativeMode();
             this.setDamageBypassesArmor();
             this.setDamageIsAbsolute();
-            this.setMagicDamage();
+            this.isUnblockable();
         }
     @Override
     public ITextComponent getDeathMessage(EntityLivingBase entity) {

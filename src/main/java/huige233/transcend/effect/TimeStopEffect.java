@@ -48,7 +48,7 @@ public class TimeStopEffect extends effectbase implements ISyncedPotion {
             entity.updateBlocked = time_stop || host.ticksExisted % interval != 0;
 
             if (!time_stop && entity.world.isRemote) {
-                if (entity.onGround) entity.motionY = 0;
+                if (entity.onGround) entity.motionY = -0.0D;
             }
             if (entity.updateBlocked) {
                 double x = entity.posX + entity.motionX / (double) interval;

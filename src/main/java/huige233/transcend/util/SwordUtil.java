@@ -1,10 +1,11 @@
 package huige233.transcend.util;
 
 import com.mojang.authlib.GameProfile;
+import huige233.transcend.entity.EntityLightningRainbow;
+import huige233.transcend.util.handlers.ModEventHandler;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryEnderChest;
@@ -16,7 +17,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,10 +75,11 @@ public class SwordUtil {
         list.remove(entity);
         for(Entity en : list) {
             BlockPos pos = en.getPosition();
-            world.addWeatherEffect(new EntityLightningBolt(world,pos.getX(),pos.getY(),pos.getZ(),false));
-            world.addWeatherEffect(new EntityLightningBolt(world,pos.getX(),pos.getY(),pos.getZ(),false));
-            world.addWeatherEffect(new EntityLightningBolt(world,pos.getX(),pos.getY(),pos.getZ(),false));
-            world.addWeatherEffect(new EntityLightningBolt(world,pos.getX(),pos.getY(),pos.getZ(),false));
+            world.spawnEntity(new EntityLightningRainbow(world,pos.getX(),pos.getY(),pos.getZ(),false));
+            world.spawnEntity(new EntityLightningRainbow(world,pos.getX(),pos.getY(),pos.getZ(),false));
+            world.spawnEntity(new EntityLightningRainbow(world,pos.getX(),pos.getY(),pos.getZ(),false));
+            world.spawnEntity(new EntityLightningRainbow(world,pos.getX(),pos.getY(),pos.getZ(),false));
+            world.spawnEntity(new EntityLightningRainbow(world,pos.getX(),pos.getY(),pos.getZ(),false));
             if(en instanceof EntityPlayer){
                 if((ArmorUtils.fullEquipped((EntityPlayer) en))){
                     list.remove(en);
@@ -116,7 +117,7 @@ public class SwordUtil {
         List<Entity> entitylist = new ArrayList();
         if (target instanceof EntityLivingBase) {
             Class<? extends EntityLivingBase> clazz = ((EntityLivingBase) target).getClass();
-            WorldEvent.antiEntity.add(clazz);
+            ModEventHandler.antiEntity.add(clazz);
         }
 
         entitylist.add(target);
@@ -148,7 +149,7 @@ public class SwordUtil {
 
         if (target instanceof EntityLivingBase) {
             Class<? extends EntityLivingBase> clazz = ((EntityLivingBase) target).getClass();
-            WorldEvent.antiEntity.remove(clazz);
+            ModEventHandler.antiEntity.remove(clazz);
         }
     }
 }

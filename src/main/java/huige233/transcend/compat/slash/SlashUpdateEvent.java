@@ -48,44 +48,46 @@ public class SlashUpdateEvent {
     public void onTick(TickEvent.PlayerTickEvent event){
         if(event.player == null) return;
     }
-
-    @SubscribeEvent
-    public void onUpdate(MinecartUpdateEvent event) {
-        if (event.getEntity() == null)
-            return;
-        Entity entity = event.getEntity();
-        if (isTimestop() &&
-                entity instanceof EntityLivingBase && !hasBlade((EntityLivingBase)entity))
-            event.setCanceled(true);
-        if (isTimestop())
-            if (canStop(entity)) {
-                if (entity.ticksExisted > 2) {
-                    entity.ticksExisted--;
-                    entity.posX = entity.prevPosX;
-                    entity.posY = entity.prevPosY;
-                    entity.posZ = entity.prevPosZ;
-                    entity.rotationYaw = entity.prevRotationYaw;
-                    entity.rotationPitch = entity.prevRotationPitch;
-                    if (!entity.onGround)
-                        if (entity.world.isRemote) {
-                            entity.motionY = -0.0D;
-                        } else {
-                            entity.motionY = -0.0D;
-                        }
-                    entity.motionX = 0.0D;
-                    entity.motionZ = 0.0D;
-                    entity.fallDistance -= 0.076865F;
-                    if (entity instanceof EntityLivingBase) {
-                        EntityLivingBase living = (EntityLivingBase)entity;
-                        living.rotationYawHead = living.prevRotationYawHead;
-                        if (living instanceof net.minecraft.entity.passive.EntityTameable)
-                            living.motionY -= 1.0E-6D;
-                    }
-                }
+    /*
+        @SubscribeEvent
+        public void onUpdate(MinecartUpdateEvent event) {
+            if (event.getEntity() == null)
+                return;
+            Entity entity = event.getEntity();
+            if (isTimestop() &&
+                    entity instanceof EntityLivingBase && !hasBlade((EntityLivingBase)entity))
                 event.setCanceled(true);
-            }
-    }
+            if (isTimestop())
+                if (canStop(entity)) {
+                    if (entity.ticksExisted > 2) {
+                        entity.ticksExisted--;
+                        entity.posX = entity.prevPosX;
+                        entity.posY = entity.prevPosY;
+                        entity.posZ = entity.prevPosZ;
+                        entity.rotationYaw = entity.prevRotationYaw;
+                        entity.rotationPitch = entity.prevRotationPitch;
+                        if (!entity.onGround)
+                            if (entity.world.isRemote) {
+                                entity.motionY = -0.0D;
+                            } else {
+                                entity.motionY = -0.0D;
+                            }
+                        entity.motionX = 0.0D;
+                        entity.motionZ = 0.0D;
+                        entity.fallDistance -= 0.076865F;
+                        if (entity instanceof EntityLivingBase) {
+                            EntityLivingBase living = (EntityLivingBase)entity;
+                            living.rotationYawHead = living.prevRotationYawHead;
+                            if (living instanceof net.minecraft.entity.passive.EntityTameable)
+                                living.motionY -= 1.0E-6D;
+                        }
+                    }
+                    event.setCanceled(true);
+                }
+        }
 
+
+     */
     @SubscribeEvent
     public void onUpdate(LivingEvent.LivingUpdateEvent event) {
         if (event.getEntity() == null)

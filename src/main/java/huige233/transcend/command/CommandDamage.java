@@ -34,18 +34,18 @@ public class CommandDamage extends CommandBase {
             DamageSource damageSource = player == null ? new DamageSource("OUT_OF_WORLD") : new EntityDamageSource("OUT_OF_WORLD",player);
             EntityLivingBase e = (EntityLivingBase) entity;
             e.getCombatTracker().trackDamage(damageSource,10,10);
+        } else if(args.length == 2){
+            Entity entity = getEntity(server,sender,args[0]);
+            EntityPlayer player = getCommandSenderAsPlayer(sender);
+            EntityLivingBase e = (EntityLivingBase) entity;
+            DamageSource damageSource = player == null ? new DamageSource(args[2]) : new EntityDamageSource(args[3],player);
+            e.getCombatTracker().trackDamage(damageSource,10,10);
         } else if(args.length == 3){
             Entity entity = getEntity(server,sender,args[0]);
             EntityPlayer player = getCommandSenderAsPlayer(sender);
             EntityLivingBase e = (EntityLivingBase) entity;
-            DamageSource damageSource = player == null ? new DamageSource(args[3]) : new EntityDamageSource(args[3],player);
-            e.getCombatTracker().trackDamage(damageSource,10,10);
-        } else if(args.length == 4){
-            Entity entity = getEntity(server,sender,args[0]);
-            EntityPlayer player = getCommandSenderAsPlayer(sender);
-            EntityLivingBase e = (EntityLivingBase) entity;
-            DamageSource damageSource = player == null ? new DamageSource(args[3]) : new EntityDamageSource(args[3],player);
-            float i = (float) parseDouble(args[4]);
+            DamageSource damageSource = player == null ? new DamageSource(args[2]) : new EntityDamageSource(args[2],player);
+            float i = (float) parseDouble(args[3]);
             e.getCombatTracker().trackDamage(damageSource,i,i);
         }
     }

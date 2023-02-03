@@ -4,7 +4,6 @@ import huige233.transcend.Main;
 import huige233.transcend.init.ModItems;
 import huige233.transcend.items.FireImmune;
 import huige233.transcend.util.IHasModel;
-import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,10 +15,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -70,14 +66,5 @@ public class ToolHoe extends ItemHoe implements IHasModel {
             }
         }
         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
-    }
-
-    @SubscribeEvent
-    public static void onKeyPressed(InputEvent.KeyInputEvent event){
-        EntityPlayer player =  Minecraft.getMinecraft().player;
-        Vec3d look = player.getLookVec();
-        player.motionX = look.x;
-        player.motionZ = look.z;
-
     }
 }
