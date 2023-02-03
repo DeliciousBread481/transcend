@@ -79,42 +79,11 @@ public class CommonProxy {
         BoltRegistry.registerBolt();
     }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void load(LoadEvent.InitEvent event) {
-        if(Loader.isModLoaded("flammpfeil.slashblade") && a) {
-            ItemStack blade = new ItemStack((Item)SlashBlade.bladeNamed, 1, 0);
-            String name = "flammpfeil.slashblade.named.tran";
-            ItemStack tran = new ItemStack(LoaderSlash.tran, 1, 0);
-            NBTTagCompound tag = new NBTTagCompound();
-            tag.setInteger("HideFlags",6);
-            ItemSlashBladeNamed.CurrentItemName.set(tag, name);
-            ItemSlashBladeNamed.CustomMaxDamage.set(tag, Integer.valueOf(32767));
-            ItemSlashBladeNamed.IsDefaultBewitched.set(tag, Boolean.valueOf(true));
-            ItemSlashBladeNamed.NamedBlades.add("flammpfeil.slashblade.named.tran");
-            ItemSlashBlade.setBaseAttackModifier(tag, 32767.0F);
-            ItemSlashBlade.SpecialAttackType.set(tag, Integer.valueOf(678));
-            ItemSlashBlade.TextureName.set(tag, "named/transcend/texture");
-            ItemSlashBlade.ModelName.set(tag, "named/transcend/model");
-            ItemSlashBlade.RepairCount.set(tag, Integer.valueOf(100000));
-            ItemSlashBlade.KillCount.set(tag, Integer.valueOf(1000000));
-            ItemSlashBlade.ProudSoul.set(tag, Integer.valueOf(1000000));
-            SpecialEffects.addEffect(blade, "SETranscend",1000);
-            tag.setBoolean("Unbreakable", true);
-            tran.setTagCompound(tag);
-            tran.addEnchantment(Enchantments.INFINITY, 127);
-            tran.addEnchantment(Enchantments.POWER, 127);
-            tran.addEnchantment(Enchantments.PUNCH, 127);
-            SlashBlade.registerCustomItemStack(name, tran);
-            a = false;
-        }
-    }
-
     public void init( FMLInitializationEvent event )
     {
         if(Loader.isModLoaded("flammpfeil.slashblade")) EntityRegistry.registerModEntity(new ResourceLocation("transcend", "Delete"), EntityDelete.class, "Delete", 30, Main.instance, 250, 200, true);
         if(Loader.isModLoaded("conarm")) conarmConfig.setup();
         EntityRegistry.registerModEntity(new ResourceLocation("transcend", "LightningRainbow"), EntityLightningRainbow.class, "LightningRainbow", 31, Main.instance, 250, 200, true);
-
     }
 
 

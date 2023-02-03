@@ -183,8 +183,6 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
         }
     }
 
-
-
     @Override
     public boolean onLeftClickEntity(@NotNull ItemStack stack, @NotNull EntityPlayer player, Entity entity) {
         if(!entity.world.isRemote){

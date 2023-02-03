@@ -4,9 +4,10 @@ import huige233.transcend.Main;
 import huige233.transcend.compat.slash.Delete;
 import huige233.transcend.compat.slash.SlashUpdateEvent;
 import mods.flammpfeil.slashblade.ItemSlashBladeNamed;
+import mods.flammpfeil.slashblade.SlashBlade;
 import mods.flammpfeil.slashblade.item.ItemSlashBlade;
 import mods.flammpfeil.slashblade.specialeffect.SpecialEffects;
-import net.minecraft.client.Minecraft;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -16,6 +17,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
 import java.util.EnumSet;
@@ -28,8 +30,7 @@ public class TranscendSlash extends ItemSlashBladeNamed {
         super(ToolMaterial.IRON,4.0f);
         this.firstload = false;
         setMaxDamage(40);
-        setTranslationKey("flammpfeil.slashblade.named");
-        //setCreativeTab(Main.TranscendTab);
+        setCreativeTab(Main.TranscendTab);
     }
 
     public void onUpdate(ItemStack stack, World world, Entity entity, int i, boolean b){
@@ -68,7 +69,6 @@ public class TranscendSlash extends ItemSlashBladeNamed {
         int var6 = getMaxItemUseDuration(stack) - count;
         if (ItemSlashBladeNamed.RequiredChargeTick < var6) {
             this.isUsing = true;
-            Minecraft mc = Minecraft.getMinecraft();
             player.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 0.5F, 1.0F);
             SlashUpdateEvent.setTimestop(Boolean.valueOf(true));
         } else {
@@ -82,6 +82,12 @@ public class TranscendSlash extends ItemSlashBladeNamed {
             player.removePotionEffect(potion);
     }
 
+    @Override
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> itemStacks){
+        if(this.isInCreativeTab(tab)){
+            if(tab == Main.TranscendTab) itemStacks.add(SlashBlade.findItemStack(SlashBlade.modid,"flammpfeil.slashblade.named.tran",1));
+        }
+    }
 
     public void setDamage(ItemStack itemStack, int Damage) {
         super.setDamage(itemStack, 0);
