@@ -1,4 +1,4 @@
-package huige233.transcend.compat.slash;
+package huige233.transcend.compat.slash.specialattack;
 
 import mods.flammpfeil.slashblade.ability.ArmorPiercing;
 import mods.flammpfeil.slashblade.ability.StylishRankManager;

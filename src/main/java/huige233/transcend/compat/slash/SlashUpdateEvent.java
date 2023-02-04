@@ -1,14 +1,11 @@
 package huige233.transcend.compat.slash;
 
-import huige233.transcend.compat.TranscendSlash;
-import mods.flammpfeil.slashblade.item.ItemSlashBlade;
+import huige233.transcend.compat.slash.named.ItemTrSlashBlade;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.minecart.MinecartUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -36,7 +33,7 @@ public class SlashUpdateEvent {
             EntityPlayer p = (EntityPlayer) entity;
             for(int i = 0; i < p.inventory.getSizeInventory(); i++){
                 ItemStack stack = p.inventory.getStackInSlot(i);
-                if(stack != null && stack.getItem() instanceof TranscendSlash){
+                if(stack != null && stack.getItem() instanceof ItemTrSlashBlade){
                     return true;
                 }
             }

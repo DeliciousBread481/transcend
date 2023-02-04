@@ -1,38 +1,34 @@
-package huige233.transcend.compat;
+package huige233.transcend.compat.slash.named;
 
-import huige233.transcend.Main;
-import huige233.transcend.compat.slash.specialattack.Delete;
 import huige233.transcend.compat.slash.SlashUpdateEvent;
+import huige233.transcend.compat.slash.specialattack.Delete;
+import huige233.transcend.compat.slash.BladeLoader;
+import huige233.transcend.util.ItemBladeUtils;
 import mods.flammpfeil.slashblade.ItemSlashBladeNamed;
-import mods.flammpfeil.slashblade.SlashBlade;
 import mods.flammpfeil.slashblade.item.ItemSlashBlade;
 import mods.flammpfeil.slashblade.specialeffect.SpecialEffects;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-import java.util.EnumSet;
+import java.util.UUID;
 
-public class TranscendSlash extends ItemSlashBladeNamed {
+public class TranscendSlashBlade extends ItemTrSlashBlade {
     private boolean firstload;
     public boolean isUsing = false;
 
-    public TranscendSlash(){
-        super(ToolMaterial.IRON,4.0f);
-        this.firstload = false;
-        setMaxDamage(40);
-        setCreativeTab(Main.TranscendTab);
+    public TranscendSlashBlade(ToolMaterial par2EnumToolMaterial, float baseAttackModifiers) {
+        super(par2EnumToolMaterial, baseAttackModifiers);
+        setTranslationKey("transcend.tran");
+        setRegistryName("tran");
+        ForgeRegistries.ITEMS.register(this);
+        ItemBladeUtils.Tr_BLADE.add(this);
     }
-
 
     public void onUpdate(ItemStack stack, World world, Entity entity, int i, boolean b){
         super.onUpdate(stack, world, entity, i, b);
@@ -64,30 +60,16 @@ public class TranscendSlash extends ItemSlashBladeNamed {
         tag.setBoolean("Unbreakable", true);
     }
 
-    public void onUsingTick(ItemStack stack, EntityLivingBase player, int count) {
-        super.onUsingTick(stack, player, count);
-        EnumSet<SwordType> swordType = getSwordType(stack);
-        int var6 = getMaxItemUseDuration(stack) - count;
-        if (ItemSlashBladeNamed.RequiredChargeTick < var6) {
-            this.isUsing = true;
-            player.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 0.5F, 1.0F);
-            SlashUpdateEvent.setTimestop(Boolean.valueOf(true));
-        } else {
-            SlashUpdateEvent.setTimestop(Boolean.valueOf(false));
-            this.isUsing = false;
+    public boolean onDroppedByPlayer(ItemStack stack, EntityPlayer player) {
+        if (stack.getItem() == BladeLoader.tran) {
+            NBTTagCompound tag = getItemTagCompound(stack);
+            if (tag.hasUniqueId("Owner")) {
+                UUID ownerid = tag.getUniqueId("Owner");
+                if (ownerid.equals(player.getUniqueID()))
+                    return false;
+            }
         }
-    }
-
-    private void removeEffect(EntityPlayer player, Potion potion) {
-        if (player.getActivePotionEffect(potion) != null)
-            player.removePotionEffect(potion);
-    }
-
-    @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> itemStacks){
-        if(this.isInCreativeTab(tab)){
-            if(tab == Main.TranscendTab) itemStacks.add(SlashBlade.findItemStack(SlashBlade.modid,"flammpfeil.slashblade.named.tran",1));
-        }
+        return true;
     }
 
     public void setDamage(ItemStack itemStack, int Damage) {

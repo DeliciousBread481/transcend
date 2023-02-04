@@ -1,6 +1,7 @@
-package huige233.transcend.compat.slash;
+package huige233.transcend.compat.slash.specialeffects;
 
 import huige233.transcend.compat.TranscendSlash;
+import huige233.transcend.compat.slash.named.ItemTrSlashBlade;
 import huige233.transcend.entity.EntityLightningRainbow;
 import mods.flammpfeil.slashblade.ItemSlashBladeNamed;
 import mods.flammpfeil.slashblade.ability.StylishRankManager;
@@ -71,7 +72,6 @@ public class SETranscend implements ISpecialEffect, IRemovable {
                 return;
             case Effective:
                 if(interval<=0) {
-                    ItemSlashBlade.damageItem(event.blade, 5, player);
                     float damage=5.0f+ ItemSlashBladeNamed.RepairCount.get(event.blade.getTagCompound())/10;
                     player.addPotionEffect(new PotionEffect(MobEffects.STRENGTH,150,3));
                     player.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION,100,3));
@@ -116,7 +116,7 @@ public class SETranscend implements ISpecialEffect, IRemovable {
                 if(player.getRNG().nextInt(4) != 0) return;
                 break;
             case Effective:
-                if(player.getHeldItemMainhand().getItem() instanceof TranscendSlash){
+                if(player.getHeldItemMainhand().getItem() instanceof ItemTrSlashBlade){
                     int rankPoint = StylishRankManager.getTotalRankPoint(player);
                     int aRankPoint = (int) (StylishRankManager.RankRange * 7D);
                     int rankAmount = aRankPoint - rankPoint;

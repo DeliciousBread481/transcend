@@ -4,22 +4,17 @@ import huige233.transcend.Main;
 import huige233.transcend.compat.Avartiabreak;
 import huige233.transcend.compat.PsiCompat;
 import huige233.transcend.compat.slash.*;
+import huige233.transcend.compat.slash.specialattack.EntityDelete;
+import huige233.transcend.compat.slash.BladeLoader;
 import huige233.transcend.compat.tinkers.TiCConfig;
 import huige233.transcend.compat.tinkers.conarmConfig;
 import huige233.transcend.entity.BoltRegistry;
 import huige233.transcend.entity.EntityLightningRainbow;
 import huige233.transcend.packet.PacketEndTimeStop;
+import huige233.transcend.util.ItemBladeUtils;
 import huige233.transcend.util.handlers.ModEventHandler;
-import mods.flammpfeil.slashblade.ItemSlashBladeNamed;
-import mods.flammpfeil.slashblade.SlashBlade;
-import mods.flammpfeil.slashblade.item.ItemSlashBlade;
-import mods.flammpfeil.slashblade.named.event.LoadEvent;
-import mods.flammpfeil.slashblade.specialeffect.SpecialEffects;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Enchantments;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.Style;
 import net.minecraftforge.common.MinecraftForge;
@@ -28,8 +23,6 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 @Optional.Interface(iface = "mods.flammpfeil.slashblade.named.event.LoadEvent", modid = "flammpfeil.slashblade")
@@ -75,6 +68,8 @@ public class CommonProxy {
         MinecraftForge.EVENT_BUS.register(new ModEventHandler());
         if(Loader.isModLoaded("flammpfeil.slashblade")) {
             SlashInit.init();
+            new BladeLoader();
+            new ItemBladeUtils();
         }
         BoltRegistry.registerBolt();
     }
