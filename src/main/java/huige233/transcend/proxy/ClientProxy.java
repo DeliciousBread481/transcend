@@ -1,12 +1,12 @@
 package huige233.transcend.proxy;
 
 import huige233.transcend.effect.TimeStopEffect;
-import huige233.transcend.entity.BoltRegistry;
 import huige233.transcend.lib.HeartRenderHandler;
 import huige233.transcend.packet.PacketEndTimeStop;
 import huige233.transcend.render.RenderBlinkEffect;
 import huige233.transcend.tileEntity.RenderTileUltraManaPool;
 import huige233.transcend.tileEntity.TileUltraManaPool;
+import huige233.transcend.util.ItemBladeUtils;
 import huige233.transcend.util.other.IHUDRenderable;
 import huige233.transcend.util.other.TravelController;
 import net.minecraft.block.Block;
@@ -37,7 +37,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class ClientProxy extends CommonProxy {
     public void registerItemRenderer( Item item, int meta, String id )
     {
-        ModelLoader.setCustomModelResourceLocation( item, meta, new ModelResourceLocation( item.getRegistryName(), id ) );
+        ModelLoader.setCustomModelResourceLocation( item, meta, new ModelResourceLocation(item.getRegistryName(),id));
     }
 
     @Override
@@ -73,6 +73,9 @@ public class ClientProxy extends CommonProxy {
             ClientRegistry.bindTileEntitySpecialRenderer(TileUltraManaPool.class, new RenderTileUltraManaPool());
         }
         super.preInit(event);
+        if(Loader.isModLoaded("flammpfeil.slashblade")) {
+            new ItemBladeUtils();
+        }
     }
 
     public void init( FMLInitializationEvent event )

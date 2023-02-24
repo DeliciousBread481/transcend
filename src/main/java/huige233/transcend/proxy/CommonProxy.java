@@ -56,6 +56,7 @@ public class CommonProxy {
 
     public void preInit( FMLPreInitializationEvent event )
     {
+        MinecraftForge.EVENT_BUS.register(this);
         if(Loader.isModLoaded("tconstruct")){
             TiCConfig.setup();
         }
@@ -69,7 +70,7 @@ public class CommonProxy {
         if(Loader.isModLoaded("flammpfeil.slashblade")) {
             SlashInit.init();
             new BladeLoader();
-            new ItemBladeUtils();
+            //new ItemBladeUtils();
         }
         BoltRegistry.registerBolt();
     }

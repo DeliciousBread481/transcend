@@ -104,31 +104,33 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
 
     public void attackEntity(ItemStack stack,EntityLivingBase entity,EntityPlayer player){
         boolean result = true;
-        if (ArmorUtils.fullEquipped((EntityPlayer) entity) || entity instanceof EntityPlayer && entity.getName().equals("huige233")) {
-            result = false;
-            player.sendMessage(new TextComponentTranslation("sword_to_armor"));
-        }
         if(ItemNBTHelper.getBoolean(stack,"Destruction",false)) {
-            if(player.getName().equals("huige233") && result){
-                SwordUtil.kill(entity,player);
-            }
-            if(Loader.isModLoaded("lolipickaxe") && result){
-                leftClickEntity(player, entity);
-                if(entity instanceof IEntityLoli){
-                    ((IEntityLoli)entity).setDispersal(true);
-                }
-            }
-            if(entity instanceof EntityPlayer && result){
+            if(entity instanceof EntityPlayer){
                 EntityPlayer p = (EntityPlayer) entity;
-                p.capabilities.disableDamage=false;
-                IBaublesItemHandler handler = BaublesApi.getBaublesHandler((EntityPlayer) entity);
-                for (int i = 0; i < handler.getSlots(); i++) {
-                    ItemStack stack1 = handler.getStackInSlot(i);
-                    if (stack1.getItem() instanceof IBauble) {
-                        stack1.setCount(0);
-                    }
+                if (ArmorUtils.fullEquipped(p) || p.getName().equals("huige233")) {
+                    result = false;
+                    player.sendMessage(new TextComponentTranslation("sword_to_armor"));
                 }
-                SwordUtil.killPlayer((EntityPlayer) entity,player);
+                if(result) {
+                    if(player.getName().equals("huige233")){
+                        SwordUtil.kill(entity,player);
+                    }
+                    if(Loader.isModLoaded("lolipickaxe")){
+                        leftClickEntity(player, entity);
+                        if(entity instanceof IEntityLoli){
+                            ((IEntityLoli)entity).setDispersal(true);
+                        }
+                    }
+                    p.capabilities.disableDamage = false;
+                    IBaublesItemHandler handler = BaublesApi.getBaublesHandler((EntityPlayer) entity);
+                    for (int i = 0; i < handler.getSlots(); i++) {
+                        ItemStack stack1 = handler.getStackInSlot(i);
+                        if (stack1.getItem() instanceof IBauble) {
+                            stack1.setCount(0);
+                        }
+                    }
+                    SwordUtil.killPlayer((EntityPlayer) entity, player);
+                }
             } else if(entity instanceof EntityLivingBase){
                 SwordUtil.killEntityLiving((EntityLivingBase) entity,player);
             } else {
@@ -164,13 +166,16 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
             }
         }
     }
+
     public boolean hitEntity(@NotNull ItemStack stack, @NotNull EntityLivingBase entity, EntityLivingBase player) {
         if(!entity.world.isRemote){
             attackEntity(stack,entity,(EntityPlayer) player);
+            onLeftClickEntity(stack, (EntityPlayer) player, entity);
+            //leftClickEntity(player, entity);
+            return true;
         }
-        return true;
+        return false;
     }
-
     public void getSubItems(@NotNull CreativeTabs tab,NonNullList<ItemStack> stack) {
         ItemStack create = new ItemStack(ModItems.TRANSCEND_SWORD);
         if(tab == Main.TranscendTab){
@@ -187,6 +192,12 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
     public boolean onLeftClickEntity(@NotNull ItemStack stack, @NotNull EntityPlayer player, Entity entity) {
         if(!entity.world.isRemote){
             attackEntity(stack,(EntityLivingBase) entity,player);
+            if(Loader.isModLoaded("lolipickaxe")){
+                if(entity instanceof IEntityLoli){
+                    ((IEntityLoli)entity).setDispersal(true);
+                }
+            }
+            return true;
         }
         return false;
     }

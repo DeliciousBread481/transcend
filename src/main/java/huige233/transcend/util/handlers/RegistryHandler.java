@@ -1,24 +1,15 @@
 package huige233.transcend.util.handlers;
 
 import huige233.transcend.compat.ThaumcraftCompat;
-import huige233.transcend.compat.TranscendSlash;
 import huige233.transcend.init.ModBlock;
 import huige233.transcend.init.ModEnchantment;
 import huige233.transcend.init.ModItems;
-import huige233.transcend.items.compat.AnvilCompat;
-import huige233.transcend.items.compat.FragmentLan;
-import huige233.transcend.items.compat.ThunderSkin;
-import huige233.transcend.tileEntity.BlockUltraManaPool;
 import huige233.transcend.tileEntity.TileEntityHandler;
 import huige233.transcend.util.IHasModel;
-import mods.flammpfeil.slashblade.tileentity.DummyTileEntity;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
-import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;

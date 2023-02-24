@@ -1,33 +1,25 @@
 package huige233.transcend.compat.slash.named;
 
 import huige233.transcend.util.BladeUtils;
-import huige233.transcend.util.TextUtils;
+import huige233.transcend.util.ItemBladeUtils;
 import mods.flammpfeil.slashblade.ItemSlashBladeNamed;
 import mods.flammpfeil.slashblade.TagPropertyAccessor;
-import mods.flammpfeil.slashblade.specialattack.IJustSpecialAttack;
-import mods.flammpfeil.slashblade.specialattack.SpecialAttackBase;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.EnumSet;
-import java.util.List;
 
 import static huige233.transcend.util.BladeUtils.TrNamedBlades;
 
 public class ItemTrSlashBlade extends ItemSlashBladeNamed {
     public ItemTrSlashBlade(ToolMaterial material, float baseAttackModifiers) {
         super(material, baseAttackModifiers);
+        ItemBladeUtils.Tr_BLADE.add(this);
     }
 
     public static TagPropertyAccessor.TagPropertyBoolean isInCreativeTab = new TagPropertyAccessor.TagPropertyBoolean("IsInCreativeTab");
     public static TagPropertyAccessor.TagPropertyBoolean isTrBlade = new TagPropertyAccessor.TagPropertyBoolean("isTrBlade");
-
+/*
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformationSwordClass(ItemStack stack, EntityPlayer player, List tooltip, boolean advanced) {
@@ -50,7 +42,7 @@ public class ItemTrSlashBlade extends ItemSlashBladeNamed {
            tooltip.add(String.format("§8%s", I18n.format("flammpfeil.swaepon.info.noname")));
         }
     }
-/*
+
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformationSpecialAttack(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
@@ -65,8 +57,6 @@ public class ItemTrSlashBlade extends ItemSlashBladeNamed {
             }
         }
     }
-
- */
 
     @Override
     @SideOnly(Side.CLIENT)
@@ -99,40 +89,20 @@ public class ItemTrSlashBlade extends ItemSlashBladeNamed {
         par3List.add(String.format(template,ba , sss , (baseModif + maxBonus)));
     }
 
-    public void doChargeAttack(ItemStack stack, EntityPlayer par3EntityPlayer,boolean isJust){
-        NBTTagCompound tag = getItemTagCompound(stack);
-        if (isInCreativeTab.get(tag)) {
-            return;
-        }
-        SpecialAttackBase sa = getSpecialAttack(stack);
-        if(isJust && sa instanceof IJustSpecialAttack){
-            ((IJustSpecialAttack)sa).doJustSpacialAttack(stack,par3EntityPlayer);
-        }else {
-            sa.doSpacialAttack(stack, par3EntityPlayer);
-        }
-        IsCharged.set(tag, true);
-    }
-/*
-    @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        if (this.isInCreativeTab(tab)) {
-            for(String bladename : TrNamedBlades){
-                ItemStack blade = BladeUtils.getCustomBlade(bladename);
-                NBTTagCompound tag = getItemTagCompound(blade);
-                BaseAttackModifier.set(tag,0.0F);
-                isInCreativeTab.set(tag,true);
-                if(blade.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-                    blade.setItemDamage(0);
-                }
-                if(!blade.isEmpty()) {
-                    subItems.add(blade);
-                }
+        public void doChargeAttack(ItemStack stack, EntityPlayer par3EntityPlayer,boolean isJust){
+            NBTTagCompound tag = getItemTagCompound(stack);
+            if (isInCreativeTab.get(tag)) {
+                return;
             }
+            SpecialAttackBase sa = getSpecialAttack(stack);
+            if(isJust && sa instanceof IJustSpecialAttack){
+                ((IJustSpecialAttack)sa).doJustSpacialAttack(stack,par3EntityPlayer);
+            }else {
+                sa.doSpacialAttack(stack, par3EntityPlayer);
+            }
+            IsCharged.set(tag, true);
         }
-    }
-
-
- */
+     */
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
         if (isInCreativeTab(tab))

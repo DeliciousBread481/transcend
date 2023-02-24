@@ -6,6 +6,7 @@ import net.minecraft.util.text.TextFormatting;
 public class TextUtils {
     private static final TextFormatting[] fabulousness;
     private static final TextFormatting[] sanic;
+    private static final TextFormatting[] sanics;
     private static final TextFormatting[] faust;
 
     public TextUtils() {
@@ -19,8 +20,16 @@ public class TextUtils {
         return ludicrousFormatting(input, sanic, 50.0D, 1, 1);
     }
 
+    public static String makeSANICS(String input) {
+        return ludicrousFormatting(input, sanics, 50.0D, 1, 1);
+    }
+
     public static String makeFaust(String input){
         return ludicrousFormatting(input,faust,45.0D,1,1);
+    }
+
+    public static String makeFabulousL(String input){
+        return ludicrousFormatting(input,fabulousness,300.0D,0,2);
     }
 
     public static String ludicrousFormatting(String input, TextFormatting[] colours, double delay, int step, int posstep) {
@@ -45,5 +54,6 @@ public class TextUtils {
         fabulousness = new TextFormatting[]{TextFormatting.RED, TextFormatting.GOLD, TextFormatting.YELLOW, TextFormatting.GREEN, TextFormatting.AQUA, TextFormatting.BLUE, TextFormatting.LIGHT_PURPLE};
         sanic = new TextFormatting[]{TextFormatting.BLUE, TextFormatting.BLUE, TextFormatting.BLUE, TextFormatting.BLUE, TextFormatting.WHITE, TextFormatting.BLUE, TextFormatting.WHITE, TextFormatting.WHITE, TextFormatting.BLUE, TextFormatting.WHITE, TextFormatting.WHITE, TextFormatting.BLUE, TextFormatting.RED, TextFormatting.WHITE, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY};
         faust = new TextFormatting[]{TextFormatting.BLUE,TextFormatting.BLUE,TextFormatting.GREEN,TextFormatting.GREEN,TextFormatting.AQUA,TextFormatting.AQUA,TextFormatting.YELLOW,TextFormatting.YELLOW,TextFormatting.WHITE,TextFormatting.WHITE,TextFormatting.BLUE,TextFormatting.BLUE,TextFormatting.GREEN,TextFormatting.GREEN,TextFormatting.AQUA,TextFormatting.AQUA,TextFormatting.YELLOW,TextFormatting.YELLOW,TextFormatting.WHITE,TextFormatting.WHITE,TextFormatting.BLUE,TextFormatting.BLUE,TextFormatting.GREEN,TextFormatting.GREEN,TextFormatting.AQUA,TextFormatting.AQUA,TextFormatting.YELLOW,TextFormatting.YELLOW,TextFormatting.WHITE,TextFormatting.WHITE,TextFormatting.BLUE,TextFormatting.BLUE,TextFormatting.GREEN,TextFormatting.GREEN,TextFormatting.AQUA,TextFormatting.AQUA,TextFormatting.YELLOW,TextFormatting.YELLOW,TextFormatting.WHITE,TextFormatting.WHITE};
+        sanics = new TextFormatting[]{TextFormatting.DARK_GRAY, TextFormatting.DARK_GRAY, TextFormatting.DARK_GRAY, TextFormatting.DARK_GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.WHITE, TextFormatting.WHITE, TextFormatting.GRAY, TextFormatting.GRAY, TextFormatting.DARK_GRAY, TextFormatting.DARK_GRAY, TextFormatting.DARK_GRAY, TextFormatting.BLACK, TextFormatting.BLACK, TextFormatting.BLACK, TextFormatting.BLACK, TextFormatting.BLACK, TextFormatting.BLACK, TextFormatting.BLACK, TextFormatting.BLACK, TextFormatting.BLACK, TextFormatting.BLACK, TextFormatting.BLACK, TextFormatting.BLACK, TextFormatting.BLACK, TextFormatting.BLACK, TextFormatting.BLACK, TextFormatting.BLACK, TextFormatting.BLACK, TextFormatting.BLACK, TextFormatting.BLACK, TextFormatting.BLACK, TextFormatting.BLACK, TextFormatting.BLACK};
     }
 }

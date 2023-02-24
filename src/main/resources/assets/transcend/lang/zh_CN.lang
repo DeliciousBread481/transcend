@@ -76,4 +76,17 @@ tile.cast_machine.name=基岩冶炼厂
 tile.void_block.name=虚空
 tile.CreateRfSource.name=创造RF能源
 
+
+#超越拔刀
+item.flammpfeil.slashblade.named.tran.name=§3极上权能的四维投影「舞动于超弦之上的琴弓」
+item.flammpfeil.slashblade.named.tran1.name=§3先行坍缩之鞘「不可视的阿瓦隆」
+
+flammpfeil.slashblade.specialattack.delete=§6D§kata§r §6Delete§r
+
+slashblade.seffect.name.SETranscend=超越万物
+slashblade.seffect.name.SEDataLock=DataLock
+
+flammpfeil.info.transcend=此为万力之力，摧坚拔韧。
+flammpfeil.info.no.transcend=这鞘中寄宿着尚且无法观测的次元。
+
 potion.transcend:time_stop=时间停止

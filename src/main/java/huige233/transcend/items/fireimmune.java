@@ -48,21 +48,6 @@ public class FireImmune extends EntityItem {
         //if(!world.isRemote) {
             //tell player item position
 //            if (ticksExisted % 20 == 0) {
-                BlockPos pos = new BlockPos(this.posX, this.posY, this.posZ);
-                world.getPlayers(EntityPlayerMP.class, player -> player.getDistanceSq(pos) < 100).forEach(player -> player.sendMessage(new TextComponentString("Item at " + pos.toString())));
-//            }
-
-            if (this.getItem().getItem() == ModItems.BEDROCK_CHEN) {
-                if (this.posY < 0) {
-                    int count = this.getItem().getCount();
-                    ItemStack stack = new ItemStack(ModItems.BEDROCK_FEN, count);
-                    FireImmune item = new FireImmune(world, posX, 15, posZ, stack);
-                    item.setNoGravity(true);
-                    world.spawnEntity(item);
-                    world.addWeatherEffect(new EntityLightningBolt(world, this.posX, 15, this.posZ, false));
-                    this.setDead();
-                }
-            }
         //}
     }
 

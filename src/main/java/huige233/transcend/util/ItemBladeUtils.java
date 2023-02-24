@@ -24,7 +24,6 @@ public class ItemBladeUtils {
         }
 
     }
-
     public void registerBlade(Item blade){
         ModelLoader.setCustomModelResourceLocation(blade, 0, modelLoc);
         ForgeHooksClient.registerTESRItemStack(blade, 0, DummyTileEntity.class);
@@ -34,6 +33,4 @@ public class ItemBladeUtils {
     public void onModelBake(ModelBakeEvent event){
         event.getModelRegistry().putObject(modelLoc, new BladeModel());
     }
-
-
 }

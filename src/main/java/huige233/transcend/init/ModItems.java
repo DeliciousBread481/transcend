@@ -51,12 +51,17 @@ public class ModItems {
     public static final ToolMaterial Invulnera = EnumHelper.addToolMaterial("Invulnera",0,0,1,-4,0);
     public static final ItemSword Invulnerable = new ItemInvulnerable("invulnerable",Invulnera);
     public static final ItemSword TimeStop = new ItemTimeStop("timestop",Invulnera);
-    public static final Item ITEM_XP = new ItemXp("transcend_xp",Main.TranscendTab);
+
+    //public static final Item ITEM_XP = new ItemXp("transcend_xp",Main.TranscendTab);
     public static final Item TravelStaff = new ItemTravelStaff("travel_staff",Main.TranscendTab);
     public static final ItemFood InfinityFood = new InfinityFood();
-    public static final Item OP_Cuff = new ItemOPCuffs("op_cuff",Invulnera);
+    //public static final Item OP_Cuff = new ItemOPCuffs("op_cuff",Invulnera);
     public static final Item AnvilCompat = new AnvilCompat();
     public static final Item FragmentLan = new FragmentLan();
     public static final Item ThunderSkin = new ThunderSkin();
+
     //public static final ItemSword a = new TranscendSword("tr",Main.TranscendTab,transcend_tool);
+
+    public static final Item CHUI = new ItemBase("chui",Main.TranscendTab).setMaxDamage(3);
+    public static final Item CK = new ItemBase("chukuang",Main.TranscendTab);
 }

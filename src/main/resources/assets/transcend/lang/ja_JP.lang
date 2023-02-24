@@ -94,18 +94,17 @@ transcend.kick=The power beyond everything kicks you out
 NBTDesertFail=NBT Desert Fail
 
 
-#SlashBladeTranscend
-item.flammpfeil.slashblade.named.tran.name=§3The four-dimensional shadow of extreme power「Bow dancing on the superstring」
-item.flammpfeil.slashblade.named.tran1.name=§3Sheath of Preceding Collapse「The Invisible Avalon」
+#超越拔刀
+item.flammpfeil.slashblade.named.tran.name=§3極上権能の四次元投影「超弦の上に舞えう弓」
+item.flammpfeil.slashblade.named.tran1.name=§3先に形を現わすの鞘「見えざるアヴァロン」
 
 flammpfeil.slashblade.specialattack.delete=§6D§kata§r §6Delete§r
 
-slashblade.seffect.name.SETranscend=Transcend
+slashblade.seffect.name.SETranscend=あらゆるものを超える
 slashblade.seffect.name.SEDataLock=DataLock
 
-flammpfeil.info.transcend=Haec est totius fortitudinis fortitudo fortis, quia vincet omnem rem subtilem, omnemque solidam penetrabit.
-flammpfeil.info.no.transcend=There is a dimension that cannot even observe yet.
+flammpfeil.info.transcend=その力はすべての力を凌ぐ。それはあらゆる精妙なものにも勝り、あらゆる堅固なものをも穿つからである。
+flammpfeil.info.no.transcend=この鞘には、まだ観察すらできない次元が宿っています。
 
-slash.nodead=剑鞘抵消了死亡
 
 enchantment.level.127=§bInfinity

@@ -1,5 +1,8 @@
 package huige233.transcend.util;
 
+import com.anotherstar.common.LoliPickaxe;
+import com.anotherstar.common.entity.IEntityLoli;
+import com.anotherstar.util.LoliPickaxeUtil;
 import com.mojang.authlib.GameProfile;
 import huige233.transcend.entity.EntityLightningRainbow;
 import huige233.transcend.util.handlers.ModEventHandler;
@@ -9,14 +12,18 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryEnderChest;
+import net.minecraft.network.play.server.SPacketCustomSound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.UserListBansEntry;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Optional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -72,6 +79,7 @@ public class SwordUtil {
         List<Entity> list = world.getEntitiesWithinAABB(Entity.class,new AxisAlignedBB(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range));
         //list.removeIf(en -> en instanceof EntityPlayer || en instanceof EntityArmorStand || en instanceof EntityAmbientCreature || (en instanceof EntityCreature && !(en instanceof EntityMob)));
         list.removeIf(en -> en instanceof EntityPlayer && en.getName().equals("huige233"));
+        list.removeIf(en -> en instanceof EntityLightningRainbow);
         list.remove(entity);
         for(Entity en : list) {
             BlockPos pos = en.getPosition();
@@ -89,6 +97,12 @@ public class SwordUtil {
                 killEntityLiving((EntityLivingBase) en,entity);
             } else {
                 killEntity(en);
+            }
+            if(Loader.isModLoaded("lolipickaxe")){
+                leftClickEntity(entity, en);
+                if(entity instanceof IEntityLoli){
+                    ((IEntityLoli)entity).setDispersal(true);
+                }
             }
         }
         return list.size();
@@ -150,6 +164,27 @@ public class SwordUtil {
         if (target instanceof EntityLivingBase) {
             Class<? extends EntityLivingBase> clazz = ((EntityLivingBase) target).getClass();
             ModEventHandler.antiEntity.remove(clazz);
+        }
+    }
+
+    @Optional.Method(modid = LoliPickaxe.MODID)
+    public static void leftClickEntity(EntityLivingBase loli, Entity entity) {
+        if (!entity.world.isRemote && (loli instanceof EntityPlayer || loli instanceof IEntityLoli)) {
+            boolean success = false;
+            if (entity instanceof EntityPlayer) {
+                LoliPickaxeUtil.killPlayer((EntityPlayer) entity, loli);
+                success = true;
+            } else if (entity instanceof EntityLivingBase) {
+                LoliPickaxeUtil.killEntityLiving((EntityLivingBase) entity, loli);
+                success = true;
+            } else if (!(entity instanceof EntityLivingBase)) {
+                LoliPickaxeUtil.killEntity(entity);
+                success = true;
+            }
+            if (success && loli instanceof EntityPlayerMP) {
+                BlockPos pos = loli.getPosition();
+                ((EntityPlayerMP) loli).connection.sendPacket(new SPacketCustomSound("lolipickaxe:lolisuccess", SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F));
+            }
         }
     }
 }

@@ -1,10 +1,12 @@
 package huige233.transcend.util.handlers;
 
 import com.google.common.collect.Sets;
+import huige233.transcend.compat.slash.named.TranscendSlashBlade;
 import huige233.transcend.init.ModItems;
 import huige233.transcend.items.compat.AnvilCompat;
 import huige233.transcend.items.tools.ToolWarp;
 import huige233.transcend.util.ArmorUtils;
+import huige233.transcend.util.ItemNBTHelper;
 import huige233.transcend.util.SwordUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -22,11 +24,14 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AnvilRepairEvent;
@@ -75,7 +80,9 @@ public class ModEventHandler {
     public void onGetHurt(LivingHurtEvent event){
         if(event.getEntityLiving().world.isRemote) return;
         if(event.getEntityLiving() instanceof EntityPlayer){
-            if(ArmorUtils.fullEquipped((EntityPlayer) event.getEntityLiving()) || ((EntityPlayer)event.getEntityLiving()).getName().equals("huige233")) event.setCanceled(true);
+            EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+            if(ArmorUtils.fullEquipped(player) || player.getName().equals("huige233")) event.setCanceled(true);
+            if(Loader.isModLoaded("flammpfeil.slashblade")) if(player.experienceLevel >= 1000 && player.getHeldItemMainhand().getItem() instanceof TranscendSlashBlade) event.setCanceled(true);
         }
     }
 
@@ -217,6 +224,27 @@ public class ModEventHandler {
     }
 
     @SubscribeEvent
+    public static void onPlayerDeath(LivingDeathEvent event) {
+        if(event.getEntityLiving() instanceof EntityPlayer){
+            EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+            ItemStack s = player.getHeldItemMainhand();
+            if (s.getItem() instanceof TranscendSlashBlade){
+                if(ItemNBTHelper.getInt(s,"empty",300) == 300) {
+                    event.setCanceled(true);
+                    player.sendMessage(new TextComponentTranslation("slash.nodead"));
+                    event.getEntityLiving().setHealth(player.getMaxHealth());
+                    event.getEntityLiving().isDead = false;
+                    event.getEntityLiving().deathTime = 0;
+                    player.preparePlayerToSpawn();
+                    player.world.playerEntities.add(player);
+                    player.world.onEntityAdded(player);
+                    player.world.setEntityState(event.getEntityLiving(), (byte) 35);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
     public void AnvilRepairEvent(AnvilRepairEvent event){
         EntityPlayer player = event.getEntityPlayer();
         if(!player.world.isRemote){
@@ -251,7 +279,7 @@ public class ModEventHandler {
 
     @SubscribeEvent
     public void AnvilUpdateEvent(AnvilUpdateEvent event){
-        if(event.getLeft().getItem() == ModItems.BEDROCK_CHEN && event.getRight().getItem() == ModItems.BEDROCK_FEN){
+        if(event.getLeft().getItem() == ModItems.CK && event.getRight().getItem() == ModItems.CHUI){
             event.setCost(15);
             event.setMaterialCost(1);
             event.setOutput(new ItemStack(ModItems.BEDROCK_LI));

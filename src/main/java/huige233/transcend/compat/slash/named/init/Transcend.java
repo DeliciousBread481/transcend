@@ -32,6 +32,7 @@ public class Transcend {
         ItemSlashBlade.ProudSoul.set(tag, Integer.valueOf(1000000));
         ItemSlashBlade.SummonedSwordColor.set(tag, 0x4091FF);
         SpecialEffects.addEffect(customblade, "SETranscend",1000);
+        SpecialEffects.addEffect(customblade, "SEDataLock",0);
         customblade.addEnchantment(Enchantments.INFINITY, 127);
         customblade.addEnchantment(Enchantments.POWER, 127);
         customblade.addEnchantment(Enchantments.PUNCH, 127);
