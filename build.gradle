@@ -41,7 +41,8 @@ minecraft {
             "-Dmixin.hotSwap=true",
             "-Dmixin.debug.export=true",
             "-Dmixin.checks.interfaces=true",
-//            "-Dlegacy.debugClassLoading=true",
+            "-Dlegacy.debugClassLoading=true",
+            "-Dlegacy.debugClassLoadingFiner=true",
 //            "-Dlegacy.debugClassLoadingSave=true",
             "-Dfml.coreMods.load=huige233.transcend.asm.FMLLoadingPlugin"
     ]
@@ -92,6 +93,7 @@ repositories {
     maven { url = "http://maven.cil.li/" }
     maven { url = "https://maven.ellpeck.de/" }
     maven { url ="https://www.cursemaven.com"}
+    maven { url = "file:/${projectDir}/local-repo" }
 }
 
 
@@ -122,7 +124,12 @@ dependencies {
     deobfCompile("codechicken:CodeChickenLib:${mc_version}-${ccl_version}:universal") {
         exclude group: "mezz.jei"
     }
-    compile fileTree(dir:'libs',includes:['*jar'])
+    //compile fileTree(dir:'libs',includes:['*jar'])
+    deobfCompile "mods:MmmMmmMmmMmm-1.12:1.14"
+    deobfCompile "mods:Baubles:1.12-1.5.2"
+    deobfCompile "mods:industrialcraft-2:2.8.188-ex112"
+    deobfCompile "mods:LoliPickaxe:1.2.12-1.12.2_pure"
+    deobfCompile "mods:SlashBlade:OHHH"
     deobfCompile ("zone.rong:mixinbooter:4.2")
 
     runtime "curse.maven:bwmcore-${bwm_core}"
@@ -183,7 +190,9 @@ tasks.genIntellijRuns.doFirst {
                 }
             }
         }
-        new XmlNodePrinter(new PrintWriter(new FileWriter(workspaceFile))).print(workspace)
+        new PrintWriter(new FileWriter(workspaceFile)).withCloseable {
+            new XmlNodePrinter(it).print(workspace)
+        }
     }
 }
 
@@ -198,5 +207,7 @@ tasks.genIntellijRuns.doLast {
             it.module.@name = project.idea.module.name + '.' + project.minecraft.runSourceSet.name
         }
     }
-    new XmlNodePrinter(new PrintWriter(new FileWriter(workspaceFile))).print(workspace)
+    new PrintWriter(new FileWriter(workspaceFile)).withCloseable {
+        new XmlNodePrinter(it).print(workspace)
+    }
 }

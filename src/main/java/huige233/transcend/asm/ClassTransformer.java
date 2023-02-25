@@ -46,7 +46,7 @@ public class ClassTransformer implements IClassTransformer {
                     return cv.visitMethod(access, name, desc, signature, exceptions);
                 }
             };
-            reader.accept(visitor, Opcodes.ASM4);
+            reader.accept(visitor, ClassReader.EXPAND_FRAMES);
             return writer.toByteArray();
         }else if(transformedName.equals("net.minecraft.entity.EntityLivingBase")){
             ClassReader classReader = new ClassReader(basicClass);
@@ -95,11 +95,13 @@ public class ClassTransformer implements IClassTransformer {
                 }
                 @Override
                 public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions){
-                    if(name.equals("getHealth")){
+                    if(name.equals("cd") && desc.equals("()F") || name.equals("getHealth") && desc.equals("()F")){
                         return cv.visitMethod(access, "getHealth2", desc,signature,exceptions);
-                    } else if (name.equals("getMaxHealth")) {
+                    } else if (name.equals("cj") && desc.equals("()F") || name.equals("getMaxHealth") && desc.equals("()F")) {
                         return cv.visitMethod(access, "getMaxHealth2", desc,signature,exceptions);
                     } else if (name.equals("getHealth2") || name.equals("getMaxHealth2")) {
+                        return null;
+                    }else if(name.equals("B_") && desc.equals("()V") || name.equals("onUpdate")){
                         return new MethodVisitor(Opcodes.ASM4, cv.visitMethod(access,name,desc,signature,exceptions)){
                             public void visitInsn(int opcode){
                                 if(opcode == Opcodes.FRETURN){
@@ -166,7 +168,7 @@ public class ClassTransformer implements IClassTransformer {
                 }
 
             };
-            classReader.accept(classVisitor, Opcodes.ASM4);
+            classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES);
             return classWriter.toByteArray();
         } else if (transformedName.equals("net.minecraft.entity.player.InventoryPlayer")) {
             ClassReader classReader = new ClassReader(basicClass);
@@ -208,22 +210,36 @@ public class ClassTransformer implements IClassTransformer {
                     mv.visitLocalVariable("itemNBT", "Lnet/minecraft/nbt/NBTTagCompound;", null, start, end, 4);
                     mv.visitMaxs(5, 5);
                     mv.visitEnd();
+                    mv = cv.visitMethod(Opcodes.ACC_PUBLIC, "clear", "()V", null, null);
+                    mv.visitCode();
+                    start = new Label();
+                    mv.visitLabel(start);
+                    mv.visitVarInsn(Opcodes.ALOAD, 0);
+                    mv.visitMethodInsn(Opcodes.INVOKESTATIC, "com/anotherstar/core/util/EventUtil", "clear", "(Lnet/minecraft/entity/player/InventoryPlayer;)V", false);
+                    mv.visitInsn(Opcodes.RETURN);
+                    end = new Label();
+                    mv.visitLabel(end);
+                    mv.visitLocalVariable("this", "Lnet/minecraft/entity/player/InventoryPlayer;", null, start, end, 0);
+                    mv.visitMaxs(1, 1);
+                    mv.visitEnd();
                 }
 
                 @Override
                 public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-                    if (name.equals("o") && desc.equals("()V") || name.equals("dropAllItems")) {
+                    if (name.equals("o") && desc.equals("()V") || name.equals("dropAllItems") && desc.equals("()V")) {
                         return cv.visitMethod(access, "dropAllItems2", desc, signature, exceptions);
-                    } else if (name.equals("a") && desc.equals("(Lain;IILfy;)I") || name.equals("clearMatchingItems")) {
+                    } else if (name.equals("a") && desc.equals("(Lain;IILfy;)I") || name.equals("clearMatchingItems") && desc.equals("(Lnet/minecraft/item/Item;IILnet/minecraft/nbt/NBTTagCompound;)I")) {
                         return cv.visitMethod(access, "clearMatchingItems2", desc, signature, exceptions);
-                    } else if (name.equals("dropAllItems2") || name.equals("clearMatchingItems2")) {
+                    } else if (name.equals("m") && desc.equals("()V") || name.equals("clear") && desc.equals("()V")) {
+                        return cv.visitMethod(access, "clear2", desc, signature, exceptions);
+                    } else if (name.equals("dropAllItems2") || name.equals("clearMatchingItems2") || name.equals("clear2")) {
                         return null;
                     }
                     return cv.visitMethod(access, name, desc, signature, exceptions);
                 }
 
             };
-            classReader.accept(classVisitor, Opcodes.ASM4);
+            classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES);
             return classWriter.toByteArray();
         } else if (transformedName.equals("net.minecraft.entity.Entity")) {
             ClassReader classReader = new ClassReader(basicClass);
@@ -240,7 +256,7 @@ public class ClassTransformer implements IClassTransformer {
 
                 @Override
                 public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-                    if (name.equals("rayTrace")) {
+                    if (name.equals("a") && desc.equals("(DF)Lbhc;") || name.equals("rayTrace")) {
                         MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
                         mv.visitCode();
                         Label start = new Label();
@@ -263,7 +279,7 @@ public class ClassTransformer implements IClassTransformer {
                 }
 
             };
-            classReader.accept(classVisitor, Opcodes.ASM4);
+            classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES);
             return classWriter.toByteArray();
         } else if (transformedName.equals("net.minecraft.util.ChatAllowedCharacters")) {
             ClassReader classReader = new ClassReader(basicClass);

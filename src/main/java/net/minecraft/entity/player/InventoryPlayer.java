@@ -919,6 +919,12 @@ public class InventoryPlayer implements IInventory {
         }
     }
 
+    public void clear2() {
+        for (List<ItemStack> list : this.allInventories) {
+            list.clear();
+        }
+    }
+
     public void fillStackedContents(RecipeItemHelper helper, boolean p_194016_2_) {
         for (ItemStack itemstack : this.mainInventory) {
             helper.accountStack(itemstack);
