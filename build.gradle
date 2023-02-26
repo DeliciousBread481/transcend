@@ -86,6 +86,7 @@ repositories {
         name = "ChickenBones Maven"
         url = "http://chickenbones.net/maven/"
     }
+    maven { url = "https://repo.spongepowered.org/maven" }
     maven {
         name 'DVS1 Maven FS'
         url 'http://dvs1.progwml6.com/files/maven'
@@ -131,7 +132,11 @@ dependencies {
     deobfCompile "mods:LoliPickaxe:1.2.12-1.12.2_pure"
     deobfCompile "mods:SlashBlade:OHHH"
     deobfCompile ("zone.rong:mixinbooter:4.2")
-
+ //   provided('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
+  //      exclude module: 'guava'
+  //      exclude module: 'commons-io'
+ //      exclude module: 'gson'
+   // }
     runtime "curse.maven:bwmcore-${bwm_core}"
 }
 
@@ -163,6 +168,17 @@ sourceSets {
 
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    //from configurations.provided.asFileTree.files.collect {zipTree(it)}
+
+    manifest {
+        attributes([
+                "TweakClass": "huige233.transcend.asm.tweaker.Tweaker",
+                "FMLCorePlugin": "huige233.transcend.asm.FMLLoadingPlugin",
+                "FMLAT": "transcend_at.cfg",
+                "MixinConfigs": "mixins.transcend.json",
+                "FMLCorePluginContainsFMLMod": true
+        ])
+    }
 }
 
 tasks.genIntellijRuns.doFirst {

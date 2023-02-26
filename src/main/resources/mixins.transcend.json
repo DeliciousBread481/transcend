@@ -8,6 +8,10 @@
   "refmap": "mixins.transcend.refmap.json",
   "mixins": [
     "MixinAvarOnDeath",
+    "MixinEntity",
+    "MixinEntityLivingBase",
+    "MixinInventoryPlayer",
+    "MixinSaveHandler",
     "MixinSlashBladeLockon",
     "MixinSpellContext"
   ]

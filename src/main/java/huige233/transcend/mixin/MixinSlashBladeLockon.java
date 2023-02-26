@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = ItemSlashBlade.class,remap = false)
-public class MixinSlashBladeLockon {
+public abstract class MixinSlashBladeLockon {
 
     @Shadow(remap = false)
     public static TagPropertyAccessor.TagPropertyInteger TargetEntityId;
