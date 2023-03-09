@@ -50,9 +50,10 @@ public class FireImmune extends EntityItem {
 //            if (ticksExisted % 20 == 0) {
         //}
     }
-
+/*
     @Override
     public boolean attackEntityFrom(@Nonnull DamageSource source, float amount) {
+
         if(!world.isRemote){
             if(source.isDamageAbsolute()) {
                 if (this.getItem().getItem() == ModItems.BEDROCK_CHEN) {
@@ -72,6 +73,8 @@ public class FireImmune extends EntityItem {
         }
         return source.equals(new DamageSource("transcend"));
     }
+
+ */
 
     public static class EventHandler {
 

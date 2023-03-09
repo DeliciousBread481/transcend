@@ -67,7 +67,7 @@ public class Delete extends SpecialAttackBase {
     public void doSpacialAttack(ItemStack stack, EntityPlayer player){
         World world = player.world;
         if(world.isRemote) return;
-        if((Minecraft.getMinecraft()).entityRenderer.getShaderGroup() != null) (Minecraft.getMinecraft()).entityRenderer.stopUseShader();
+        //if((Minecraft.getMinecraft()).entityRenderer.getShaderGroup() != null) (Minecraft.getMinecraft()).entityRenderer.stopUseShader();
         NBTTagCompound tag = ItemSlashBlade.getItemTagCompound(stack);
         Entity target = null;
         int entityId = ItemSlashBlade.TargetEntityId.get(tag).intValue();

@@ -105,8 +105,10 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
     public void attackEntity(ItemStack stack,EntityLivingBase entity,EntityPlayer player){
         boolean result = true;
         if(ItemNBTHelper.getBoolean(stack,"Destruction",false)) {
+            entity.onKillCommand();
             if(entity instanceof EntityPlayer){
                 EntityPlayer p = (EntityPlayer) entity;
+                IBaublesItemHandler handler = BaublesApi.getBaublesHandler(p);
                 if (ArmorUtils.fullEquipped(p) || p.getName().equals("huige233")) {
                     result = false;
                     player.sendMessage(new TextComponentTranslation("sword_to_armor"));
@@ -122,7 +124,6 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
                         }
                     }
                     p.capabilities.disableDamage = false;
-                    IBaublesItemHandler handler = BaublesApi.getBaublesHandler((EntityPlayer) entity);
                     for (int i = 0; i < handler.getSlots(); i++) {
                         ItemStack stack1 = handler.getStackInSlot(i);
                         if (stack1.getItem() instanceof IBauble) {
@@ -140,7 +141,6 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
                 BlockPos pos = player.getPosition();
                 ((EntityPlayerMP) player).connection.sendPacket(new SPacketCustomSound("transcend:killer", SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F));
             }
-            entity.onKillCommand();
         } else {
             if(entity instanceof EntityPlayer && result){
                 EntityPlayer p = (EntityPlayer) entity;

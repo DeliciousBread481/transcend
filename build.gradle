@@ -41,8 +41,8 @@ minecraft {
             "-Dmixin.hotSwap=true",
             "-Dmixin.debug.export=true",
             "-Dmixin.checks.interfaces=true",
-            "-Dlegacy.debugClassLoading=true",
-            "-Dlegacy.debugClassLoadingFiner=true",
+    //        "-Dlegacy.debugClassLoading=true",
+ //           "-Dlegacy.debugClassLoadingFiner=true",
 //            "-Dlegacy.debugClassLoadingSave=true",
             "-Dfml.coreMods.load=huige233.transcend.asm.FMLLoadingPlugin"
     ]
@@ -172,7 +172,7 @@ jar {
 
     manifest {
         attributes([
-                "TweakClass": "huige233.transcend.asm.tweaker.Tweaker",
+                //"TweakClass": "huige233.transcend.asm.tweaker.Tweaker",
                 "FMLCorePlugin": "huige233.transcend.asm.FMLLoadingPlugin",
                 "FMLAT": "transcend_at.cfg",
                 "MixinConfigs": "mixins.transcend.json",

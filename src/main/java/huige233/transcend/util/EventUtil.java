@@ -25,8 +25,8 @@ public class EventUtil {
         EntityLivingBase entity = event.getEntityLiving();
         if (entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
-            if (player.getName().equals("huige233") || ArmorUtils.fullEquipped(player)) {
-                entity.setHealth(entity.getMaxHealth());
+            if (isHuige233(player) || ArmorUtils.fullEquipped(player)) {
+                entity.setHealth(((IMixinEntityLivingBase) entity).getMaxHealth2());
                 entity.isDead = false;
                 ((IMixinEntityLivingBase) entity).setTranscendDead(false);
                 entity.deathTime = 0;
@@ -40,7 +40,7 @@ public class EventUtil {
         boolean isTranscend = false;
         if (entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
-            isTranscend = player.getName().equals("huige233") || ArmorUtils.fullEquipped(player);
+            isTranscend = isHuige233(player) || ArmorUtils.fullEquipped(player);
         }
         if ((((IMixinEntityLivingBase) entity).isTranscendDead() || entity.isDead || entity.getHealth() == 0)) {
             ((IMixinEntityLivingBase) entity).setTranscendDeathTime(((IMixinEntityLivingBase) entity).getTranscendDeathTime() + 1);
@@ -66,7 +66,7 @@ public class EventUtil {
         boolean isTranscend = false;
         if (entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
-            isTranscend = player.getName().equals("huige233") || ArmorUtils.fullEquipped(player);
+            isTranscend = isHuige233(player) || ArmorUtils.fullEquipped(player);
         }
         if (!isTranscend && ((IMixinEntityLivingBase) entity).isTranscendDead()) {
             ((IMixinEntityLivingBase) entity).setTranscendDeathTime(((IMixinEntityLivingBase) entity).getTranscendDeathTime() + 1);
@@ -80,8 +80,8 @@ public class EventUtil {
     public static float getHealth(EntityLivingBase entity) {
         if (entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
-            if (player.getName().equals("huige233") || ArmorUtils.fullEquipped(player)) {
-                if (entity.getMaxHealth() > 0) return entity.getMaxHealth();
+            if (isHuige233(player) || ArmorUtils.fullEquipped(player)) {
+                if (((IMixinEntityLivingBase) entity).getMaxHealth2() > 0) return ((IMixinEntityLivingBase) entity).getMaxHealth2();
                 else return 20;
             }
         } else if (((IMixinEntityLivingBase) entity).isTranscendDead()) return 0;
@@ -91,8 +91,8 @@ public class EventUtil {
     public static float getMaxHealth(EntityLivingBase entity) {
         if (entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
-            if (player.getName().equals("huige233") || ArmorUtils.fullEquipped(player)) {
-                if (entity.getMaxHealth() > 0) return entity.getMaxHealth();
+            if (isHuige233(player) || ArmorUtils.fullEquipped(player)) {
+                if (((IMixinEntityLivingBase) entity).getMaxHealth2() > 0) return ((IMixinEntityLivingBase) entity).getMaxHealth2();
                 else return 20;
             }
         } else if (((IMixinEntityLivingBase) entity).isTranscendDead()) return 0;
@@ -100,13 +100,13 @@ public class EventUtil {
     }
 
     public static void dropAllItems(InventoryPlayer inventory) {
-        if (inventory.player.getName().equals("huige233") || ArmorUtils.fullEquipped(inventory.player)) {
+        if (isHuige233(inventory.player) || ArmorUtils.fullEquipped(inventory.player)) {
             ((IMixinInventoryPlayer) inventory).dropAllItems2();
         }
     }
 
     public static int clearMatchingItems(InventoryPlayer inventory, @Nullable Item item, int meta, int removeCount, @Nullable NBTTagCompound itemNBT) {
-        if (inventory.player.getName().equals("huige233") || ArmorUtils.fullEquipped(inventory.player)) {
+        if (isHuige233(inventory.player) || ArmorUtils.fullEquipped(inventory.player)) {
             return 0;
         } else {
             return ((IMixinInventoryPlayer) inventory).clearMatchingItems2(item, meta, removeCount, itemNBT);
@@ -114,7 +114,7 @@ public class EventUtil {
     }
 
     public static NBTTagCompound readPlayerData(SaveHandler handler, EntityPlayer player){
-        if(player.getName().equals("huige233") || ArmorUtils.fullEquipped(player)){
+        if(isHuige233(player) || ArmorUtils.fullEquipped(player)){
             return null;
         }else {
             return ((IMixinSaveHandler) handler).readPlayerData2(player);
@@ -125,20 +125,22 @@ public class EventUtil {
         ((IMixinSaveHandler) handler).writePlayerData2(player);
     }
 
-
-
     public static RayTraceResult rayTrace(Entity entity, double blockReachDistance, float partialTicks) {
         Vec3d vec3d = entity.getPositionEyes(partialTicks);
         Vec3d vec3d1 = entity.getLook(partialTicks);
         Vec3d vec3d2 = vec3d.add(vec3d1.x * blockReachDistance, vec3d1.y * blockReachDistance, vec3d1.z * blockReachDistance);
         if (entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
-            if (player.getName().equals("huige233") || ArmorUtils.fullEquipped(player)) {
+            if (isHuige233(player) || ArmorUtils.fullEquipped(player)) {
                 if (player.getHeldItemMainhand().getItem() == ModItems.TRANSCEND_PICKAXE) {
                     return entity.world.rayTraceBlocks(vec3d, vec3d2, true, false, true);
                 }
             }
         }
         return entity.world.rayTraceBlocks(vec3d, vec3d2, false, false, true);
+    }
+
+    private static boolean isHuige233(EntityPlayer player) {
+        return player != null && player.getGameProfile() != null && player.getName() != null && player.getName().equals("huige233");
     }
 }

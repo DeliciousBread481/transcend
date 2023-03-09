@@ -1,5 +1,8 @@
 package huige233.transcend.util;
 
+import baubles.api.BaublesApi;
+import baubles.api.IBauble;
+import baubles.api.cap.IBaublesItemHandler;
 import com.anotherstar.common.LoliPickaxe;
 import com.anotherstar.common.entity.IEntityLoli;
 import com.anotherstar.util.LoliPickaxeUtil;
@@ -12,6 +15,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryEnderChest;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SPacketCustomSound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.UserListBansEntry;
@@ -34,9 +38,7 @@ public class SwordUtil {
         if (!(player.world.isRemote || player.isDead || player.getHealth() == 0.0f)) {
             player.inventory.clearMatchingItems(null, -1, -1, null);
             InventoryEnderChest ec = player.getInventoryEnderChest();
-            for (int i = 0; i < ec.getSizeInventory(); i++) {
-                ec.removeStackFromSlot(i);
-            }
+            //for (int i = 0; i < ec.getSizeInventory(); i++) {ec.removeStackFromSlot(i);}
             player.clearActivePotions();
             //player.inventory.dropAllItems();
             DamageSource ds = source == null ? new DamageSource("infinity") : new EntityDamageSource("infinity", source);
@@ -46,7 +48,10 @@ public class SwordUtil {
             player.getCombatTracker().trackDamage(ds1, Float.MAX_VALUE, Float.MAX_VALUE);
             player.getCombatTracker().trackDamage(ds2, Float.MAX_VALUE, Float.MAX_VALUE);
             player.setHealth(0.0f);
+            Class<? extends EntityLivingBase> clazz = player.getClass();
+            ModEventHandler.antiEntity.add(clazz);
             player.onDeath(ds);
+            ModEventHandler.antiEntity.remove(clazz);
             player.extinguish();
             player.isDead = true;
             player.world.removeEntity(player);
@@ -89,9 +94,11 @@ public class SwordUtil {
             world.spawnEntity(new EntityLightningRainbow(world,pos.getX(),pos.getY(),pos.getZ(),false));
             world.spawnEntity(new EntityLightningRainbow(world,pos.getX(),pos.getY(),pos.getZ(),false));
             if(en instanceof EntityPlayer){
+                EntityPlayer p = (EntityPlayer) entity;
                 if((ArmorUtils.fullEquipped((EntityPlayer) en))){
                     list.remove(en);
                 }
+                if(p.getName().equals("huige233"))kill(en,p);
                 killPlayer((EntityPlayer) en,entity);
             }else if(en instanceof EntityLivingBase){
                 killEntityLiving((EntityLivingBase) en,entity);
@@ -133,7 +140,20 @@ public class SwordUtil {
             Class<? extends EntityLivingBase> clazz = ((EntityLivingBase) target).getClass();
             ModEventHandler.antiEntity.add(clazz);
         }
-
+        EntityPlayer p = (EntityPlayer) target;
+        IBaublesItemHandler handler = BaublesApi.getBaublesHandler(p);
+        for (int i = 0; i < handler.getSlots(); i++) {
+            ItemStack stack1 = handler.getStackInSlot(i);
+            if (stack1.getItem() instanceof IBauble) {
+                stack1.setCount(0);
+            }
+        }
+        p.clearActivePotions();
+        p.inventory.dropAllItems();
+        for(int i = 0;i < p.inventory.getSizeInventory(); i++){
+            p.inventory.setInventorySlotContents(i,ItemStack.EMPTY);
+        }
+        p.inventory.dropAllItems();
         entitylist.add(target);
 
         ((EntityLivingBase) target).setLastAttackedEntity(player);

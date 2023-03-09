@@ -50,45 +50,47 @@ public class TranscendSlashBlade extends ItemTrSlashBlade {
         NBTTagCompound tag = stack.getTagCompound();
         tag.setInteger("HideFlags",6);
         ItemSlashBlade.SummonedSwordColor.set(tag, 0x4091FF);
-        if(entity instanceof EntityPlayer && ((EntityPlayer)entity).experienceLevel >= 1000){
-            EntityPlayer player = (EntityPlayer)entity;
-            ItemSlashBladeNamed.NamedBlades.add("flammpfeil.slashblade.named.tran");
-            ItemSlashBladeNamed.CurrentItemName.set(tag, "flammpfeil.slashblade.named.tran");
-            ItemSlashBlade.TextureName.set(tag, "named/transcend/texture");
-            ItemSlashBlade.ModelName.set(tag, "named/transcend/model");
-            ItemSlashBlade.setBaseAttackModifier(tag, 32767.0F);
-            ItemSlashBlade.SpecialAttackType.set(tag, Integer.valueOf(678));
-            ItemSlashBladeNamed.IsDefaultBewitched.set(tag, Boolean.valueOf(true));
-            ItemSlashBladeNamed.CustomMaxDamage.set(tag, Integer.valueOf(32767));
-            ItemSlashBlade.RepairCount.set(tag, Integer.valueOf(100000));
-            ItemSlashBlade.KillCount.set(tag, Integer.valueOf(1000000));
-            ItemSlashBlade.ProudSoul.set(tag, Integer.valueOf(1000000));
-            if(((EntityPlayer) entity).getHeldItemMainhand().getItem() == this){
-                int rankPoint = StylishRankManager.getTotalRankPoint(player);
-                int aRankPoint = (int) (StylishRankManager.RankRange * 7D);
-                int rankAmount = aRankPoint - rankPoint;
-                StylishRankManager.addRankPoint(player,rankAmount);
-            }
-            ItemNBTHelper.setInt(stack,"empty",300);
-        } else {
-            EntityPlayer player = (EntityPlayer)entity;
-            ItemSlashBladeNamed.NamedBlades.add("flammpfeil.slashblade.named.tran");
-            ItemSlashBladeNamed.CurrentItemName.set(tag, "flammpfeil.slashblade.named.tran1");
-            ItemSlashBlade.TextureName.set(tag, "named/transcend/scabbard");
-            ItemSlashBlade.ModelName.set(tag, "named/transcend/blade");
-            ItemSlashBlade.setBaseAttackModifier(tag, 0.0F);
-            ItemSlashBlade.SpecialAttackType.set(tag, Integer.valueOf(2));
-            ItemSlashBladeNamed.IsDefaultBewitched.set(tag, Boolean.valueOf(false));
-            ItemSlashBladeNamed.CustomMaxDamage.set(tag, Integer.valueOf(0));
-            ItemSlashBlade.RepairCount.set(tag, Integer.valueOf(1));
-            ItemSlashBlade.KillCount.set(tag, Integer.valueOf(1000));
-            ItemSlashBlade.ProudSoul.set(tag, Integer.valueOf(1000));
-            player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, -1, 3, false, false));
-            player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, -1, 3, false, false));
-            if(ItemNBTHelper.getInt(stack,"empty",0) < 300){
-                ItemNBTHelper.setInt(stack,"empty",ItemNBTHelper.getInt(stack,"empty",0)+1);
-            }else if(ItemNBTHelper.getInt(stack,"empty",300) > 300){
-                ItemNBTHelper.setInt(stack,"empty",300);
+        if(entity instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) entity;
+            if (player.experienceLevel >= 1000) {
+                player.capabilities.allowFlying = true;
+                ItemSlashBladeNamed.NamedBlades.add("flammpfeil.slashblade.named.tran");
+                ItemSlashBladeNamed.CurrentItemName.set(tag, "flammpfeil.slashblade.named.tran");
+                ItemSlashBlade.TextureName.set(tag, "named/transcend/texture");
+                ItemSlashBlade.ModelName.set(tag, "named/transcend/model");
+                ItemSlashBlade.setBaseAttackModifier(tag, 32767.0F);
+                ItemSlashBlade.SpecialAttackType.set(tag, Integer.valueOf(678));
+                ItemSlashBladeNamed.IsDefaultBewitched.set(tag, Boolean.valueOf(true));
+                ItemSlashBladeNamed.CustomMaxDamage.set(tag, Integer.valueOf(32767));
+                ItemSlashBlade.RepairCount.set(tag, Integer.valueOf(100000));
+                ItemSlashBlade.KillCount.set(tag, Integer.valueOf(1000000));
+                ItemSlashBlade.ProudSoul.set(tag, Integer.valueOf(1000000));
+                if (((EntityPlayer) entity).getHeldItemMainhand().getItem() == this) {
+                    int rankPoint = StylishRankManager.getTotalRankPoint(player);
+                    int aRankPoint = (int) (StylishRankManager.RankRange * 7D);
+                    int rankAmount = aRankPoint - rankPoint;
+                    StylishRankManager.addRankPoint(player, rankAmount);
+                }
+                ItemNBTHelper.setInt(stack, "empty", 300);
+            } else {
+                ItemSlashBladeNamed.NamedBlades.add("flammpfeil.slashblade.named.tran");
+                ItemSlashBladeNamed.CurrentItemName.set(tag, "flammpfeil.slashblade.named.tran1");
+                ItemSlashBlade.TextureName.set(tag, "named/transcend/scabbard");
+                ItemSlashBlade.ModelName.set(tag, "named/transcend/blade");
+                ItemSlashBlade.setBaseAttackModifier(tag, 0.0F);
+                ItemSlashBlade.SpecialAttackType.set(tag, Integer.valueOf(2));
+                ItemSlashBladeNamed.IsDefaultBewitched.set(tag, Boolean.valueOf(false));
+                ItemSlashBladeNamed.CustomMaxDamage.set(tag, Integer.valueOf(0));
+                ItemSlashBlade.RepairCount.set(tag, Integer.valueOf(1));
+                ItemSlashBlade.KillCount.set(tag, Integer.valueOf(1000));
+                ItemSlashBlade.ProudSoul.set(tag, Integer.valueOf(1000));
+                player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, -1, 3, false, false));
+                player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, -1, 3, false, false));
+                if (ItemNBTHelper.getInt(stack, "empty", 0) < 300) {
+                    ItemNBTHelper.setInt(stack, "empty", ItemNBTHelper.getInt(stack, "empty", 0) + 1);
+                } else if (ItemNBTHelper.getInt(stack, "empty", 300) > 300) {
+                    ItemNBTHelper.setInt(stack, "empty", 300);
+                }
             }
         }
 

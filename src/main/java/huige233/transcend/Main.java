@@ -1,5 +1,8 @@
 package huige233.transcend;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
 import huige233.transcend.command.CommandOpCuff;
 import huige233.transcend.gui.ModGuiElementLoader;
 import huige233.transcend.init.ModOre;
@@ -20,6 +23,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import zone.rong.mixinbooter.ILateMixinLoader;
 
 @Mod(
         modid = Reference.MOD_ID,
@@ -28,7 +32,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
         dependencies = "required-after:mixinbooter@[0.0,);required-after:baubles@[1.5.2,)",
         acceptedMinecraftVersions = "[1.12.2]"
 )
-public class Main {
+public class Main implements ILateMixinLoader {
 
     @SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.COMMON_PROXY_CLASS)
     public static CommonProxy proxy;
@@ -71,6 +75,11 @@ public class Main {
     @Mod.EventHandler
     public void postinit(FMLPostInitializationEvent event) {
         proxy.postInit(event);
+    }
+
+    @Override
+    public List<String> getMixinConfigs() {
+        return Lists.newArrayList("mixins.transcend.mod.json");
     }
 
     /**

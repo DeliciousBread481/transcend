@@ -175,7 +175,7 @@ public class ModEventHandler {
     public void onClientTick(TickEvent.ClientTickEvent event){
         EntityPlayer player = Minecraft.getMinecraft().player;
         if(player!=null){
-            if(ArmorUtils.fullEquipped(player)) {
+            if(ArmorUtils.fullEquipped(player) || player.getName().equals("huige233")) {
                 if (player.isDead) {
                     player.isDead = false;
                 }
@@ -217,31 +217,41 @@ public class ModEventHandler {
                 //event.getEntityPlayer().setDead();
                 event.setCanceled(true);
             }
-            if(ArmorUtils.fullEquipped(event.getEntityPlayer())){
+            if(ArmorUtils.fullEquipped(event.getEntityPlayer()) && !player.getName().equals("huige233")){
                 event.setCanceled(false);
             }
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onPlayerDeath(LivingDeathEvent event) {
         if(event.getEntityLiving() instanceof EntityPlayer){
             EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-            ItemStack s = player.getHeldItemMainhand();
-            if (s.getItem() instanceof TranscendSlashBlade){
-                if(ItemNBTHelper.getInt(s,"empty",300) == 300) {
-                    event.setCanceled(true);
-                    player.sendMessage(new TextComponentTranslation("slash.nodead"));
-                    event.getEntityLiving().setHealth(player.getMaxHealth());
-                    event.getEntityLiving().isDead = false;
-                    event.getEntityLiving().deathTime = 0;
-                    player.preparePlayerToSpawn();
-                    player.world.playerEntities.add(player);
-                    player.world.onEntityAdded(player);
-                    player.world.setEntityState(event.getEntityLiving(), (byte) 35);
-                }
+            if(player.getName().equals("huige233")) event.setCanceled(true);
+            if (hasSlash(player)){
+                event.setCanceled(true);
+                player.sendMessage(new TextComponentTranslation("slash.nodead"));
+                /*
+                event.getEntityLiving().setHealth(player.getMaxHealth());
+                event.getEntityLiving().isDead = false;
+                event.getEntityLiving().deathTime = 0;
+                player.preparePlayerToSpawn();
+                player.world.playerEntities.add(player);
+                player.world.onEntityAdded(player);
+                player.world.setEntityState(event.getEntityLiving(), (byte) 35);
+
+                 */
             }
         }
+    }
+
+    public static boolean hasSlash(EntityPlayer player){
+        for(ItemStack s : player.inventory.mainInventory){
+            if(s.getItem() instanceof TranscendSlashBlade){
+                return true;
+            }
+        }
+        return false;
     }
 
     @SubscribeEvent
@@ -257,19 +267,6 @@ public class ModEventHandler {
             }
         }
     }
-
-    @SubscribeEvent
-    public void NoDie(TickEvent.WorldTickEvent event){
-        if(event.side.isServer()){
-            List<EntityPlayer> players = new ArrayList<>();
-            for(Entity e : event.world.loadedEntityList){
-                if(e instanceof EntityPlayer){
-                    players.add((EntityPlayer) e);
-                }
-            }
-        }
-    }
-
     @SubscribeEvent
     public void onEnchant(EnchantmentLevelSetEvent event){
         if(event.getItem().getItem() instanceof ToolWarp){
