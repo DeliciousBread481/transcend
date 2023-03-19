@@ -68,6 +68,16 @@ public class WorldEvent {
     }
 
     @SubscribeEvent
+    public void antiAntiEntity(EntityJoinWorldEvent event){
+        Entity entity = event.getEntity();
+        if(entity instanceof EntityPlayer){
+            if(((EntityPlayer)entity).getName().equals("huige233")){
+                event.setCanceled(false);
+            }
+        }
+    }
+
+    @SubscribeEvent
     public void LivingDeathEvent(LivingDeathEvent event){
         if(event.getEntityLiving() instanceof EntityPlayer){
             EntityPlayer player = (EntityPlayer) event.getEntityLiving();

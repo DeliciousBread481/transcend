@@ -68,7 +68,7 @@ public class ModEventHandler {
         EnumFacing facing = event.getFace();
         Vec3d vec = event.getHitVec();
         if(!world.isRemote){
-            if(state.getBlockHardness(world,pos) <= -1 && stack.getItem() == ModItems.TRANSCEND_PICKAXE) {
+            if(state.getBlockHardness(world,pos) <= -1 || state.getMaterial() != Material.AIR && stack.getItem() == ModItems.TRANSCEND_PICKAXE) {
                 ItemStack drop = block.getPickBlock(state, new RayTraceResult(vec, facing), world, pos, player);
                 event.getWorld().destroyBlock(pos, false);
                 world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), drop));

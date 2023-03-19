@@ -3,7 +3,6 @@ package huige233.transcend.compat.slash.specialattack;
 import mods.flammpfeil.slashblade.entity.EntitySlashDimension;
 import mods.flammpfeil.slashblade.item.ItemSlashBlade;
 import mods.flammpfeil.slashblade.specialattack.SpecialAttackBase;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;

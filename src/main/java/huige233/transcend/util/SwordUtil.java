@@ -1,13 +1,8 @@
 package huige233.transcend.util;
 
-import baubles.api.BaublesApi;
-import baubles.api.IBauble;
-import baubles.api.cap.IBaublesItemHandler;
-import com.anotherstar.common.LoliPickaxe;
-import com.anotherstar.common.entity.IEntityLoli;
-import com.anotherstar.util.LoliPickaxeUtil;
 import com.mojang.authlib.GameProfile;
 import huige233.transcend.entity.EntityLightningRainbow;
+import huige233.transcend.util.handlers.BaublesHelper;
 import huige233.transcend.util.handlers.ModEventHandler;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.Entity;
@@ -16,18 +11,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.server.SPacketCustomSound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.UserListBansEntry;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Optional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -105,12 +96,15 @@ public class SwordUtil {
             } else {
                 killEntity(en);
             }
+            /*
             if(Loader.isModLoaded("lolipickaxe")){
                 leftClickEntity(entity, en);
                 if(entity instanceof IEntityLoli){
                     ((IEntityLoli)entity).setDispersal(true);
                 }
             }
+
+             */
         }
         return list.size();
     }
@@ -141,13 +135,15 @@ public class SwordUtil {
             ModEventHandler.antiEntity.add(clazz);
         }
         EntityPlayer p = (EntityPlayer) target;
-        IBaublesItemHandler handler = BaublesApi.getBaublesHandler(p);
-        for (int i = 0; i < handler.getSlots(); i++) {
-            ItemStack stack1 = handler.getStackInSlot(i);
-            if (stack1.getItem() instanceof IBauble) {
-                stack1.setCount(0);
-            }
+//        IBaublesItemHandler handler = BaublesApi.getBaublesHandler(p);
+        for (ItemStack bauble : BaublesHelper.getBaubles(p)) {
+//            ItemStack stack1 = handler.getStackInSlot(i);
+//            if (stack1.getItem() instanceof IBauble) {
+                bauble.setCount(0);
+//            }
         }
+//        for (int i = 0; i < handler.getSlots(); i++) {
+//        }
         p.clearActivePotions();
         p.inventory.dropAllItems();
         for(int i = 0;i < p.inventory.getSizeInventory(); i++){
@@ -186,7 +182,7 @@ public class SwordUtil {
             ModEventHandler.antiEntity.remove(clazz);
         }
     }
-
+/*
     @Optional.Method(modid = LoliPickaxe.MODID)
     public static void leftClickEntity(EntityLivingBase loli, Entity entity) {
         if (!entity.world.isRemote && (loli instanceof EntityPlayer || loli instanceof IEntityLoli)) {
@@ -207,4 +203,6 @@ public class SwordUtil {
             }
         }
     }
+
+ */
 }

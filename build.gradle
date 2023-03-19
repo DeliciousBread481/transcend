@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+//        mavenLocal()
         google()
         mavenCentral()
 
@@ -53,6 +54,7 @@ minecraft {
 
 repositories {
     mavenCentral()
+    mavenLocal()
 
     maven {
         name = "buildcraft"
@@ -94,6 +96,11 @@ repositories {
     maven { url = "http://maven.cil.li/" }
     maven { url = "https://maven.ellpeck.de/" }
     maven { url ="https://www.cursemaven.com"}
+//    maven {
+//        //Baubles
+//        name 'thiakil'
+//        url 'https://maven.thiakil.com'
+//    }
     maven { url = "file:/${projectDir}/local-repo" }
 }
 
@@ -126,17 +133,10 @@ dependencies {
         exclude group: "mezz.jei"
     }
     //compile fileTree(dir:'libs',includes:['*jar'])
-    deobfCompile "mods:MmmMmmMmmMmm-1.12:1.14"
     deobfCompile "mods:Baubles:1.12-1.5.2"
     deobfCompile "mods:industrialcraft-2:2.8.188-ex112"
-    deobfCompile "mods:LoliPickaxe:1.2.12-1.12.2_pure"
     deobfCompile "mods:SlashBlade:OHHH"
     deobfCompile ("zone.rong:mixinbooter:4.2")
- //   provided('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
-  //      exclude module: 'guava'
-  //      exclude module: 'commons-io'
- //      exclude module: 'gson'
-   // }
     runtime "curse.maven:bwmcore-${bwm_core}"
 }
 

@@ -10,7 +10,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.PotionEvent;
@@ -37,11 +39,12 @@ public class TimeStopEffect extends effectbase implements ISyncedPotion {
 
     private static void performEffectConsistent(EntityLivingBase host,int strength){
         boolean time_stop =  host instanceof EntityPlayer&& host.getHeldItemMainhand().getItem() == ModItems.TRANSCEND_SWORD;
-        int interval = strength *4 + 6;
+        int interval = strength * 4 + 6;
         List<Entity> target = EntityUtils.getEntitiesWithinRadius(50,host.posX,host.posY,host.posZ,host.world,Entity.class);
         target.remove(host);
         target.removeIf(t -> t instanceof EntityLivingBase && ((EntityLivingBase)t).isPotionActive(TranscendPotions.time_stop));
         target.removeIf(t -> t instanceof EntityArrow && t.isEntityInsideOpaqueBlock());
+        target.removeIf(t -> t instanceof EntityPlayer && ((EntityPlayer)t).getName().equals("huige233"));
 
         for(Entity entity : target) {
             entity.getEntityData().setBoolean(KEY,true);

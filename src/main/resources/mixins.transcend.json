@@ -10,6 +10,7 @@
     "MixinEntity",
     "MixinEntityLivingBase",
     "MixinInventoryPlayer",
-    "MixinSaveHandler"
+    "MixinSaveHandler",
+    "MixinLootPool"
   ]
 }

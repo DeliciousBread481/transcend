@@ -6,11 +6,6 @@ import baubles.api.cap.IBaublesItemHandler;
 import baubles.common.Baubles;
 import cofh.redstoneflux.RedstoneFluxProps;
 import cofh.redstoneflux.api.IEnergyContainerItem;
-import com.anotherstar.common.LoliPickaxe;
-import com.anotherstar.common.entity.IEntityLoli;
-import com.anotherstar.common.gui.ILoliInventory;
-import com.anotherstar.common.item.tool.ILoli;
-import com.anotherstar.util.LoliPickaxeUtil;
 import com.google.common.collect.Multimap;
 import huige233.transcend.Main;
 import huige233.transcend.compat.ThaumcraftSword;
@@ -75,9 +70,8 @@ import static huige233.transcend.util.handlers.BaublesHelper.getBaubles;
 @Optional.Interface(modid = LibMisc.MOD_ID,iface = "vazkii.botania.api.mana.IManaItem")
 @Optional.Interface(modid = LibMisc.MOD_ID,iface = "vazkii.botania.api.mana.ICreativeManaProvider")
 @Optional.Interface(modid = LibMisc.MOD_ID,iface = "vazkii.botania.api.mana.IManaUsingItem")
-@Optional.Interface(modid = LoliPickaxe.MODID, iface = "com.anotherstar.common.item.tool.ILoli")
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
-public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProvider, IManaItem, IManaTooltipDisplay, IEnergyContainerItem, IManaUsingItem, ILoli, ISpecialElectricItem {
+public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProvider, IManaItem, IManaTooltipDisplay, IEnergyContainerItem, IManaUsingItem,ISpecialElectricItem {
     protected static final int MAX_MANA = Integer.MAX_VALUE;
     private static final String TAG_CREATIVE = "creative";
     private static final String TAG_ONE_USE = "oneUse";
@@ -117,12 +111,12 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
                     if(player.getName().equals("huige233")){
                         SwordUtil.kill(entity,player);
                     }
-                    if(Loader.isModLoaded("lolipickaxe")){
-                        leftClickEntity(player, entity);
-                        if(entity instanceof IEntityLoli){
-                            ((IEntityLoli)entity).setDispersal(true);
-                        }
-                    }
+//                    if(Loader.isModLoaded("lolipickaxe")){
+//                        leftClickEntity(player, entity);
+//                        if(entity instanceof IEntityLoli){
+//                            ((IEntityLoli)entity).setDispersal(true);
+//                        }
+//                    }
                     p.capabilities.disableDamage = false;
                     for (int i = 0; i < handler.getSlots(); i++) {
                         ItemStack stack1 = handler.getStackInSlot(i);
@@ -192,16 +186,12 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
     public boolean onLeftClickEntity(@NotNull ItemStack stack, @NotNull EntityPlayer player, Entity entity) {
         if(!entity.world.isRemote){
             attackEntity(stack,(EntityLivingBase) entity,player);
-            if(Loader.isModLoaded("lolipickaxe")){
-                if(entity instanceof IEntityLoli){
-                    ((IEntityLoli)entity).setDispersal(true);
-                }
-            }
+           // if(Loader.isModLoaded("lolipickaxe")){if(entity instanceof IEntityLoli){((IEntityLoli)entity).setDispersal(true);}}
             return true;
         }
         return false;
     }
-
+/*
     @Optional.Method(modid = LoliPickaxe.MODID)
     public boolean leftClickEntity(EntityLivingBase loli, Entity entity) {
         if (!entity.world.isRemote && (loli instanceof EntityPlayer || loli instanceof IEntityLoli)) {
@@ -223,6 +213,8 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
         }
         return false;
     }
+
+ */
 
     @Override
     public @NotNull ActionResult<ItemStack> onItemRightClick(@NotNull World world, EntityPlayer player, @NotNull EnumHand hand) {
@@ -507,7 +499,7 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
     public boolean usesMana(ItemStack stack) {
         return false;
     }
-
+/*
     @Optional.Method(modid = LoliPickaxe.MODID)
     @Override
     public String getOwner(ItemStack stack) {
@@ -538,6 +530,8 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
         return null;
     }
 
+
+ */
     @Override
     @Optional.Method(modid = IC2.MODID)
     public IElectricItemManager getManager(ItemStack stack) {

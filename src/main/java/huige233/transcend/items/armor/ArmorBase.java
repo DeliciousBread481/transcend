@@ -87,7 +87,7 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
                 event.getEntityLiving().setHealth(player.getMaxHealth());
                 event.getEntityLiving().isDead = false;
                 event.getEntityLiving().deathTime = 0;
-                player.preparePlayerToSpawn();
+                //player.preparePlayerToSpawn();
                 player.world.playerEntities.add(player);
                 player.world.onEntityAdded(player);
                 player.world.setEntityState(event.getEntityLiving(), (byte) 35);
