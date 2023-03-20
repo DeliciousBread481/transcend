@@ -1,6 +1,7 @@
 package huige233.transcend.util.other;
 
-import huige233.transcend.mixinitf.ILootPoolFieldGetter;
+import huige233.transcend.mixinitf.IMixinLootPoolFieldGetter;
+import huige233.transcend.mixinitf.IMixinLootTableFieldGetter;
 import net.minecraft.world.storage.loot.*;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import org.apache.commons.lang3.tuple.Pair;
@@ -14,14 +15,14 @@ public abstract class LootReverser {
 
     private static LootTable reversedLootTable(LootTable table) {
         ArrayList<LootPool> reversedLootPolls = new ArrayList<>();
-        Stream<Pair<String, LootPool>> stream = table.pools.stream().map(pool -> Pair.of(pool.getName(), pool));
+        Stream<Pair<String, LootPool>> stream = ((IMixinLootTableFieldGetter) table).getLootPool().stream().map(pool -> Pair.of(pool.getName(), pool));
 
         Map<String, LootPool> poolMap = stream.collect(Collectors.toMap(Pair::getKey, Pair::getValue));
         List<Pair<String, RandomValueRange>> sortedRoll = stream.map(pool -> Pair.of(pool.getKey(), pool.getValue().getRolls())).sorted(Comparator.comparingDouble(randomValueRange -> (randomValueRange.getValue().getMax() + randomValueRange.getValue().getMin()) / 2.0)).collect(Collectors.toList());
         List<Pair<String, RandomValueRange>> sortedBoundsRoll = stream.map(pool -> Pair.of(pool.getKey(), pool.getValue().getBonusRolls())).sorted(Comparator.comparingDouble(randomValueRange -> (randomValueRange.getValue().getMax() + randomValueRange.getValue().getMin()) / 2.0)).collect(Collectors.toList());
 
         for (String name : poolMap.keySet()) {
-            ILootPoolFieldGetter fieldGetter = (ILootPoolFieldGetter) poolMap.get(name);
+            IMixinLootPoolFieldGetter fieldGetter = (IMixinLootPoolFieldGetter) poolMap.get(name);
 
             RandomValueRange reversedRoll = sortedRoll.get(sortedRoll.size() - 1 - sortedRoll.indexOf(name)).getValue();
             RandomValueRange reversedBoundsRoll = sortedBoundsRoll.get(sortedBoundsRoll.size() - 1 - sortedBoundsRoll.indexOf(name)).getValue();
