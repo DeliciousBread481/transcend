@@ -38,70 +38,6 @@ public class ItemTravelStaff extends ItemBase implements IHasModel {
     }
 
     @Override
-    public void onUpdate(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected){
-        if(Loader.isModLoaded(IC2.MODID)){
-            ic2charge(stack,world,entity,itemSlot,isSelected);
-        }
-        if(Loader.isModLoaded(RedstoneFluxProps.MOD_ID)){
-            rfReceive(stack,world,entity,itemSlot,isSelected);
-        }
-    }
-
-    @Optional.Method(modid = RedstoneFluxProps.MOD_ID)
-    private void rfReceive(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
-        if (!entity.world.isRemote && entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) entity;
-            for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-                ItemStack receive = player.inventory.getStackInSlot(i);
-                if (!receive.isEmpty()) {
-                    if (receive.getItem() instanceof IEnergyContainerItem) {
-                        IEnergyContainerItem energy = (IEnergyContainerItem) receive.getItem();
-                        energy.receiveEnergy(receive, energy.getMaxEnergyStored(receive) - energy.getEnergyStored(receive), false);
-                    }
-                    if (receive.hasCapability(CapabilityEnergy.ENERGY, null)) {
-                        IEnergyStorage cap = (IEnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY, null);
-                        if ((cap != null) && (cap.canReceive())) {
-                            cap.receiveEnergy(Integer.MAX_VALUE, false);
-                        }
-                    }
-                }
-            }
-            if (Loader.isModLoaded(Baubles.MODID)) {
-                for (ItemStack receive : getBaubles(player)) {
-                    if (receive.getItem() instanceof IEnergyContainerItem) {
-                        IEnergyContainerItem energy = (IEnergyContainerItem) receive.getItem();
-                        energy.receiveEnergy(receive, energy.getMaxEnergyStored(receive) - energy.getEnergyStored(receive), false);
-                    }
-                    if (receive.hasCapability(CapabilityEnergy.ENERGY, null)) {
-                        IEnergyStorage cap = (IEnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY, null);
-                        if ((cap != null) && (cap.canReceive())) {
-                            cap.receiveEnergy(Integer.MAX_VALUE, false);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @Optional.Method(modid = IC2.MODID)
-    private void ic2charge(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
-        if (!entity.world.isRemote && entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) entity;
-            for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-                ItemStack toCharge = player.inventory.getStackInSlot(i);
-                if (!toCharge.isEmpty()) {
-                    ElectricItem.manager.charge(toCharge, ElectricItem.manager.getMaxCharge(toCharge) - ElectricItem.manager.getCharge(toCharge), Integer.MAX_VALUE, true, false);
-                }
-            }
-            if (Loader.isModLoaded(Baubles.MODID)) {
-                for (ItemStack toCharge : getBaubles(player)) {
-                    ElectricItem.manager.charge(toCharge, ElectricItem.manager.getMaxCharge(toCharge) - ElectricItem.manager.getCharge(toCharge), Integer.MAX_VALUE, true, false);
-                }
-            }
-        }
-    }
-
-    @Override
     public @Nonnull ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand){
         ItemStack equipped = player.getHeldItem(hand);
         if(player.isSneaking()){
@@ -122,5 +58,9 @@ public class ItemTravelStaff extends ItemBase implements IHasModel {
         }
         player.swingArm(hand);
         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, equipped);
+    }
+
+    public double getMaxCharge(ItemStack itemStack) {
+        return Integer.MAX_VALUE;
     }
 }

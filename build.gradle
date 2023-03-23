@@ -228,3 +228,32 @@ tasks.genIntellijRuns.doLast {
         new XmlNodePrinter(it).print(workspace)
     }
 }
+import net.minecraftforge.gradle.tasks.DownloadAssetsTask
+import sun.misc.SharedSecrets
+import sun.misc.Unsafe
+
+// initialize the constant pool and force to load strings so that strings can be replaced
+void initConstantPool(Class<?> clazz) {
+    if (clazz != null && !clazz.interface) {
+        initConstantPool clazz.superclass
+
+        def constantPool = SharedSecrets.javaLangAccess.getConstantPool clazz
+        for (i in 0..constantPool.size) {
+            try {
+                constantPool.getStringAt i
+            } catch (def ignored) {}
+        }
+    }
+}
+
+// replace string values in constant pools
+void replaceString(String str1, String str2) {
+    String.class.getDeclaredField "value" with {
+        it.setAccessible true
+        it.set str1, str2.toCharArray()
+    }
+}
+
+// https://github.com/MinecraftForge/ForgeGradle/blob/FG_2.3/src/main/java/net/minecraftforge/gradle/tasks/DownloadAssetsTask.java#L189
+initConstantPool Unsafe.theUnsafe.allocateInstance(DownloadAssetsTask.GetAssetTask.class).class
+replaceString "http://resources.download.minecraft.net/", "https://resources.download.minecraft.net/"

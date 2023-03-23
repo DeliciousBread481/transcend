@@ -30,6 +30,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumRarity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
@@ -374,12 +375,12 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
             for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
                 ItemStack toCharge = player.inventory.getStackInSlot(i);
                 if (!toCharge.isEmpty()) {
-                    ElectricItem.manager.charge(toCharge, ElectricItem.manager.getMaxCharge(toCharge) - ElectricItem.manager.getCharge(toCharge), Integer.MAX_VALUE, true, false);
+                    ElectricItem.manager.charge(toCharge, ElectricItem.manager.getCharge(toCharge) - ElectricItem.manager.getCharge(toCharge), Integer.MAX_VALUE, true, false);
                 }
             }
             if (Loader.isModLoaded(Baubles.MODID)) {
                 for (ItemStack toCharge : getBaubles(player)) {
-                    ElectricItem.manager.charge(toCharge, ElectricItem.manager.getMaxCharge(toCharge) - ElectricItem.manager.getCharge(toCharge), Integer.MAX_VALUE, true, false);
+                    ElectricItem.manager.charge(toCharge, ElectricItem.rawManager.getCharge(toCharge) - ElectricItem.manager.getCharge(toCharge), Integer.MAX_VALUE, true, false);
                 }
             }
         }
@@ -536,6 +537,36 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
     @Optional.Method(modid = IC2.MODID)
     public IElectricItemManager getManager(ItemStack stack) {
         return new InfiniteElectricItemManager();
+    }
+
+    @Override
+    public boolean canProvideEnergy(ItemStack itemStack) {
+        return false;
+    }
+
+    @Override
+    public Item getChargedItem(ItemStack itemStack) {
+        return null;
+    }
+
+    @Override
+    public Item getEmptyItem(ItemStack itemStack) {
+        return null;
+    }
+
+    @Override
+    public double getMaxCharge(ItemStack itemStack) {
+        return Integer.MAX_VALUE;
+    }
+
+    @Override
+    public int getTier(ItemStack itemStack) {
+        return 0;
+    }
+
+    @Override
+    public double getTransferLimit(ItemStack itemStack) {
+        return 0;
     }
 }
 
