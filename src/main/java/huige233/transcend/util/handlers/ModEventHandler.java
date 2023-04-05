@@ -17,8 +17,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -26,6 +29,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraft.world.GameType;
 import net.minecraft.world.World;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent;
@@ -46,6 +50,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -57,6 +62,29 @@ public class ModEventHandler {
     public static Set<Class<? extends Entity>> antiEntity = Sets.newHashSet();
     public static Set<EntityPlayer> transcendPlayer = Sets.newHashSet();
 
+    static Field entityDataField;
+    static {
+        try {
+            Field field = Entity.class.getDeclaredField("customEntityData");
+            field.setAccessible(true);
+            entityDataField = field;
+        } catch (Exception ignored) {}
+    }
+    private static NBTTagCompound getOptional(EntityPlayerMP online) {
+        try {
+            if (entityDataField != null) {
+                return (NBTTagCompound) entityDataField.get(online);
+            }
+        } catch (Exception ignored) {}
+        return online.getEntityData();
+    }
+    private static boolean isCuff(EntityPlayer player){
+        EntityPlayerMP p = (EntityPlayerMP)player;
+        NBTTagCompound tag = getOptional(p);
+        return tag != null && tag.hasKey("_Cuff_");
+    }
+
+
     @SubscribeEvent
     public void onLeftCLick(PlayerInteractEvent.LeftClickBlock event){
         World world = event.getWorld();
@@ -67,6 +95,7 @@ public class ModEventHandler {
         ItemStack stack = event.getItemStack();
         EnumFacing facing = event.getFace();
         Vec3d vec = event.getHitVec();
+        if(isCuff(player)) event.setCanceled(true);
         if(!world.isRemote){
             if(state.getBlockHardness(world,pos) <= -1 || state.getMaterial() != Material.AIR && stack.getItem() == ModItems.TRANSCEND_PICKAXE) {
                 ItemStack drop = block.getPickBlock(state, new RayTraceResult(vec, facing), world, pos, player);
@@ -92,6 +121,7 @@ public class ModEventHandler {
         if(!entity.world.isRemote){
             if(entity instanceof EntityPlayer){
                 EntityPlayer player = (EntityPlayer) entity;
+                if(isCuff(player)) event.setCanceled(true);
                 if(ArmorUtils.fullEquipped(player) || player.getName().equals("huige233")) {
                     if(player.getEntityData().getBoolean("transcendThorns")){
                         Entity source = event.getSource().getTrueSource();
@@ -156,15 +186,11 @@ public class ModEventHandler {
             ItemStack held = event.getEntityLiving().getHeldItem(EnumHand.MAIN_HAND);
             if (held.getItem() == ModItems.TRANSCEND_PICKAXE) {
                 if (!event.getEntityLiving().onGround) {
-                    event.setNewSpeed(event.getNewSpeed() * 5.0F);
+                    event.setNewSpeed(event.getNewSpeed() * 15.0F);
                 }
 
                 if (!event.getEntityLiving().isInsideOfMaterial(Material.WATER) && !EnchantmentHelper.getAquaAffinityModifier(event.getEntityLiving())) {
                     event.setNewSpeed(event.getNewSpeed() * 5.0F);
-                }
-
-                if (held.getTagCompound() != null && (held.getTagCompound().getBoolean("hammer") || held.getTagCompound().getBoolean("destroyer"))) {
-                    event.setNewSpeed(event.getNewSpeed() * 0.5F);
                 }
             }
         }
@@ -191,6 +217,13 @@ public class ModEventHandler {
     public void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase == Phase.END) {
             for (EntityPlayer player : transcendPlayer) {
+                if(isCuff(player)){
+                    player.clearActivePotions();
+                    InventoryEnderChest ec = player.getInventoryEnderChest();
+                    for (int i = 0; i < ec.getSizeInventory(); i++) {ec.removeStackFromSlot(i);}
+                    EntityPlayerMP playerMP = (EntityPlayerMP) player;
+                    if(!(playerMP.interactionManager.getGameType() == GameType.SURVIVAL))playerMP.setGameType(GameType.SURVIVAL);
+                }
                 if (player.isDead) {
                     player.isDead = false;
                 }

@@ -6,7 +6,6 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import huige233.transcend.Main;
 import huige233.transcend.items.ItemBase;
-import huige233.transcend.items.tools.ItemTimeStop;
 import huige233.transcend.util.IHasModel;
 import huige233.transcend.util.ItemNBTHelper;
 import huige233.transcend.util.Reference;
@@ -30,14 +29,12 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 import static huige233.transcend.util.handlers.BaublesHelper.getBaubles;
@@ -49,7 +46,6 @@ public class FragmentLan extends ItemBase implements IBauble, IHasModel {
         addPropertyOverride(new ResourceLocation(Reference.MOD_ID,"empty"),(stack, worldIn, entityIn) -> FragmentLan.hasEmpty(stack)?0f:1f);
         this.maxStackSize=1;
     }
-
     @Override
     public BaubleType getBaubleType(ItemStack itemStack) {
         return BaubleType.TRINKET;

@@ -8,8 +8,8 @@
   "refmap": "mixins.transcend.refmap.json",
   "mixins": [
     "MixinAvarOnDeath",
-    "MixinLootTable",
     "MixinSlashBladeLockon",
-    "MixinSpellContext"
+    "MixinSpellContext",
+    "MixinMixinLootPool"
   ]
 }

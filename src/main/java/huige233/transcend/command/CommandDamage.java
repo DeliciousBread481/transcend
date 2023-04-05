@@ -10,7 +10,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.Mod;
+
+import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class CommandDamage extends CommandBase {
@@ -20,33 +25,22 @@ public class CommandDamage extends CommandBase {
 
     @Override
     public String getUsage(ICommandSender sender){
-        return "/damage <entity> <DamageSource>";
+        return "/damage <entity> <DamageSource> <count>";
     }
 
     public void execute(MinecraftServer server,ICommandSender sender,String[] args) throws CommandException{
-        if(args.length == 0) {
-            EntityPlayer player = getCommandSenderAsPlayer(sender);
-            DamageSource damageSource = player == null ? new DamageSource("OUT_OF_WORLD") : new EntityDamageSource("OUT_OF_WORLD",player);
-            player.getCombatTracker().trackDamage(damageSource,10,10);
-        } else if(args.length == 1){
-            Entity entity = getEntity(server,sender,args[0]);
-            EntityPlayer player = getCommandSenderAsPlayer(sender);
-            DamageSource damageSource = player == null ? new DamageSource("OUT_OF_WORLD") : new EntityDamageSource("OUT_OF_WORLD",player);
-            EntityLivingBase e = (EntityLivingBase) entity;
-            e.getCombatTracker().trackDamage(damageSource,10,10);
-        } else if(args.length == 2){
-            Entity entity = getEntity(server,sender,args[0]);
-            EntityPlayer player = getCommandSenderAsPlayer(sender);
-            EntityLivingBase e = (EntityLivingBase) entity;
-            DamageSource damageSource = player == null ? new DamageSource(args[2]) : new EntityDamageSource(args[3],player);
-            e.getCombatTracker().trackDamage(damageSource,10,10);
-        } else if(args.length == 3){
-            Entity entity = getEntity(server,sender,args[0]);
-            EntityPlayer player = getCommandSenderAsPlayer(sender);
-            EntityLivingBase e = (EntityLivingBase) entity;
-            DamageSource damageSource = player == null ? new DamageSource(args[2]) : new EntityDamageSource(args[2],player);
-            float i = (float) parseDouble(args[3]);
-            e.getCombatTracker().trackDamage(damageSource,i,i);
+        EntityPlayer attacker = getCommandSenderAsPlayer(sender);
+        EntityLivingBase victim = args.length > 0 ? getEntity(server,sender,args[0],EntityLivingBase.class) : attacker;
+        DamageSource damageSource = new EntityDamageSource(args.length > 1 ? args[1] : "OUT_OF_WORLD", attacker);
+        float damage = args.length > 2 ? (float) parseDouble(args[2]) : 10;
+        victim.getCombatTracker().trackDamage(damageSource,damage,damage);
+    }
+
+    @Override
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nonnull BlockPos targetPos){
+        if(args.length == 1){
+            return getListOfStringsMatchingLastWord(args, server.getOnlinePlayerNames());
         }
+        return Collections.<String>emptyList();
     }
 }

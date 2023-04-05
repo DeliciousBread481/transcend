@@ -3,6 +3,7 @@ package huige233.transcend;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+import huige233.transcend.command.CommandDamage;
 import huige233.transcend.command.CommandOpCuff;
 import huige233.transcend.gui.ModGuiElementLoader;
 import huige233.transcend.init.ModOre;
@@ -67,6 +68,7 @@ public class Main implements ILateMixinLoader {
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandOpCuff());
+        event.registerServerCommand(new CommandDamage());
     }
 
     /**

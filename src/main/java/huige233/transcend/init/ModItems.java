@@ -66,4 +66,5 @@ public class ModItems {
     public static final Item CHUI = new ItemBase("chui",Main.TranscendTab).setMaxDamage(3);
     public static final Item CK = new ItemBase("chukuang",Main.TranscendTab);
     public static final Item LN = new LootUnder("lootunder",Main.TranscendTab);
+    public static final ItemBow TBow = new ItemTBow("transcend_bow",Main.TranscendTab);
 }
