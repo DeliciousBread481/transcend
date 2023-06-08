@@ -1,14 +1,14 @@
 package huige233.transcend.items.tools;
 
 import com.google.common.collect.Multimap;
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.compat.ThaumcraftSword;
 import huige233.transcend.init.ModItems;
+import huige233.transcend.packet.PacketLeftClick;
 import huige233.transcend.util.IHasModel;
 import huige233.transcend.util.ItemNBTHelper;
 import huige233.transcend.util.Reference;
 import huige233.transcend.util.handlers.TranscendPacketHandler;
-import huige233.transcend.packet.PacketLeftClick;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -23,7 +23,6 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
@@ -39,7 +38,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
-import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.internal.IManaBurst;
 import vazkii.botania.api.mana.BurstProperties;
 import vazkii.botania.api.mana.ILensEffect;
@@ -63,7 +61,7 @@ public class ToolWarp extends ItemSword implements IHasModel, ILensEffect {
     }
     @Override
     public void registerModels() {
-        Main.proxy.registerItemRenderer(this,0,"inventory");
+        Transcend.proxy.registerItemRenderer(this,0,"inventory");
     }
 
     @Override
@@ -154,7 +152,7 @@ public class ToolWarp extends ItemSword implements IHasModel, ILensEffect {
         burst.setManaLossPerTick(40F);
         burst.setGravity(0f);
         burst.setMotion(burst.motionX * motionModifier, burst.motionY * motionModifier, burst.motionZ * motionModifier);
-
+        //
         ItemStack lens = stack.copy();
         ItemNBTHelper.setString(lens, "attackerUsername", player.getName());
         burst.setSourceLens(lens);
@@ -182,7 +180,7 @@ public class ToolWarp extends ItemSword implements IHasModel, ILensEffect {
         String attacker = ItemNBTHelper.getString(burst.getSourceLens(), "attackerUsername", "");
 
         burst.setColor(generateRGB((((EntityThrowable) burst).getUniqueID().hashCode() +entity.world.getWorldTime()) /5.0f));
-
+        EntityThrowable a = (EntityThrowable)burst;
         for(EntityLivingBase living : entities) {
             if (living instanceof EntityPlayer && (living.getName().equals(attacker) || FMLCommonHandler.instance().getMinecraftServerInstance() != null && !FMLCommonHandler.instance().getMinecraftServerInstance().isPVPEnabled()))
                 continue;

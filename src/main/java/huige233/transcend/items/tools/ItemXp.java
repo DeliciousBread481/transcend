@@ -1,8 +1,8 @@
 package huige233.transcend.items.tools;
 
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.init.ModItems;
-import huige233.transcend.items.FireImmune;
+import huige233.transcend.items.EntityFireImmune;
 import huige233.transcend.items.ItemBase;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -21,7 +21,7 @@ public class ItemXp extends ItemBase {
 
     @Override
     public void registerModels(){
-        Main.proxy.registerItemRenderer(this,0,"inventory");
+        Transcend.proxy.registerItemRenderer(this,0,"inventory");
     }
 
     public boolean hasCustomEntity(ItemStack stack){
@@ -29,7 +29,7 @@ public class ItemXp extends ItemBase {
     }
 
     public Entity createEntity(World world, Entity location,ItemStack stack){
-        return new FireImmune(world,location,stack);
+        return new EntityFireImmune(world,location.posX,location.posY,location.posZ,stack);
     }
 
     public EnumRarity  getRarity(ItemStack stack){

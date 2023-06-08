@@ -1,8 +1,8 @@
 package huige233.transcend.items.tools;
 
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.init.ModItems;
-import huige233.transcend.items.FireImmune;
+import huige233.transcend.items.EntityFireImmune;
 import huige233.transcend.util.IHasModel;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -31,7 +31,7 @@ public class ToolHoe extends ItemHoe implements IHasModel {
 
     @Override
     public void registerModels() {
-        Main.proxy.registerItemRenderer(this, 0, "inventory");
+        Transcend.proxy.registerItemRenderer(this, 0, "inventory");
     }
 
     public boolean hasCustomEntity(ItemStack stack) {
@@ -43,7 +43,7 @@ public class ToolHoe extends ItemHoe implements IHasModel {
     }
 
     public Entity createEntity(World world, Entity location, ItemStack itemstack) {
-        return new FireImmune(world, location, itemstack);
+        return new EntityFireImmune(world,location.posX,location.posY,location.posZ,itemstack);
     }
 
     public EnumRarity getRarity(ItemStack stack) {

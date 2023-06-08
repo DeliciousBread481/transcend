@@ -1,7 +1,7 @@
 package huige233.transcend.items.tools;
 
 
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.init.ModItems;
 import huige233.transcend.init.TranscendPotions;
 import huige233.transcend.util.IHasModel;
@@ -37,14 +37,14 @@ public class ItemTimeStop extends ItemSword implements IHasModel {
         super(material);
         setTranslationKey(name);
         setRegistryName(name);
-        setCreativeTab(Main.TranscendTab);
+        setCreativeTab(Transcend.TranscendTab);
         addPropertyOverride(new ResourceLocation(Reference.MOD_ID,"faust"),(stack, worldIn, entityIn) -> ItemTimeStop.isFaust(stack)?1f:0f);
         ModItems.ITEMS.add(this);
     }
 
     @Override
     public void registerModels() {
-        Main.proxy.registerItemRenderer(this, 0, "inventory");
+        Transcend.proxy.registerItemRenderer(this, 0, "inventory");
     }
 
     @Override
@@ -99,7 +99,7 @@ public class ItemTimeStop extends ItemSword implements IHasModel {
     }
 
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> stack) {
-        if(tab == Main.TranscendTab) {
+        if(tab == Transcend.TranscendTab) {
             ItemStack itemstack = new ItemStack(this);
             ItemNBTHelper.setInt(itemstack, "HideFlags", 3);
             stack.add(itemstack);

@@ -1,6 +1,6 @@
 package huige233.transcend.blocks;
 
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.init.ModBlock;
 import huige233.transcend.init.ModItems;
 import huige233.transcend.util.IHasModel;
@@ -18,7 +18,7 @@ public class BlockBase extends Block implements IHasModel {
         super(material);
         setHardness(5.0F);
         setResistance(10.0F);
-        setTranslationKey(name).setRegistryName(name).setCreativeTab(Main.TranscendTab);
+        setTranslationKey(name).setRegistryName(name).setCreativeTab(Transcend.TranscendTab);
         ModBlock.BLOCKS.add(this);
         ModItems.ITEMS.add(new ItemBlock(this).setRegistryName(this.getRegistryName()));
     }
@@ -33,7 +33,7 @@ public class BlockBase extends Block implements IHasModel {
 
     @Override
     public void registerModels() {
-        Main.proxy.registerItemRenderer(Item.getItemFromBlock(this), 0, "inventory");
+        Transcend.proxy.registerItemRenderer(Item.getItemFromBlock(this), 0, "inventory");
     }
 
 

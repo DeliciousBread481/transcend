@@ -1,6 +1,6 @@
 package huige233.transcend.packet;
 
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -11,7 +11,7 @@ public class PacketEndTimeStop implements IMessageHandler<PacketEndTimeStop.Mess
     @Override
     public IMessage onMessage(Message message, MessageContext ctx) {
         if(ctx.side.isClient()){
-            net.minecraft.client.Minecraft.getMinecraft().addScheduledTask(() -> Main.proxy.handleEndTimeStopPacket(message));
+            net.minecraft.client.Minecraft.getMinecraft().addScheduledTask(() -> Transcend.proxy.handleEndTimeStopPacket(message));
         }
         return null;
     }

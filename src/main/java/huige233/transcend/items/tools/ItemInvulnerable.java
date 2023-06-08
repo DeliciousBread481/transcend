@@ -1,6 +1,6 @@
 package huige233.transcend.items.tools;
 
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.init.ModItems;
 import huige233.transcend.util.ItemNBTHelper;
 import net.minecraft.client.util.ITooltipFlag;
@@ -24,7 +24,7 @@ public class ItemInvulnerable extends ItemSword {
         super(material);
         setTranslationKey(name);
         setRegistryName(name);
-        setCreativeTab(Main.TranscendTab);
+        setCreativeTab(Transcend.TranscendTab);
         ModItems.ITEMS.add(this);
     }
 
@@ -43,7 +43,7 @@ public class ItemInvulnerable extends ItemSword {
         tooltip.add(TextFormatting.BLUE+I18n.translateToLocal("tooltip.invulnerable"));
     }
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> stack) {
-        if(tab == Main.TranscendTab) {
+        if(tab == Transcend.TranscendTab) {
             ItemStack itemstack = new ItemStack(this);
             ItemNBTHelper.setInt(itemstack, "HideFlags", 3);
             stack.add(itemstack);

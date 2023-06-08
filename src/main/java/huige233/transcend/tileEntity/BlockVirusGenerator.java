@@ -1,6 +1,6 @@
 package huige233.transcend.tileEntity;
 
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.blocks.BlockBase;
 import huige233.transcend.gui.ModGuiElementLoader;
 import huige233.transcend.init.ModBlock;
@@ -54,7 +54,7 @@ public class BlockVirusGenerator extends BlockBase {
     {
         if(!worldIn.isRemote)
         {
-            playerIn.openGui(Main.instance, ModGuiElementLoader.GUI_VIRUS_GENERATOR, worldIn, pos.getX(), pos.getY(), pos.getZ());
+            playerIn.openGui(Transcend.instance, ModGuiElementLoader.GUI_VIRUS_GENERATOR, worldIn, pos.getX(), pos.getY(), pos.getZ());
         }
 
         return true;

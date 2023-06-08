@@ -1,10 +1,10 @@
 package huige233.transcend.items.tools;
 
 import com.google.common.collect.Multimap;
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.init.ModBlock;
 import huige233.transcend.init.ModItems;
-import huige233.transcend.items.FireImmune;
+import huige233.transcend.items.EntityFireImmune;
 import huige233.transcend.util.ArmorUtils;
 import huige233.transcend.util.IHasModel;
 import huige233.transcend.util.ItemNBTHelper;
@@ -56,7 +56,7 @@ public class ToolPickaxe extends ItemPickaxe implements IHasModel {
 
     @Override
     public void registerModels() {
-        Main.proxy.registerItemRenderer(this, 0, "inventory");
+        Transcend.proxy.registerItemRenderer(this, 0, "inventory");
     }
 
     @Override
@@ -162,7 +162,7 @@ public class ToolPickaxe extends ItemPickaxe implements IHasModel {
     }
 
     public Entity createEntity(World world,Entity location, ItemStack itemstack) {
-        return new FireImmune(world,location,itemstack);
+        return new EntityFireImmune(world,location.posX,location.posY,location.posZ,itemstack);
     }
 
     public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
@@ -205,7 +205,6 @@ public class ToolPickaxe extends ItemPickaxe implements IHasModel {
             }
         }
     }
-
     public EnumRarity getRarity(ItemStack stack )
     {
         return(ModItems.COSMIC_RARITY);

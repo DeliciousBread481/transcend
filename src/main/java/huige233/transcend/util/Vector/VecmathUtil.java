@@ -1,5 +1,8 @@
 package huige233.transcend.util.Vector;
 
+import hellfirepvp.astralsorcery.common.util.data.Vector3;
+import net.minecraft.entity.Entity;
+
 import java.awt.Rectangle;
 
 import javax.annotation.Nonnull;
@@ -612,4 +615,12 @@ public class VecmathUtil {
         return res;
     }
 
+    public static Vector3d atEntityCorner(Entity entity) {
+        return new Vector3d(entity.posX, entity.posY, entity.posZ);
+    }
+
+    public static Vector3d atEntityCenter(Entity entity) {
+        Vector3d offset = atEntityCorner(entity);
+        return offset.add(entity.width / 2, entity.height / 2, entity.width / 2);
+    }
 }

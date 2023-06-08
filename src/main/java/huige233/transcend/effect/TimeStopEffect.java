@@ -1,18 +1,16 @@
 package huige233.transcend.effect;
 
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.init.ModItems;
 import huige233.transcend.init.TranscendPotions;
 import huige233.transcend.util.EntityUtils;
-import huige233.transcend.util.handlers.ISyncedPotion;
 import huige233.transcend.util.Reference;
+import huige233.transcend.util.handlers.ISyncedPotion;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.PotionEvent;
@@ -111,7 +109,7 @@ public class TimeStopEffect extends effectbase implements ISyncedPotion {
     public static void onPotionAddedEvent(PotionEvent.PotionAddedEvent event){
         if(event.getEntity().world.isRemote && event.getPotionEffect().getPotion() == TranscendPotions.time_stop
                 && event.getEntity() instanceof EntityPlayer){
-            Main.proxy.playBlinkEffect((EntityPlayer) event.getEntity());
+            Transcend.proxy.playBlinkEffect((EntityPlayer) event.getEntity());
         }
     }
 

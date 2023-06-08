@@ -38,12 +38,13 @@ public abstract class MixinEntityLivingBase implements IMixinEntityLivingBase {
     }
 
     @Overwrite
-    public final float getHealth() {
+    //final?
+    public float getHealth() {
         return EventUtil.getHealth((EntityLivingBase) (Object) this);
     }
 
     @Overwrite
-    public final float getMaxHealth() {
+    public float getMaxHealth() {
         return EventUtil.getMaxHealth((EntityLivingBase) (Object) this);
     }
 }

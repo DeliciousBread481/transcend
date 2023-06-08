@@ -3,6 +3,7 @@ package huige233.transcend.util.handlers;
 import baubles.api.BaublesApi;
 import baubles.api.cap.IBaublesItemHandler;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -25,6 +26,9 @@ public class BaublesHelper {
         if (CAPABILITY_BAUBLES == null) {
             return new ArrayList();
         } else {
+            if(entity == null) {
+                return new ArrayList();
+            }
             IBaublesItemHandler handler = BaublesApi.getBaublesHandler(entity);
             if (handler == null) {
                 return new ArrayList();

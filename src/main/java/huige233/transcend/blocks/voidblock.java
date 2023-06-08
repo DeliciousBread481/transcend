@@ -1,6 +1,6 @@
 package huige233.transcend.blocks;
 
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.util.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -29,7 +29,7 @@ public class voidblock extends BlockBase {
         super(name, material);
         setTranslationKey(Reference.MOD_ID+".voidblock");
         setSoundType(SoundType.METAL);
-        setCreativeTab(Main.TranscendTab);
+        setCreativeTab(Transcend.TranscendTab);
         setHardness(-1.0F);
         setResistance(6000000.0F);
         setHarvestLevel("pickaxe", 300000);

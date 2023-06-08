@@ -2,7 +2,7 @@ package huige233.transcend.items.compat;
 
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.items.ItemBase;
 import huige233.transcend.lib.AnvilDamageSource;
 import huige233.transcend.util.ItemNBTHelper;
@@ -33,11 +33,10 @@ import java.util.List;
 
 import static huige233.transcend.util.handlers.BaublesHelper.getBaubles;
 
-@Optional.Interface(iface = "baubles.api.IBauble", modid = "baubles")
 @Mod.EventBusSubscriber
 public class AnvilCompat extends ItemBase implements IBauble {
     public AnvilCompat() {
-        super("anvil_compat", Main.TranscendTab);
+        super("anvil_compat", Transcend.TranscendTab);
         this.maxStackSize = 1;
     }
 
@@ -97,7 +96,7 @@ public class AnvilCompat extends ItemBase implements IBauble {
 
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if(tab == Main.TranscendTab) {
+        if(tab == Transcend.TranscendTab) {
             ItemStack itemStack = new ItemStack(this);
             ItemNBTHelper.setInt(itemStack, "Anvil", 120);
             items.add(itemStack);

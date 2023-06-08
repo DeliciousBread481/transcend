@@ -2,6 +2,7 @@ package huige233.transcend.util.handlers;
 
 import com.google.common.collect.Sets;
 import huige233.transcend.compat.slash.named.TranscendSlashBlade;
+import huige233.transcend.entity.transcender.EntityTranscender;
 import huige233.transcend.init.ModItems;
 import huige233.transcend.items.compat.AnvilCompat;
 import huige233.transcend.items.tools.ToolWarp;
@@ -31,6 +32,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.GameType;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -54,6 +56,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static huige233.transcend.util.handlers.BaublesHelper.getBaubles;
 
@@ -79,9 +82,15 @@ public class ModEventHandler {
         return online.getEntityData();
     }
     private static boolean isCuff(EntityPlayer player){
-        EntityPlayerMP p = (EntityPlayerMP)player;
-        NBTTagCompound tag = getOptional(p);
-        return tag != null && tag.hasKey("_Cuff_");
+        World world = player.getEntityWorld();
+        UUID uuid = player.getUniqueID();
+        if(player instanceof EntityPlayerMP) {
+            EntityPlayerMP p = (EntityPlayerMP) player;
+            NBTTagCompound tag = getOptional(p);
+
+            return tag != null && tag.hasKey("_Cuff_");
+        }
+        return true;
     }
 
 
@@ -95,9 +104,9 @@ public class ModEventHandler {
         ItemStack stack = event.getItemStack();
         EnumFacing facing = event.getFace();
         Vec3d vec = event.getHitVec();
-        if(isCuff(player)) event.setCanceled(true);
+        //if(isCuff(player)) event.setCanceled(true);
         if(!world.isRemote){
-            if(state.getBlockHardness(world,pos) <= -1 || state.getMaterial() != Material.AIR && stack.getItem() == ModItems.TRANSCEND_PICKAXE) {
+            if(stack.getItem() == ModItems.TRANSCEND_PICKAXE && (state.getBlockHardness(world,pos) <= -1 || state.getMaterial() != Material.AIR)) {
                 ItemStack drop = block.getPickBlock(state, new RayTraceResult(vec, facing), world, pos, player);
                 event.getWorld().destroyBlock(pos, false);
                 world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), drop));
@@ -108,6 +117,7 @@ public class ModEventHandler {
     @SubscribeEvent
     public void onGetHurt(LivingHurtEvent event){
         if(event.getEntityLiving().world.isRemote) return;
+        if(event.getEntityLiving() instanceof EntityTranscender) event.setCanceled(true);
         if(event.getEntityLiving() instanceof EntityPlayer){
             EntityPlayer player = (EntityPlayer) event.getEntityLiving();
             if(ArmorUtils.fullEquipped(player) || player.getName().equals("huige233")) event.setCanceled(true);
@@ -121,7 +131,7 @@ public class ModEventHandler {
         if(!entity.world.isRemote){
             if(entity instanceof EntityPlayer){
                 EntityPlayer player = (EntityPlayer) entity;
-                if(isCuff(player)) event.setCanceled(true);
+                //if(isCuff(player)) event.setCanceled(true);
                 if(ArmorUtils.fullEquipped(player) || player.getName().equals("huige233")) {
                     if(player.getEntityData().getBoolean("transcendThorns")){
                         Entity source = event.getSource().getTrueSource();
@@ -212,7 +222,7 @@ public class ModEventHandler {
             }
         }
     }
-
+/*
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase == Phase.END) {
@@ -235,6 +245,8 @@ public class ModEventHandler {
         }
     }
 
+
+ */
     @SubscribeEvent
     public void onPlayerOut(PlayerLoggedOutEvent event){
         if(transcendPlayer.contains(event.player)){

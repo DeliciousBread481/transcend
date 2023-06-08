@@ -3,17 +3,16 @@ package huige233.transcend.items.armor;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.compat.PsiCompat;
 import huige233.transcend.init.ModItems;
-import huige233.transcend.items.FireImmune;
+import huige233.transcend.items.EntityFireImmune;
 import huige233.transcend.lib.TranscendDamageSources;
 import huige233.transcend.util.ArmorUtils;
 import huige233.transcend.util.IHasModel;
 import huige233.transcend.util.ItemNBTHelper;
 import huige233.transcend.util.Reference;
 import huige233.transcend.util.handlers.EnergeticHandler;
-import huige233.transcend.util.handlers.ModEventHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -71,7 +70,7 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
 
     @Override
     public void registerModels() {
-        Main.proxy.registerItemRenderer(this, 0, "inventory");
+        Transcend.proxy.registerItemRenderer(this, 0, "inventory");
     }
 
     public void setDamage(ItemStack stack, int damage) {
@@ -296,7 +295,7 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
     }
 
     public Entity createEntity(World world,Entity location, ItemStack itemstack) {
-        return new FireImmune(world,location,itemstack);
+        return new EntityFireImmune(world,location.posX,location.posY,location.posZ,itemstack);
     }
 
     @SideOnly(Side.CLIENT)
@@ -330,7 +329,7 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
     }
 
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> stack) {
-        if(tab == Main.TranscendTab) {
+        if(tab == Transcend.TranscendTab) {
             ItemStack itemstack = new ItemStack(this);
             ItemNBTHelper.setByte(itemstack, "TC.RUNIC", (byte) 127);
             ItemNBTHelper.setInt(itemstack,"ncRadiationResistance",32767);

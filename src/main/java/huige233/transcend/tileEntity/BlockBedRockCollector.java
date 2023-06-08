@@ -1,7 +1,6 @@
 package huige233.transcend.tileEntity;
 
-import codechicken.lib.util.RotationUtils;
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.blocks.BlockBase;
 import huige233.transcend.gui.ModGuiElementLoader;
 import huige233.transcend.init.Props;
@@ -55,7 +54,7 @@ public class BlockBedRockCollector extends BlockBase {
         if (world.isRemote) {
             return true;
         } else {
-            player.openGui(Main.instance, ModGuiElementLoader.GUI_COLLECTOR, world, pos.getX(), pos.getY(), pos.getZ());
+            player.openGui(Transcend.instance, ModGuiElementLoader.GUI_COLLECTOR, world, pos.getX(), pos.getY(), pos.getZ());
             return true;
         }
     }
@@ -68,7 +67,6 @@ public class BlockBedRockCollector extends BlockBase {
         TileEntity tile = world.getTileEntity(pos);
         if (tile instanceof TileEntityCollerctor) {
             TileEntityCollerctor machine = (TileEntityCollerctor) tile;
-            machine.setFacing(RotationUtils.getPlacedRotationHorizontal(player));
         }
 
     }

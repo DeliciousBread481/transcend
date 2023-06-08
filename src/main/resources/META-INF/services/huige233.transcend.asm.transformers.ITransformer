@@ -2,3 +2,4 @@ huige233.transcend.asm.transformers.EntityLivingBaseTransformer
 huige233.transcend.asm.transformers.InventoryPlayerTransformer
 huige233.transcend.asm.transformers.SaveHandlerTransformer
 huige233.transcend.asm.transformers.ToolsTransformer
+huige233.transcend.asm.transformers.ChatAllowedCharactersTransformer

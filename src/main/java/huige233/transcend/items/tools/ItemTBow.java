@@ -2,7 +2,7 @@ package huige233.transcend.items.tools;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.init.ModItems;
 import huige233.transcend.util.IHasModel;
 import huige233.transcend.util.Reference;
@@ -50,7 +50,7 @@ public class ItemTBow extends ItemBow implements IHasModel {
 
     @Override
     public void registerModels() {
-        Main.proxy.registerItemRenderer(this, 0, "inventory");
+        Transcend.proxy.registerItemRenderer(this, 0, "inventory");
     }
 
     public boolean hasCustomEntity(ItemStack stack) {

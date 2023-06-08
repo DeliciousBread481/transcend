@@ -19,9 +19,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class RegistryHandler {
     @SubscribeEvent
-    public static void onItemRegister( RegistryEvent.Register<Item> event )
+    public static void onItemRegister(RegistryEvent.Register<Item> event)
     {
-        event.getRegistry().registerAll( ModItems.ITEMS.toArray( new Item[0] ) );
+        event.getRegistry().registerAll(ModItems.ITEMS.toArray( new Item[0] ));
         if(Loader.isModLoaded("thaumcraft")) {
             event.getRegistry().registerAll(new ThaumcraftCompat());
         }
@@ -34,26 +34,26 @@ public class RegistryHandler {
 
 
     @SubscribeEvent
-    public static void onModelRegister( ModelRegistryEvent event )
+    public static void onModelRegister(ModelRegistryEvent event)
     {
-        for ( Item item : ModItems.ITEMS )
+        for (Item item : ModItems.ITEMS)
         {
-            if ( item instanceof IHasModel )
+            if (item instanceof IHasModel)
             {
-                ( (IHasModel) item).registerModels();
+                ((IHasModel) item).registerModels();
             }
         }
         for(Block block: ModBlock.BLOCKS) {
             if(block instanceof IHasModel) {
-                ( (IHasModel) block).registerModels();
+                ((IHasModel) block).registerModels();
             }
         }
     }
 
 
     @SubscribeEvent
-    public static void onEnchantmentRegister( RegistryEvent.Register<Enchantment> event )
+    public static void onEnchantmentRegister(RegistryEvent.Register<Enchantment> event)
     {
-        event.getRegistry().registerAll( ModEnchantment.ENCHANTMENTS.toArray( new Enchantment[0] ) );
+        event.getRegistry().registerAll(ModEnchantment.ENCHANTMENTS.toArray( new Enchantment[0]));
     }
 }

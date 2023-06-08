@@ -2,7 +2,7 @@ package huige233.transcend.items.compat;
 
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.items.ItemBase;
 import huige233.transcend.packet.PacketTJump;
 import huige233.transcend.util.Reference;
@@ -37,7 +37,7 @@ import static huige233.transcend.util.handlers.BaublesHelper.getBaubles;
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class ThunderSkin extends ItemBase implements IBauble {
     public ThunderSkin() {
-        super("thunder_skin", Main.TranscendTab);
+        super("thunder_skin", Transcend.TranscendTab);
         this.maxStackSize = 1;
     }
 

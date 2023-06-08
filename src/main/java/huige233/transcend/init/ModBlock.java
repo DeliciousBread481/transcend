@@ -3,10 +3,7 @@ package huige233.transcend.init;
 import huige233.transcend.blocks.BlockBase;
 import huige233.transcend.blocks.bedrockorz;
 import huige233.transcend.blocks.voidblock;
-import huige233.transcend.tileEntity.BlockBedRockCollector;
-import huige233.transcend.tileEntity.BlockCreativeRFSource;
-import huige233.transcend.tileEntity.BlockUltraManaPool;
-import huige233.transcend.tileEntity.BlockVirusGenerator;
+import huige233.transcend.tileEntity.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.event.RegistryEvent;
@@ -26,8 +23,17 @@ public class ModBlock {
     public static final Block BEDROCK_COLLECTOR = new BlockBedRockCollector("bedrock_collector").setHardness(5.0f);
     public static final Block CAST_MACHINE = new BlockVirusGenerator("cast_machine");
     public static final Block NETHER_STAR_BLOCK = new BlockBase("nether_star_block", Material.ROCK).setHardness(5.0F);
-    public static final Block CREATIVERFSOURCE = new BlockCreativeRFSource();
+    public static final Block CREATIVERFSOURCE = new BlockCreativeRFSource("creative_rf_source");
+    public static Block CREATIVEEUSOURCE = null;
+
     public static Block ULTRAMANAPOOL = null;
+
+    static {
+
+        if(Loader.isModLoaded("ic2")) {
+            //CREATIVEEUSOURCE = new BlockCreativeEUSource("creative_eu_source_");
+        }
+    }
 
     @SubscribeEvent
     public static void onBlockRegister(RegistryEvent.Register<Block> event) {
@@ -35,5 +41,9 @@ public class ModBlock {
             ULTRAMANAPOOL = new BlockUltraManaPool();
             event.getRegistry().registerAll(ULTRAMANAPOOL);
         }
+//        if(Loader.isModLoaded("ic2")){
+//            CREATIVEEUSOURCE = new BlockCreativeEUSource("creative_eu_source_");
+//            event.getRegistry().registerAll(CREATIVEEUSOURCE);
+//        }
     }
 }

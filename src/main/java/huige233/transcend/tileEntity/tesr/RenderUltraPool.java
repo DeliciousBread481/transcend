@@ -1,5 +1,6 @@
-package huige233.transcend.tileEntity;
+package huige233.transcend.tileEntity.tesr;
 
+import huige233.transcend.tileEntity.TileUltraManaPool;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderMinecart;

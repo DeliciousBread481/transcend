@@ -1,6 +1,6 @@
 package huige233.transcend.compat;
 
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.compat.slash.specialattack.Delete;
 import huige233.transcend.compat.slash.SlashUpdateEvent;
 import mods.flammpfeil.slashblade.ItemSlashBladeNamed;
@@ -30,7 +30,7 @@ public class TranscendSlash extends ItemSlashBladeNamed {
         super(ToolMaterial.IRON,4.0f);
         this.firstload = false;
         setMaxDamage(40);
-        setCreativeTab(Main.TranscendTab);
+        setCreativeTab(Transcend.TranscendTab);
     }
 
 
@@ -86,7 +86,7 @@ public class TranscendSlash extends ItemSlashBladeNamed {
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> itemStacks){
         if(this.isInCreativeTab(tab)){
-            if(tab == Main.TranscendTab) itemStacks.add(SlashBlade.findItemStack(SlashBlade.modid,"flammpfeil.slashblade.named.tran",1));
+            if(tab == Transcend.TranscendTab) itemStacks.add(SlashBlade.findItemStack(SlashBlade.modid,"flammpfeil.slashblade.named.tran",1));
         }
     }
 

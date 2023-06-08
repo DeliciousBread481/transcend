@@ -24,9 +24,16 @@ public class ModEnchantment {
     @SubscribeEvent
     public static void EnchantmentFlawless(LivingUpdateEvent event) {
         EntityLivingBase living = event.getEntityLiving();
-        int level = EnchantmentHelper.getMaxEnchantmentLevel(FLAWLESS, living);
+        int level = EnchantmentHelper.getMaxEnchantmentLevel((Enchantment) FLAWLESS, living);
         BlockPos pos = living.getPosition();
         World world = event.getEntity().world;
     }
 
+    @SubscribeEvent
+    public static void EnchantmentTranscend(LivingUpdateEvent event) {
+        EntityLivingBase living = event.getEntityLiving();
+        int level = EnchantmentHelper.getMaxEnchantmentLevel((Enchantment) TRANSCEND, living);
+        BlockPos pos = living.getPosition();
+        World world = event.getEntity().world;
+    }
 }

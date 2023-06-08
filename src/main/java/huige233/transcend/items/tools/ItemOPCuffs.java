@@ -1,7 +1,7 @@
 package huige233.transcend.items.tools;
 
 import com.mojang.authlib.GameProfile;
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.init.ModItems;
 import huige233.transcend.util.IHasModel;
 import huige233.transcend.util.ItemNBTHelper;
@@ -27,13 +27,13 @@ public class ItemOPCuffs extends ItemSword implements IHasModel {
         super(material);
         setTranslationKey(name);
         setRegistryName(name);
-        setCreativeTab(Main.TranscendTab);
+        setCreativeTab(Transcend.TranscendTab);
         ModItems.ITEMS.add(this);
     }
 
     @Override
     public void registerModels() {
-        Main.proxy.registerItemRenderer(this,0,"inventory");
+        Transcend.proxy.registerItemRenderer(this,0,"inventory");
     }
 
     @Override

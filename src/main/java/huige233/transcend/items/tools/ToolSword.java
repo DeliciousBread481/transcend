@@ -7,10 +7,10 @@ import baubles.common.Baubles;
 import cofh.redstoneflux.RedstoneFluxProps;
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import com.google.common.collect.Multimap;
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.compat.ThaumcraftSword;
 import huige233.transcend.init.ModItems;
-import huige233.transcend.items.FireImmune;
+import huige233.transcend.items.EntityFireImmune;
 import huige233.transcend.lib.TranscendDamageSources;
 import huige233.transcend.util.*;
 import ic2.api.item.ElectricItem;
@@ -30,10 +30,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumRarity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketCustomSound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -72,14 +70,13 @@ import static huige233.transcend.util.handlers.BaublesHelper.getBaubles;
 @Optional.Interface(modid = LibMisc.MOD_ID,iface = "vazkii.botania.api.mana.ICreativeManaProvider")
 @Optional.Interface(modid = LibMisc.MOD_ID,iface = "vazkii.botania.api.mana.IManaUsingItem")
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
-public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProvider, IManaItem, IManaTooltipDisplay, IEnergyContainerItem, IManaUsingItem,ISpecialElectricItem {
+public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProvider, IManaItem, IManaTooltipDisplay, IEnergyContainerItem, IManaUsingItem, ISpecialElectricItem {
     protected static final int MAX_MANA = Integer.MAX_VALUE;
     private static final String TAG_CREATIVE = "creative";
     private static final String TAG_ONE_USE = "oneUse";
     private static final String TAG_MANA = "mana";
     public static BaseAttribute transcendDamage = new RangedAttribute(null,"transcend.damage",0.0D,0.0D,Double.MAX_VALUE);
     private static final DamageSource ADMIN_KILL = (new DamageSource("administrative.kill")).setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute();
-
     public ToolSword(String name, CreativeTabs tab, ToolMaterial material) {
         super(material);
         setTranslationKey(name);
@@ -90,7 +87,7 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
 
     @Override
     public void registerModels() {
-        Main.proxy.registerItemRenderer(this, 0, "inventory");
+        Transcend.proxy.registerItemRenderer(this, 0, "inventory");
     }
     @SideOnly(Side.CLIENT)
     public boolean hasEffect(@NotNull ItemStack par1ItemStack) {
@@ -173,7 +170,7 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
     }
     public void getSubItems(@NotNull CreativeTabs tab,NonNullList<ItemStack> stack) {
         ItemStack create = new ItemStack(ModItems.TRANSCEND_SWORD);
-        if(tab == Main.TranscendTab){
+        if(tab == Transcend.TranscendTab){
             if(Loader.isModLoaded(LibMisc.MOD_ID)) {
                 setMana(create, MAX_MANA);
                 isCreative(create);
@@ -251,8 +248,8 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
         return 0;
     }
 
-    public Entity createEntity(@NotNull World world, @NotNull Entity location, @NotNull ItemStack itemstack) {
-        return new FireImmune(world,location,itemstack);
+    public Entity createEntity(World world, Entity location, ItemStack itemstack) {
+        return new EntityFireImmune(world,location.posX,location.posY,location.posZ,itemstack);
     }
 
     @Nonnull
@@ -300,38 +297,37 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
 
     @Override
     public void onUpdate(ItemStack stack,World world,Entity entity,int itemSlot,boolean isSelected){
-        if(Loader.isModLoaded(IC2.MODID)){
-            ic2charge(stack,world,entity,itemSlot,isSelected);
+        if(!world.isRemote) {
+            if (Loader.isModLoaded(IC2.MODID)) {
+                ic2charge(stack, world, entity, itemSlot, isSelected);
+                ((EntityPlayer)entity).inventoryContainer.detectAndSendChanges();
+            }
+            if (Loader.isModLoaded(RedstoneFluxProps.MOD_ID)) {
+                rfReceive(stack, world, entity, itemSlot, isSelected);
+            }
+            // if (!nbt.hasKey("Owner")) {nbt.setString("Owner", player.getName());}
         }
-        if(Loader.isModLoaded(RedstoneFluxProps.MOD_ID)){
-            rfReceive(stack,world,entity,itemSlot,isSelected);
-        }
-        if(entity instanceof EntityPlayer){
+    }
+
+    @Optional.Method(modid = IC2.MODID)
+    private void ic2charge(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
+        if (!entity.world.isRemote && entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
-            NBTTagCompound nbt;
-            if(stack.hasTagCompound()){
-                nbt = stack.getTagCompound();
-            } else {
-                nbt = new NBTTagCompound();
-                stack.setTagCompound(nbt);
+            for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+                ItemStack toCharge = player.inventory.getStackInSlot(i);
+                if (!toCharge.isEmpty()) {
+//                    ElectricItem.manager.charge(toCharge, ElectricItem.manager.getCharge(toCharge) - ElectricItem.manager.getCharge(toCharge), Integer.MAX_VALUE, true, false);
+                    ElectricItem.manager.charge(toCharge, Integer.MAX_VALUE, Integer.MAX_VALUE, true, false);
+                }
             }
-            if (!nbt.hasKey("Owner")) {
-                nbt.setString("Owner", player.getName());
-            }
-            if(!ArmorUtils.fullEquipped(player)) {
-                if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() == ModItems.TRANSCEND_SWORD) {
-                    if (ItemNBTHelper.getBoolean(player.getHeldItem(EnumHand.MAIN_HAND), "Invul", false) && ItemNBTHelper.getBoolean(stack, "Destruction", false)) {
-                        NonNullList<ItemStack> armor = player.inventory.armorInventory;
-                        armor.set(3, new ItemStack(ModItems.FLAWLESS_HELMET));
-                        armor.set(2, new ItemStack(ModItems.FLAWLESS_CHESTPLATE));
-                        armor.set(1, new ItemStack(ModItems.FLAWLESS_LEGGINGS));
-                        armor.set(0, new ItemStack(ModItems.FLAWLESS_BOOTS));
-                    }
+            if (Loader.isModLoaded(Baubles.MODID)) {
+                for (ItemStack toCharge : getBaubles(player)) {
+//                    ElectricItem.manager.charge(toCharge, ElectricItem.rawManager.getCharge(toCharge) - ElectricItem.manager.getCharge(toCharge), Integer.MAX_VALUE, true, false);
+                    ElectricItem.manager.charge(toCharge, Integer.MAX_VALUE, Integer.MAX_VALUE, true, false);
                 }
             }
         }
     }
-
     @Optional.Method(modid = RedstoneFluxProps.MOD_ID)
     private void rfReceive(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
         if (!entity.world.isRemote && entity instanceof EntityPlayer) {
@@ -363,24 +359,6 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
                             cap.receiveEnergy(Integer.MAX_VALUE, false);
                         }
                     }
-                }
-            }
-        }
-    }
-
-    @Optional.Method(modid = IC2.MODID)
-    private void ic2charge(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
-        if (!entity.world.isRemote && entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) entity;
-            for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-                ItemStack toCharge = player.inventory.getStackInSlot(i);
-                if (!toCharge.isEmpty()) {
-                    ElectricItem.manager.charge(toCharge, ElectricItem.manager.getCharge(toCharge) - ElectricItem.manager.getCharge(toCharge), Integer.MAX_VALUE, true, false);
-                }
-            }
-            if (Loader.isModLoaded(Baubles.MODID)) {
-                for (ItemStack toCharge : getBaubles(player)) {
-                    ElectricItem.manager.charge(toCharge, ElectricItem.rawManager.getCharge(toCharge) - ElectricItem.manager.getCharge(toCharge), Integer.MAX_VALUE, true, false);
                 }
             }
         }
@@ -498,7 +476,7 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
     @Optional.Method(modid = LibMisc.MOD_ID)
     @Override
     public boolean usesMana(ItemStack stack) {
-        return false;
+        return true;
     }
 /*
     @Optional.Method(modid = LoliPickaxe.MODID)
@@ -533,40 +511,12 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
 
 
  */
+    public static final InfiniteElectricItemManager infinite = new InfiniteElectricItemManager();
+
     @Override
     @Optional.Method(modid = IC2.MODID)
-    public IElectricItemManager getManager(ItemStack stack) {
-        return new InfiniteElectricItemManager();
-    }
-
-    @Override
-    public boolean canProvideEnergy(ItemStack itemStack) {
-        return false;
-    }
-
-    @Override
-    public Item getChargedItem(ItemStack itemStack) {
-        return null;
-    }
-
-    @Override
-    public Item getEmptyItem(ItemStack itemStack) {
-        return null;
-    }
-
-    @Override
-    public double getMaxCharge(ItemStack itemStack) {
-        return Integer.MAX_VALUE;
-    }
-
-    @Override
-    public int getTier(ItemStack itemStack) {
-        return 0;
-    }
-
-    @Override
-    public double getTransferLimit(ItemStack itemStack) {
-        return 0;
+    public IElectricItemManager getManager(ItemStack itemStack) {
+        return infinite;
     }
 }
 

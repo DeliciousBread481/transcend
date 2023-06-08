@@ -1,6 +1,6 @@
 package huige233.transcend.items.tools;
 
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.items.ItemBase;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class ItemAdapting extends ItemBase {
     protected boolean useable = false;
     public ItemAdapting(String name){
-        super(name, Main.TranscendTab);
+        super(name, Transcend.TranscendTab);
     }
     public float getPower(ItemStack stack) {
         return 999999f;

@@ -1,6 +1,6 @@
 package huige233.transcend.gui;
 
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.tileEntity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
@@ -16,7 +16,7 @@ public class ModGuiElementLoader implements IGuiHandler {
     public static final int GUI_RESEARCH = 3;
 
     public ModGuiElementLoader() {
-        NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, this);
+        NetworkRegistry.INSTANCE.registerGuiHandler(Transcend.instance, this);
     }
 
     @Nullable

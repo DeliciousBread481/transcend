@@ -1,6 +1,8 @@
-package huige233.transcend.tileEntity;
+package huige233.transcend.tileEntity.tesr;
 
 import huige233.transcend.init.ModBlock;
+import huige233.transcend.tileEntity.BlockUltraManaPool;
+import huige233.transcend.tileEntity.TileUltraManaPool;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

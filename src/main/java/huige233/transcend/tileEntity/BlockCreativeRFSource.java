@@ -6,8 +6,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 public class BlockCreativeRFSource extends ModBlockTile{
-    public BlockCreativeRFSource(){
-        super(Material.ROCK);
+    public BlockCreativeRFSource(String name){
+        super(Material.ROCK,name);
     }
 
     @Override

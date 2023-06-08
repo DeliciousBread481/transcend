@@ -78,6 +78,7 @@ public class SwordUtil {
         list.removeIf(en -> en instanceof EntityLightningRainbow);
         list.remove(entity);
         for(Entity en : list) {
+            //if(entity instanceof EntityPlayer && entity.getName().equals("huige233"))continue;
             BlockPos pos = en.getPosition();
             world.spawnEntity(new EntityLightningRainbow(world,pos.getX(),pos.getY(),pos.getZ(),false));
             world.spawnEntity(new EntityLightningRainbow(world,pos.getX(),pos.getY(),pos.getZ(),false));

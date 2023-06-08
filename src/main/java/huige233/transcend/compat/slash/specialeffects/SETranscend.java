@@ -3,7 +3,6 @@ package huige233.transcend.compat.slash.specialeffects;
 import huige233.transcend.compat.slash.named.ItemTrSlashBlade;
 import huige233.transcend.entity.EntityLightningRainbow;
 import mods.flammpfeil.slashblade.ItemSlashBladeNamed;
-import mods.flammpfeil.slashblade.ability.StylishRankManager;
 import mods.flammpfeil.slashblade.entity.selector.EntitySelectorAttackable;
 import mods.flammpfeil.slashblade.item.ItemSlashBlade;
 import mods.flammpfeil.slashblade.specialeffect.IRemovable;

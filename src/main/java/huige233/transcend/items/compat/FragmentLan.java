@@ -4,7 +4,7 @@ import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.items.ItemBase;
 import huige233.transcend.util.IHasModel;
 import huige233.transcend.util.ItemNBTHelper;
@@ -42,7 +42,7 @@ import static huige233.transcend.util.handlers.BaublesHelper.getBaubles;
 @Mod.EventBusSubscriber
 public class FragmentLan extends ItemBase implements IBauble, IHasModel {
     public FragmentLan(){
-        super("fragment_lan", Main.TranscendTab);
+        super("fragment_lan", Transcend.TranscendTab);
         addPropertyOverride(new ResourceLocation(Reference.MOD_ID,"empty"),(stack, worldIn, entityIn) -> FragmentLan.hasEmpty(stack)?0f:1f);
         this.maxStackSize=1;
     }
@@ -76,7 +76,7 @@ public class FragmentLan extends ItemBase implements IBauble, IHasModel {
 
     @Override
     public void registerModels() {
-        Main.proxy.registerItemRenderer(this, 0, "inventory");
+        Transcend.proxy.registerItemRenderer(this, 0, "inventory");
     }
 
     @SubscribeEvent
@@ -132,7 +132,7 @@ public class FragmentLan extends ItemBase implements IBauble, IHasModel {
 
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if(tab == Main.TranscendTab) {
+        if(tab == Transcend.TranscendTab) {
             ItemStack itemStack = new ItemStack(this);
             ItemNBTHelper.setInt(itemStack, "empty", 1000);
             items.add(itemStack);

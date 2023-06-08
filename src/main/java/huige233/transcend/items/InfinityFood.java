@@ -1,6 +1,6 @@
 package huige233.transcend.items;
 
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.init.ModItems;
 import huige233.transcend.util.ArmorUtils;
 import huige233.transcend.util.IHasModel;
@@ -32,14 +32,14 @@ public class InfinityFood extends ItemFood implements IHasModel {
         this.setTranslationKey("infinity_food");
         this.setAlwaysEdible();
         setRegistryName("infinity_food");
-        this.setCreativeTab(Main.TranscendTab);
+        this.setCreativeTab(Transcend.TranscendTab);
         addPropertyOverride(new ResourceLocation(Reference.MOD_ID,"easter"),(stack, worldIn, entityIn) -> InfinityFood.isEaster(stack)?1F:0F);
         ModItems.ITEMS.add(this);
     }
 
     @Override
     public void registerModels() {
-        Main.proxy.registerItemRenderer(this, 0, "inventory");
+        Transcend.proxy.registerItemRenderer(this, 0, "inventory");
     }
 
     @Override

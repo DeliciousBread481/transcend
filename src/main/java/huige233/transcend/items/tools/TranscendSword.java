@@ -1,6 +1,6 @@
 package huige233.transcend.items.tools;
 
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.init.ModItems;
 import huige233.transcend.util.IHasModel;
 import net.minecraft.creativetab.CreativeTabs;
@@ -29,7 +29,7 @@ public class TranscendSword extends ItemSword implements IHasModel {
 
     @Override
     public void registerModels() {
-        Main.proxy.registerItemRenderer(this, 0, "inventory");
+        Transcend.proxy.registerItemRenderer(this, 0, "inventory");
     }
 
     public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {

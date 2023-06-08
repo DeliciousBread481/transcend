@@ -4,8 +4,8 @@ import baubles.api.BaubleType;
 import baubles.api.BaublesApi;
 import baubles.api.IBauble;
 import baubles.api.cap.IBaublesItemHandler;
-import huige233.transcend.Main;
-import huige233.transcend.items.FireImmune;
+import huige233.transcend.Transcend;
+import huige233.transcend.items.EntityFireImmune;
 import huige233.transcend.items.ItemBase;
 import huige233.transcend.util.ItemNBTHelper;
 import net.minecraft.creativetab.CreativeTabs;
@@ -27,8 +27,8 @@ import thaumcraft.api.items.RechargeHelper;
 @Optional.Interface(iface = "baubles.api.IBauble", modid = "baubles")
 public class ThaumcraftCompat extends ItemBase implements IBauble, IVisDiscountGear, IRechargable {
     public ThaumcraftCompat(){
-    super("transcend_vis", Main.TranscendTab);
-    this.maxStackSize = 1;
+        super("transcend_vis", Transcend.TranscendTab);
+        this.maxStackSize = 1;
     }
 
      public EnumRarity getRarity(ItemStack itemStack) {
@@ -79,7 +79,7 @@ public class ThaumcraftCompat extends ItemBase implements IBauble, IVisDiscountG
 
     @Optional.Method(modid = "thaumcraft")
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> stack) {
-        if(tab == Main.TranscendTab) {
+        if(tab == Transcend.TranscendTab) {
             ItemStack itemstack = new ItemStack(this);
             ItemNBTHelper.setByte(itemstack, "TC.RUNIC", (byte) 127);
             stack.add(itemstack);
@@ -108,6 +108,6 @@ public class ThaumcraftCompat extends ItemBase implements IBauble, IVisDiscountG
     }
 
     public Entity createEntity(World world,Entity location, ItemStack itemstack) {
-        return new FireImmune(world,location,itemstack);
+        return new EntityFireImmune(world,location.posX,location.posY,location.posZ,itemstack);
     }
 }

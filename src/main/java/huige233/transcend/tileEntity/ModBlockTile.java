@@ -7,8 +7,8 @@ import net.minecraft.block.state.IBlockState;
 import javax.annotation.Nonnull;
 
 public class ModBlockTile extends BlockBase {
-    protected ModBlockTile(@Nonnull Material properties){
-        super("CreateRfSource",properties);
+    protected ModBlockTile(@Nonnull Material properties,String name){
+        super(name,properties);
     }
 
     @Override

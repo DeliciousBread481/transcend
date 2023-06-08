@@ -1,6 +1,6 @@
 package huige233.transcend.blocks;
 
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -24,7 +24,7 @@ public class bedrockorz extends BlockBase{
     public bedrockorz(String name, Material material) {
         super(name, material);
         setSoundType(SoundType.METAL);
-        setCreativeTab(Main.TranscendTab);
+        setCreativeTab(Transcend.TranscendTab);
         setHardness(-1.0F);
         setResistance(6000000.0F);
         setHarvestLevel("pickaxe", 300000);

@@ -33,13 +33,13 @@ import zone.rong.mixinbooter.ILateMixinLoader;
         dependencies = "required-after:mixinbooter@[0.0,);required-after:baubles@[1.5.2,)",
         acceptedMinecraftVersions = "[1.12.2]"
 )
-public class Main implements ILateMixinLoader {
+public class Transcend implements ILateMixinLoader {
 
     @SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.COMMON_PROXY_CLASS)
     public static CommonProxy proxy;
 
     @Mod.Instance("transcend")
-    public static Main instance;
+    public static Transcend instance;
     /**
      * This is the first initialization event. Register tile entities here.
      * The registry events below will have fired prior to entry to this method.

@@ -1,6 +1,6 @@
 package huige233.transcend.compat.slash;
 
-import huige233.transcend.Main;
+import huige233.transcend.Transcend;
 import huige233.transcend.compat.slash.specialattack.Delete;
 import huige233.transcend.compat.slash.specialeffects.SEDataLock;
 import huige233.transcend.compat.slash.specialeffects.SETranscend;
@@ -17,6 +17,6 @@ public class SlashInit {
         MinecraftForge.EVENT_BUS.register(new SlashUpdateEvent());
         SpecialEffects.register((ISpecialEffect) new SETranscend());
         SpecialEffects.register((ISpecialEffect) new SEDataLock());
-        SlashBlade.InitEventBus.register(Main.proxy);
+        SlashBlade.InitEventBus.register(Transcend.proxy);
     }
 }
