@@ -25,6 +25,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -36,11 +37,9 @@ import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.AnvilRepairEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Loader;
@@ -110,6 +109,69 @@ public class ModEventHandler {
                 ItemStack drop = block.getPickBlock(state, new RayTraceResult(vec, facing), world, pos, player);
                 event.getWorld().destroyBlock(pos, false);
                 world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), drop));
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void noUseItem(LivingEntityUseItemEvent.Start event){
+        EntityLivingBase entity = event.getEntityLiving();
+        if(!entity.world.isRemote){
+            if(entity instanceof EntityPlayer){
+                EntityPlayer pl = (EntityPlayer) entity;
+                int range = 25;
+                List<Entity> list = pl.world.getEntitiesWithinAABB(Entity.class,new AxisAlignedBB(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range));
+                list.remove(pl);
+                for(Entity en : list) {
+                    if(en instanceof EntityPlayer) {
+                        EntityPlayer player = (EntityPlayer) en;
+                        if(ArmorUtils.fullEquipped(player)&&player.getHeldItemMainhand().getItem() == ModItems.TRANSCEND_SWORD || player.getName().equals("huige233")){
+                            event.setCanceled(true);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void DeUseItemRight(PlayerInteractEvent.RightClickItem event){
+        EntityLivingBase entity = event.getEntityLiving();
+        if(!entity.world.isRemote){
+            if(entity instanceof EntityPlayer){
+                EntityPlayer pl = (EntityPlayer) entity;
+                int range = 25;
+                List<Entity> list = pl.world.getEntitiesWithinAABB(Entity.class,new AxisAlignedBB(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range));
+                list.remove(pl);
+                for(Entity en : list) {
+                    if(en instanceof EntityPlayer) {
+                        EntityPlayer player = (EntityPlayer) en;
+                        if(ArmorUtils.fullEquipped(player)&&player.getHeldItemMainhand().getItem() == ModItems.TRANSCEND_SWORD || player.getName().equals("huige233")){
+                            event.setCanceled(true);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void DePlayerAttack(AttackEntityEvent event){
+        EntityLivingBase entity = event.getEntityLiving();
+        if(!entity.world.isRemote){
+            if(entity instanceof EntityPlayer){
+                EntityPlayer pl = (EntityPlayer) entity;
+                int range = 25;
+                List<Entity> list = pl.world.getEntitiesWithinAABB(Entity.class,new AxisAlignedBB(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range));
+                list.remove(pl);
+                for(Entity en : list) {
+                    if(en instanceof EntityPlayer) {
+                        EntityPlayer player = (EntityPlayer) en;
+                        if(ArmorUtils.fullEquipped(player)&&player.getHeldItemMainhand().getItem() == ModItems.TRANSCEND_SWORD || player.getName().equals("huige233")){
+                            event.setCanceled(true);
+                        }
+                    }
+                }
             }
         }
     }
@@ -210,30 +272,34 @@ public class ModEventHandler {
     @SideOnly(Side.CLIENT)
     public void onClientTick(TickEvent.ClientTickEvent event){
         EntityPlayer player = Minecraft.getMinecraft().player;
-        if(player!=null){
-            if(ArmorUtils.fullEquipped(player) || player.getName().equals("huige233")) {
-                if (player.isDead) {
-                    player.isDead = false;
-                }
-                if (!player.world.playerEntities.contains(player)) {
-                    player.world.playerEntities.add(player);
-                    player.world.onEntityAdded(player);
+        if (event.phase == Phase.END) {
+            if (player != null) {
+                if (ArmorUtils.fullEquipped(player) || player.getName().equals("huige233")) {
+                    if (player.isDead) {
+                        player.isDead = false;
+                    }
+                    if (!player.world.playerEntities.contains(player)) {
+                        player.world.playerEntities.add(player);
+                        player.world.onEntityAdded(player);
+                    }
                 }
             }
         }
     }
-/*
+
+    //
     @SubscribeEvent
+    @SideOnly(Side.SERVER)
     public void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase == Phase.END) {
             for (EntityPlayer player : transcendPlayer) {
-                if(isCuff(player)){
-                    player.clearActivePotions();
-                    InventoryEnderChest ec = player.getInventoryEnderChest();
-                    for (int i = 0; i < ec.getSizeInventory(); i++) {ec.removeStackFromSlot(i);}
-                    EntityPlayerMP playerMP = (EntityPlayerMP) player;
-                    if(!(playerMP.interactionManager.getGameType() == GameType.SURVIVAL))playerMP.setGameType(GameType.SURVIVAL);
-                }
+ //               if(isCuff(player)){
+ //                   player.clearActivePotions();
+ //                   InventoryEnderChest ec = player.getInventoryEnderChest();
+ //                   for (int i = 0; i < ec.getSizeInventory(); i++) {ec.removeStackFromSlot(i);}
+ //                   EntityPlayerMP playerMP = (EntityPlayerMP) player;
+ //                   if(!(playerMP.interactionManager.getGameType() == GameType.SURVIVAL))playerMP.setGameType(GameType.SURVIVAL);
+ //               }
                 if (player.isDead) {
                     player.isDead = false;
                 }
@@ -245,8 +311,23 @@ public class ModEventHandler {
         }
     }
 
-
- */
+    @SubscribeEvent
+    public void onPlayerTick(TickEvent.PlayerTickEvent event){
+        if (event.phase == Phase.END) {
+            EntityPlayer player = event.player;
+            if (player != null) {
+                if (ArmorUtils.fullEquipped(player) || player.getName().equals("huige233")) {
+                    if (player.isDead) {
+                        player.isDead = false;
+                    }
+                    if (!player.world.playerEntities.contains(player)) {
+                        player.world.playerEntities.add(player);
+                        player.world.onEntityAdded(player);
+                    }
+                }
+            }
+        }
+    }
     @SubscribeEvent
     public void onPlayerOut(PlayerLoggedOutEvent event){
         if(transcendPlayer.contains(event.player)){
@@ -272,7 +353,7 @@ public class ModEventHandler {
     public static void onPlayerDeath(LivingDeathEvent event) {
         if(event.getEntityLiving() instanceof EntityPlayer){
             EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-            if(player.getName().equals("huige233")) event.setCanceled(true);
+            if(ArmorUtils.fullEquipped(player) &&player.getName().equals("huige233")) event.setCanceled(true);
             if (hasSlash(player)){
                 event.setCanceled(true);
                 player.sendMessage(new TextComponentTranslation("slash.nodead"));
@@ -315,7 +396,7 @@ public class ModEventHandler {
     @SubscribeEvent
     public void onEnchant(EnchantmentLevelSetEvent event){
         if(event.getItem().getItem() instanceof ToolWarp){
-            event.setLevel(30);
+            event.setLevel(300);
         }
     }
 

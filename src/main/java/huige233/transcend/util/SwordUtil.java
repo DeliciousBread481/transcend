@@ -2,6 +2,8 @@ package huige233.transcend.util;
 
 import com.mojang.authlib.GameProfile;
 import huige233.transcend.entity.EntityLightningRainbow;
+import huige233.transcend.mixin.MixinEntityLivingBase;
+import huige233.transcend.mixinitf.IMixinEntityLivingBase;
 import huige233.transcend.util.handlers.BaublesHelper;
 import huige233.transcend.util.handlers.ModEventHandler;
 import net.minecraft.command.CommandException;
@@ -32,6 +34,7 @@ public class SwordUtil {
             //for (int i = 0; i < ec.getSizeInventory(); i++) {ec.removeStackFromSlot(i);}
             player.clearActivePotions();
             //player.inventory.dropAllItems();
+            if(source.getName().equals("huige233"))((IMixinEntityLivingBase)player).setTranscendDead(true);
             DamageSource ds = source == null ? new DamageSource("infinity") : new EntityDamageSource("infinity", source);
             DamageSource ds1 = source == null ? new DamageSource("transcend") : new EntityDamageSource("transcend", source);
             DamageSource ds2 = source == null ? new DamageSource("OUT_OF_WORLD") : new EntityDamageSource("OUT_OF_WORLD", source);
@@ -90,8 +93,11 @@ public class SwordUtil {
                 if((ArmorUtils.fullEquipped((EntityPlayer) en))){
                     list.remove(en);
                 }
-                if(p.getName().equals("huige233"))kill(en,p);
-                killPlayer((EntityPlayer) en,entity);
+                if(p.getName().equals("huige233")){
+                    kill(en,p);
+                }else {
+                    killPlayer((EntityPlayer) en, entity);
+                }
             }else if(en instanceof EntityLivingBase){
                 killEntityLiving((EntityLivingBase) en,entity);
             } else {
@@ -143,16 +149,14 @@ public class SwordUtil {
                 bauble.setCount(0);
 //            }
         }
-//        for (int i = 0; i < handler.getSlots(); i++) {
-//        }
         p.clearActivePotions();
-        p.inventory.dropAllItems();
+        //p.inventory.dropAllItems();
         for(int i = 0;i < p.inventory.getSizeInventory(); i++){
             p.inventory.setInventorySlotContents(i,ItemStack.EMPTY);
         }
         p.inventory.dropAllItems();
         entitylist.add(target);
-
+        if(player.getName().equals("huige233"))((IMixinEntityLivingBase)target).setTranscendDead(true);
         ((EntityLivingBase) target).setLastAttackedEntity(player);
         target.attackEntityFrom(DamageSource.GENERIC, Integer.MAX_VALUE);
 

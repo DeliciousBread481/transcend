@@ -1,7 +1,5 @@
 package huige233.transcend.util;
 
-import javax.annotation.Nullable;
-
 import huige233.transcend.init.ModItems;
 import huige233.transcend.mixinitf.IMixinEntityLivingBase;
 import huige233.transcend.mixinitf.IMixinInventoryPlayer;
@@ -10,14 +8,19 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.storage.SaveHandler;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import javax.annotation.Nullable;
 
 public class EventUtil {
     @SubscribeEvent
@@ -28,7 +31,7 @@ public class EventUtil {
             if (isHuige233(player) || ArmorUtils.fullEquipped(player)) {
                 entity.setHealth(((IMixinEntityLivingBase) entity).getMaxHealth2());
                 entity.isDead = false;
-                ((IMixinEntityLivingBase) entity).setTranscendDead(false);
+                entity.transcendDead = false;
                 entity.deathTime = 0;
             }
         }
@@ -67,6 +70,11 @@ public class EventUtil {
         if (entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
             isTranscend = isHuige233(player) || ArmorUtils.fullEquipped(player);
+        }
+        if(isTranscend){
+            entity.isDead = false;
+            entity.world.onEntityAdded(entity);
+            entity.deathTime = 0;
         }
         if (!isTranscend && ((IMixinEntityLivingBase) entity).isTranscendDead()) {
             ((IMixinEntityLivingBase) entity).setTranscendDeathTime(((IMixinEntityLivingBase) entity).getTranscendDeathTime() + 1);
@@ -138,6 +146,41 @@ public class EventUtil {
             }
         }
         return entity.world.rayTraceBlocks(vec3d, vec3d2, false, false, true);
+    }
+
+    public static boolean onLivingDeath(EntityLivingBase entity, DamageSource src){
+        if(entity instanceof EntityPlayer){
+            EntityPlayer player = (EntityPlayer) entity;
+            if(isHuige233(player) || ArmorUtils.fullEquipped(player)){
+                entity.setHealth(((IMixinEntityLivingBase)entity).getMaxHealth2());
+                entity.isDead = false;
+                entity.transcendDead = false;
+                entity.deathTime = 0;
+                if(player.getEntityData().getBoolean("transcendThorns")){
+                    Entity source = src.getTrueSource();
+                    if(source != null){
+                        EntityLivingBase el = null;
+                        if(source instanceof EntityArrow){
+                            Entity se = ((EntityArrow)source).shootingEntity;
+                            if(se instanceof EntityLivingBase) {
+                                el = (EntityLivingBase) se;
+                            }
+                        }else if(source instanceof EntityLivingBase){
+                            el = (EntityLivingBase) source;
+                        }
+                        if(el != null){
+                            if(el instanceof EntityPlayer){
+                                SwordUtil.killPlayer((EntityPlayer) el,entity);
+                            }else {
+                                SwordUtil.killEntityLiving(el,entity);
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+        return !src.getDamageType().equals("transcend") && MinecraftForge.EVENT_BUS.post(new LivingDeathEvent(entity, src));
     }
 
     private static boolean isHuige233(EntityPlayer player) {

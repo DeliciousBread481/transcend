@@ -67,5 +67,5 @@ public class ModItems {
     public static final Item CK = new ItemBase("chukuang",Transcend.TranscendTab);
     public static final Item LN = new LootUnder("lootunder",Transcend.TranscendTab);
     public static final ItemBow TBow = new ItemTBow("transcend_bow",Transcend.TranscendTab);
-
+    public static final ItemShears TShears = new ToolShears("transcend_shears",Transcend.TranscendTab);
 }

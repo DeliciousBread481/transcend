@@ -24,7 +24,7 @@ public class RenderFireImmune extends Render<EntityFireImmune> {
 
     @Override
     public void doRender(EntityFireImmune entity, double x, double y, double z, float entityYaw, float partialTicks){
-        RenderUtil.renderLightRayEffects(x,y+0.5,z,new Color(0xDD, 0xDD, 0xFF),16024L,entity.getAge(),16,20,5);
+        RenderUtil.renderLightRayEffects(x,y+0.4,z,new Color(0xDD, 0xDD, 0xFF),16024L,entity.age,16,20,5);
 
         GlStateManager.pushMatrix();
         ItemStack stack = entity.getItem();

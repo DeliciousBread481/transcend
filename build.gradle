@@ -25,7 +25,7 @@ apply plugin: "net.minecraftforge.gradle.forge"
 apply plugin: 'org.spongepowered.mixin'
 
 group = 'huige233'
-version = '1.1.4-test111'
+version = '1.1.4-test225'
 
 minecraft {
     version = project.forgeVersion

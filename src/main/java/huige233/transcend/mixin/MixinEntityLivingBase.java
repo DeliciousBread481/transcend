@@ -47,4 +47,6 @@ public abstract class MixinEntityLivingBase implements IMixinEntityLivingBase {
     public float getMaxHealth() {
         return EventUtil.getMaxHealth((EntityLivingBase) (Object) this);
     }
+
+
 }

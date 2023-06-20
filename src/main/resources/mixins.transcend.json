@@ -7,10 +7,13 @@
   "priority": 0,
   "refmap": "mixins.transcend.refmap.json",
   "mixins": [
+    "MIxinChunk",
     "MixinEntity",
     "MixinEntityLivingBase",
+    "MixinForgeHooks",
     "MixinInventoryPlayer",
     "MixinLootTable",
+    "MixinOnLivingDeath",
     "MixinSaveHandler"
   ]
 }

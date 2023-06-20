@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import scala.io.Codec;
 
 import java.awt.*;
 import java.util.Random;
@@ -22,6 +23,7 @@ public class EntityFireImmune extends EntityItem {
     public EntityFireImmune(World world){
         super(world);
         this.setNoPickupDelay();
+        this.age = 1;
         this.motionX = 0;
         this.motionY = 0;
         this.motionZ = 0;
@@ -41,10 +43,13 @@ public class EntityFireImmune extends EntityItem {
     public void setItem(ItemStack stack){
         super.setItem(stack);
     }
+
     @Override
     public void onUpdate() {
+        this.age++;
+        if(this.age == 8000) this.age=0;
+        if(world.isRemote)spawnFormParticles();
         if (!world.isRemote) {
-            spawnFormParticles();
             //tell player item position
 //            if (ticksExisted % 20 == 0) {
             EntityPlayer entityIn = world.getClosestPlayer(posX, posY, posZ, 4, false);
@@ -124,5 +129,10 @@ public class EntityFireImmune extends EntityItem {
             p.scale(0.35F).setColor(new Color(a.nextFloat(), a.nextFloat(), a.nextFloat()));
         }
 
+    }
+
+    @Override
+    public void spawnRunningParticles() {
+        super.spawnRunningParticles();
     }
 }
