@@ -39,7 +39,11 @@ public class CommandDamage extends CommandBase {
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nonnull BlockPos targetPos){
         if(args.length == 1){
             return getListOfStringsMatchingLastWord(args, server.getOnlinePlayerNames());
+        }else if(args.length == 2) {
+            return getListOfStringsMatchingLastWord(args, server.getOnlinePlayerNames());
         }
         return Collections.<String>emptyList();
     }
+
+
 }

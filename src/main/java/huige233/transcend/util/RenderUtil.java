@@ -1,8 +1,9 @@
 package huige233.transcend.util;
 
 
-import hellfirepvp.astralsorcery.client.util.Blending;
+import huige233.transcend.entity.renderer.Blending;
 import huige233.transcend.util.Vector.Vector3;
+import huige233.transcend.util.Vector.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -22,14 +23,14 @@ public class RenderUtil {
     }
 
     public static void renderFacingQuadVB(BufferBuilder vb, double px, double py, double pz, float partialTicks, float scale, float angle, double u, double v, double uLength, double vLength, float colorRed, float colorGreen, float colorBlue, float alpha) {
-        float arX =  ActiveRenderInfo.getRotationX();
-        float arZ =  ActiveRenderInfo.getRotationZ();
+        float arX = ActiveRenderInfo.getRotationX();
+        float arZ = ActiveRenderInfo.getRotationZ();
         float arYZ = ActiveRenderInfo.getRotationYZ();
         float arXY = ActiveRenderInfo.getRotationXY();
         float arXZ = ActiveRenderInfo.getRotationXZ();
 
         Entity e = Minecraft.getMinecraft().getRenderViewEntity();
-        if(e == null) {
+        if (e == null) {
             e = Minecraft.getMinecraft().player;
         }
         double iPX = e.prevPosX + (e.posX - e.prevPosX) * partialTicks;
@@ -37,9 +38,9 @@ public class RenderUtil {
         double iPZ = e.prevPosZ + (e.posZ - e.prevPosZ) * partialTicks;
 
         Vector3 v1 = new Vector3(-arX * scale - arYZ * scale, -arXZ * scale, -arZ * scale - arXY * scale);
-        Vector3 v2 = new Vector3(-arX * scale + arYZ * scale,  arXZ * scale, -arZ * scale + arXY * scale);
-        Vector3 v3 = new Vector3( arX * scale + arYZ * scale,  arXZ * scale,  arZ * scale + arXY * scale);
-        Vector3 v4 = new Vector3( arX * scale - arYZ * scale, -arXZ * scale,  arZ * scale - arXY * scale);
+        Vector3 v2 = new Vector3(-arX * scale + arYZ * scale, arXZ * scale, -arZ * scale + arXY * scale);
+        Vector3 v3 = new Vector3(arX * scale + arYZ * scale, arXZ * scale, arZ * scale + arXY * scale);
+        Vector3 v4 = new Vector3(arX * scale - arYZ * scale, -arXZ * scale, arZ * scale - arXY * scale);
         if (angle != 0.0F) {
             Vector3 pvec = new Vector3(iPX, iPY, iPZ);
             Vector3 tvec = new Vector3(px, py, pz);
@@ -50,10 +51,10 @@ public class RenderUtil {
             q.rotateWithMagnitude(v3);
             q.rotateWithMagnitude(v4);
         }
-        vb.pos(px + v1.getX() - iPX, py + v1.getY() - iPY, pz + v1.getZ() - iPZ).tex(u + uLength,           v + vLength).color(colorRed, colorGreen, colorBlue, alpha).endVertex();
+        vb.pos(px + v1.getX() - iPX, py + v1.getY() - iPY, pz + v1.getZ() - iPZ).tex(u + uLength, v + vLength).color(colorRed, colorGreen, colorBlue, alpha).endVertex();
         vb.pos(px + v2.getX() - iPX, py + v2.getY() - iPY, pz + v2.getZ() - iPZ).tex(u + uLength, v).color(colorRed, colorGreen, colorBlue, alpha).endVertex();
-        vb.pos(px + v3.getX() - iPX, py + v3.getY() - iPY, pz + v3.getZ() - iPZ).tex(u, v          ).color(colorRed, colorGreen, colorBlue, alpha).endVertex();
-        vb.pos(px + v4.getX() - iPX, py + v4.getY() - iPY, pz + v4.getZ() - iPZ).tex(u,           v + vLength).color(colorRed, colorGreen, colorBlue, alpha).endVertex();
+        vb.pos(px + v3.getX() - iPX, py + v3.getY() - iPY, pz + v3.getZ() - iPZ).tex(u, v).color(colorRed, colorGreen, colorBlue, alpha).endVertex();
+        vb.pos(px + v4.getX() - iPX, py + v4.getY() - iPY, pz + v4.getZ() - iPZ).tex(u, v + vLength).color(colorRed, colorGreen, colorBlue, alpha).endVertex();
     }
 
     public static void renderFacingFullQuad(double px, double py, double pz, float partialTicks, float scale, float angle) {
@@ -61,41 +62,43 @@ public class RenderUtil {
     }
 
     public static void renderFacingQuad(double px, double py, double pz, float partialTicks, float scale, float angle, double u, double v, double uLength, double vLength) {
-        float arX =  ActiveRenderInfo.getRotationX();
-        float arZ =  ActiveRenderInfo.getRotationZ();
+        float arX = ActiveRenderInfo.getRotationX();
+        float arZ = ActiveRenderInfo.getRotationZ();
         float arYZ = ActiveRenderInfo.getRotationYZ();
         float arXY = ActiveRenderInfo.getRotationXY();
         float arXZ = ActiveRenderInfo.getRotationXZ();
 
         Entity e = Minecraft.getMinecraft().getRenderViewEntity();
-        if(e == null) {
+        if (e == null) {
             e = Minecraft.getMinecraft().player;
         }
         double iPX = e.prevPosX + (e.posX - e.prevPosX) * partialTicks;
         double iPY = e.prevPosY + (e.posY - e.prevPosY) * partialTicks;
         double iPZ = e.prevPosZ + (e.posZ - e.prevPosZ) * partialTicks;
 
-        hellfirepvp.astralsorcery.common.util.data.Vector3 v1 = new hellfirepvp.astralsorcery.common.util.data.Vector3(-arX * scale - arYZ * scale, -arXZ * scale, -arZ * scale - arXY * scale);
-        hellfirepvp.astralsorcery.common.util.data.Vector3 v2 = new hellfirepvp.astralsorcery.common.util.data.Vector3(-arX * scale + arYZ * scale,  arXZ * scale, -arZ * scale + arXY * scale);
-        hellfirepvp.astralsorcery.common.util.data.Vector3 v3 = new hellfirepvp.astralsorcery.common.util.data.Vector3( arX * scale + arYZ * scale,  arXZ * scale,  arZ * scale + arXY * scale);
-        hellfirepvp.astralsorcery.common.util.data.Vector3 v4 = new hellfirepvp.astralsorcery.common.util.data.Vector3( arX * scale - arYZ * scale, -arXZ * scale,  arZ * scale - arXY * scale);
+        Vector3f v1 = new Vector3f(-arX * scale - arYZ * scale, -arXZ * scale, -arZ * scale - arXY * scale);
+        Vector3f v2 = new Vector3f(-arX * scale + arYZ * scale, arXZ * scale, -arZ * scale + arXY * scale);
+        Vector3f v4 = new Vector3f(arX * scale - arYZ * scale, -arXZ * scale, arZ * scale - arXY * scale);
+        Vector3f v3 = new Vector3f(arX * scale + arYZ * scale, arXZ * scale, arZ * scale + arXY * scale);
         if (angle != 0.0F) {
-            hellfirepvp.astralsorcery.common.util.data.Vector3 pvec = new hellfirepvp.astralsorcery.common.util.data.Vector3(iPX, iPY, iPZ);
-            hellfirepvp.astralsorcery.common.util.data.Vector3 tvec = new hellfirepvp.astralsorcery.common.util.data.Vector3(px, py, pz);
-            hellfirepvp.astralsorcery.common.util.data.Vector3 qvec = pvec.subtract(tvec).normalize();
-            hellfirepvp.astralsorcery.common.util.data.Vector3.Quat q = hellfirepvp.astralsorcery.common.util.data.Vector3.Quat.buildQuatFrom3DVector(qvec, angle);
-            q.rotateWithMagnitude(v1);
-            q.rotateWithMagnitude(v2);
-            q.rotateWithMagnitude(v3);
-            q.rotateWithMagnitude(v4);
+            Vector3f pvec = new Vector3f((float) iPX, (float) iPY, (float) iPZ);
+            Vector3f tvec = new Vector3f((float) px, (float) py, (float) pz);
+            Vector3f qvec = new Vector3f(pvec);
+            qvec.sub(tvec);
+            qvec.normalize();
+            Vector3.Quat q = Vector3.Quat.buildQuatFrom3DVector(qvec.toVEC3(), angle);
+            q.rotateWithMagnitude(v1.toVEC3());
+            q.rotateWithMagnitude(v2.toVEC3());
+            q.rotateWithMagnitude(v3.toVEC3());
+            q.rotateWithMagnitude(v4.toVEC3());
         }
         Tessellator t = Tessellator.getInstance();
         BufferBuilder vb = t.getBuffer();
         vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(px + v1.getX() - iPX, py + v1.getY() - iPY, pz + v1.getZ() - iPZ).tex(u,           v + vLength).endVertex();
+        vb.pos(px + v1.getX() - iPX, py + v1.getY() - iPY, pz + v1.getZ() - iPZ).tex(u, v + vLength).endVertex();
         vb.pos(px + v2.getX() - iPX, py + v2.getY() - iPY, pz + v2.getZ() - iPZ).tex(u + uLength, v + vLength).endVertex();
-        vb.pos(px + v3.getX() - iPX, py + v3.getY() - iPY, pz + v3.getZ() - iPZ).tex(u + uLength, v          ).endVertex();
-        vb.pos(px + v4.getX() - iPX, py + v4.getY() - iPY, pz + v4.getZ() - iPZ).tex(u,           v          ).endVertex();
+        vb.pos(px + v3.getX() - iPX, py + v3.getY() - iPY, pz + v3.getZ() - iPZ).tex(u + uLength, v).endVertex();
+        vb.pos(px + v4.getX() - iPX, py + v4.getY() - iPY, pz + v4.getZ() - iPZ).tex(u, v).endVertex();
         t.draw();
     }
 
@@ -139,10 +142,10 @@ public class RenderUtil {
             fa /= 30.0F / (Math.min(dstJump, 10 * scale) / 10.0F);
             f4 /= 30.0F / (Math.min(dstJump, 10 * scale) / 10.0F);
             vb.pos(0, 0, 0).color(effectColor.getRed(), effectColor.getGreen(), effectColor.getBlue(), (int) (255.0F * (1.0F - f2))).endVertex();
-            vb.pos(-0.7D * f4, fa,   -0.5F * f4).color(effectColor.getRed(), effectColor.getGreen(), effectColor.getBlue(), 0).endVertex();
-            vb.pos( 0.7D * f4, fa,   -0.5F * f4).color(effectColor.getRed(), effectColor.getGreen(), effectColor.getBlue(), 0).endVertex();
-            vb.pos( 0.0D,      fa,    1.0F * f4).color(effectColor.getRed(), effectColor.getGreen(), effectColor.getBlue(), 0).endVertex();
-            vb.pos(-0.7D * f4, fa,   -0.5F * f4).color(effectColor.getRed(), effectColor.getGreen(), effectColor.getBlue(), 0).endVertex();
+            vb.pos(-0.7D * f4, fa, -0.5F * f4).color(effectColor.getRed(), effectColor.getGreen(), effectColor.getBlue(), 0).endVertex();
+            vb.pos(0.7D * f4, fa, -0.5F * f4).color(effectColor.getRed(), effectColor.getGreen(), effectColor.getBlue(), 0).endVertex();
+            vb.pos(0.0D, fa, 1.0F * f4).color(effectColor.getRed(), effectColor.getGreen(), effectColor.getBlue(), 0).endVertex();
+            vb.pos(-0.7D * f4, fa, -0.5F * f4).color(effectColor.getRed(), effectColor.getGreen(), effectColor.getBlue(), 0).endVertex();
             tes.draw();
         }
         GlStateManager.popMatrix();
@@ -161,7 +164,7 @@ public class RenderUtil {
 
     public static void removeStandartTranslationFromTESRMatrix(float partialTicks) {
         Entity rView = Minecraft.getMinecraft().getRenderViewEntity();
-        if(rView == null) rView = Minecraft.getMinecraft().player;
+        if (rView == null) rView = Minecraft.getMinecraft().player;
         Entity entity = rView;
         double tx = entity.lastTickPosX + ((entity.posX - entity.lastTickPosX) * partialTicks);
         double ty = entity.lastTickPosY + ((entity.posY - entity.lastTickPosY) * partialTicks);

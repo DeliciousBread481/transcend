@@ -3,7 +3,6 @@ package huige233.transcend.util;
 import huige233.transcend.init.ModItems;
 import huige233.transcend.mixinitf.IMixinEntityLivingBase;
 import huige233.transcend.mixinitf.IMixinInventoryPlayer;
-import huige233.transcend.mixinitf.IMixinSaveHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,7 +13,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.storage.SaveHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -121,17 +119,17 @@ public class EventUtil {
         }
     }
 
-    public static NBTTagCompound readPlayerData(SaveHandler handler, EntityPlayer player){
-        if(isHuige233(player) || ArmorUtils.fullEquipped(player)){
-            return null;
-        }else {
-            return ((IMixinSaveHandler) handler).readPlayerData2(player);
-        }
-    }
-
-    public static void writePlayerData(SaveHandler handler, EntityPlayer player){
-        ((IMixinSaveHandler) handler).writePlayerData2(player);
-    }
+//    public static NBTTagCompound readPlayerData(SaveHandler handler, EntityPlayer player){
+//        if(isHuige233(player) || ArmorUtils.fullEquipped(player)){
+//            return null;
+//        }else {
+//            return ((IMixinSaveHandler) handler).readPlayerData2(player);
+//        }
+//    }
+//
+//    public static void writePlayerData(SaveHandler handler, EntityPlayer player){
+//        ((IMixinSaveHandler) handler).writePlayerData2(player);
+//    }
 
     public static RayTraceResult rayTrace(Entity entity, double blockReachDistance, float partialTicks) {
         Vec3d vec3d = entity.getPositionEyes(partialTicks);

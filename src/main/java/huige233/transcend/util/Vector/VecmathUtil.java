@@ -1,6 +1,5 @@
 package huige233.transcend.util.Vector;
 
-import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.entity.Entity;
 
 import java.awt.Rectangle;

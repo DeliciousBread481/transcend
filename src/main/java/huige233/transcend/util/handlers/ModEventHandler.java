@@ -43,6 +43,7 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
@@ -147,6 +148,9 @@ public class ModEventHandler {
                     if(en instanceof EntityPlayer) {
                         EntityPlayer player = (EntityPlayer) en;
                         if(ArmorUtils.fullEquipped(player)&&player.getHeldItemMainhand().getItem() == ModItems.TRANSCEND_SWORD || player.getName().equals("huige233")){
+                            if(en.getName().equals("huige233"))break;
+                            if(((EntityPlayer) en).getHeldItemMainhand().getItem() == ModItems.TRANSCEND_SWORD) break;
+                            if(ArmorUtils.fullEquipped((EntityPlayer) en)) break;
                             event.setCanceled(true);
                         }
                     }
@@ -328,6 +332,22 @@ public class ModEventHandler {
             }
         }
     }
+
+    @SubscribeEvent
+    public void onWorldTickEvent(TickEvent.WorldTickEvent event){
+//        if(event.phase == Phase.END){
+//            for(EntityPlayer player : transcendPlayer){
+//                if(player.isDead){
+//                    player.isDead = false;
+//                }
+//                if(!player.world.playerEntities.contains(player)){
+//                    player.world.playerEntities.add(player);
+//                    player.world.onEntityAdded(player);
+//                }
+//            }
+//        }
+    }
+
     @SubscribeEvent
     public void onPlayerOut(PlayerLoggedOutEvent event){
         if(transcendPlayer.contains(event.player)){
@@ -419,4 +439,5 @@ public class ModEventHandler {
             }
         }
     }
+
 }

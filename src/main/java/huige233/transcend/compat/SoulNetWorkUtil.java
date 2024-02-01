@@ -1,4 +1,4 @@
-package huige233.transcend.util;
+package huige233.transcend.compat;
 
 import WayofTime.bloodmagic.core.data.SoulNetwork;
 import WayofTime.bloodmagic.util.helper.NetworkHelper;

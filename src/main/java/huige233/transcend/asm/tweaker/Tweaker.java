@@ -36,10 +36,10 @@ public class Tweaker implements ITweaker {
             transformersFiled.setAccessible(true);
             List<IClassTransformer> transformers = (List<IClassTransformer>) transformersFiled.get(Launch.classLoader);
             for (int i = transformers.size() - 1; i >= 0; i--) {
-                if (transformers.get(i).getClass().getName().equals("com.anotherstar.core.transformer.LoliPickaxeTransformer")) {
-                    transformers.remove(i);
-                    break;
-                }
+//                if (transformers.get(i).getClass().getName().equals("com.anotherstar.core.transformer.LoliPickaxeTransformer")) {
+//                    transformers.remove(i);
+//                    break;
+//                }
             }
         } catch (Throwable t) {
             throw new RuntimeException(t);

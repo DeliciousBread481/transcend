@@ -115,7 +115,7 @@ public class EntityFireImmune extends EntityItem {
 
     @SideOnly(Side.CLIENT)
     private void spawnFormParticles() {
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 5; i++) {
             EntityColorParticle p = EffectHelper.genericFlareParticle(
                     posX + rand.nextFloat() * 0.2 * (rand.nextBoolean() ? 1 : -1),
                     posY + rand.nextFloat() * 0.2 * (rand.nextBoolean() ? 1 : -1),
@@ -126,7 +126,7 @@ public class EntityFireImmune extends EntityItem {
                     rand.nextFloat() * 0.05 * (rand.nextBoolean() ? 1 : -1));
             p.gravity(0.04);
             Random a = new Random();
-            p.scale(0.35F).setColor(new Color(a.nextFloat(), a.nextFloat(), a.nextFloat()));
+            p.scale(0.25F).setColor(new Color(a.nextFloat(), a.nextFloat(), a.nextFloat()));
         }
 
     }

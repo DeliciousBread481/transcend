@@ -112,4 +112,24 @@ public class Vector3f {
     public Vector3d asVector3d() {
         return new Vector3d(x, y, z);
     }
+
+    public Vector3f copy() {
+        return new Vector3f(x, y, z);
+    }
+
+    public Vector3 toVEC3() {
+        return new Vector3(x, y, z);
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getZ() {
+        return z;
+    }
 }

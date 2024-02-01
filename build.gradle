@@ -57,10 +57,6 @@ repositories {
     mavenLocal()
     maven { url = "https://maven.aliyun.com/nexus/content/groups/public/" }
     maven {
-        name 'IC2'
-        url 'http://maven.ic2.player.to'
-    }
-    maven {
         name = "buildcraft"
         url = "https://mod-buildcraft.com/maven"
     }
@@ -121,7 +117,7 @@ dependencies {
     deobfCompile "vazkii.psi:Psi:${psi_version}"
     deobfCompile "vazkii.autoreglib:AutoRegLib:${arl_version}"
     deobfCompile "com.blamejared:MTLib:${mtlib_version}"
-    deobfCompile "hellfirepvp.astralsorcery:astralsorcery:${mc_version}-${astralsorcery_version}"
+    deobfCompile "curse.maven:astralsorcery-${astralsorcery_version}"
     deobfCompile "curse.maven:bloodmagic-${bloodmagic_version_curse}"
     deobfCompile "curse.maven:thaumcraft-${thaumcraft_version}"
     deobfCompile "curse.maven:guideapi-${guideapi_version}"
@@ -137,8 +133,11 @@ dependencies {
     }
     //compile fileTree(dir:'libs',includes:['*jar'])
     deobfCompile "mods:Baubles:1.12-1.5.2"
-    runtimeOnly "net.industrial-craft:industrialcraft-2:2.8.221-ex112"
-    compileOnly "net.industrial-craft:industrialcraft-2:2.8.221-ex112:dev"
+    //deobfCompile "mods:industrialcraft-2:2.8.188-ex112"
+    runtimeOnly "mods:industrialcraft-2:2.8.188-ex112"
+    compileOnly "mods:industrialcraft-2:2.8.188-ex112"
+    //runtimeOnly "net.industrial-craft:industrialcraft-2:2.8.221-ex112"
+    //compileOnly "net.industrial-craft:industrialcraft-2:2.8.221-ex112:dev"
     deobfCompile "mods:SlashBlade:OHHH"
     deobfCompile ("zone.rong:mixinbooter:4.2")
     runtime "curse.maven:bwmcore-${bwm_core}"
@@ -260,3 +259,4 @@ void replaceString(String str1, String str2) {
 // https://github.com/MinecraftForge/ForgeGradle/blob/FG_2.3/src/main/java/net/minecraftforge/gradle/tasks/DownloadAssetsTask.java#L189
 initConstantPool Unsafe.theUnsafe.allocateInstance(DownloadAssetsTask.GetAssetTask.class).class
 replaceString "http://resources.download.minecraft.net/", "https://resources.download.minecraft.net/"
+replaceString "http://maven.ic2.player.to/", "https://maven.ic2.player.to/"

@@ -1,15 +1,17 @@
 package huige233.transcend.entity;
 
-import hellfirepvp.astralsorcery.client.util.resource.AssetLibrary;
-import hellfirepvp.astralsorcery.client.util.resource.AssetLoader;
-import hellfirepvp.astralsorcery.client.util.resource.BindableResource;
+import huige233.transcend.Transcend;
 import huige233.transcend.entity.renderer.Blending;
+import huige233.transcend.util.Reference;
 import huige233.transcend.util.RenderUtil;
 import huige233.transcend.util.Vector.Vector3;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
@@ -19,7 +21,9 @@ import java.util.List;
 
 public class EntityColorParticle extends EntityColore {
 
-    public static final BindableResource staticFlareTex = AssetLibrary.loadTexture(AssetLoader.TextureLocation.EFFECT, "flarestatic");
+    //    public static final BindableResource staticFlareTex = AssetLibrary.loadTexture(AssetLoader.TextureLocation.EFFECT, "flarestatic");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MOD_ID, "textures/entity/flarestatic.png");
+    //todo 自己记得往里塞材质
 
     private double x, y, z;
     private double oldX, oldY, oldZ;
@@ -134,7 +138,7 @@ public class EntityColorParticle extends EntityColore {
         GlStateManager.disableCull();
         GlStateManager.depthMask(false);
 
-        staticFlareTex.bind();
+        Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 
         Tessellator t = Tessellator.getInstance();
         BufferBuilder vb = t.getBuffer();
@@ -181,7 +185,7 @@ public class EntityColorParticle extends EntityColore {
         float alpha = fadeFunction.getAlpha(age, maxAge);
         alpha *= alphaMultiplier;
         GlStateManager.color(colorRed, colorGreen, colorBlue, alpha);
-        staticFlareTex.bind();
+        Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
         RenderUtil.renderFacingQuad(
                 interpolate(oldX, x, pTicks),
                 interpolate(oldY, y, pTicks),

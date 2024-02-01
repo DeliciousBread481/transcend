@@ -6,7 +6,7 @@ import huige233.transcend.init.ModItems;
 import huige233.transcend.items.EntityFireImmune;
 import huige233.transcend.util.IHasModel;
 import huige233.transcend.util.ItemNBTHelper;
-import huige233.transcend.util.SoulNetWorkUtil;
+import huige233.transcend.compat.SoulNetWorkUtil;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;

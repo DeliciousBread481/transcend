@@ -6,6 +6,7 @@ import huige233.transcend.mixin.MixinEntityLivingBase;
 import huige233.transcend.mixinitf.IMixinEntityLivingBase;
 import huige233.transcend.util.handlers.BaublesHelper;
 import huige233.transcend.util.handlers.ModEventHandler;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,6 +22,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,9 +46,9 @@ public class SwordUtil {
             player.getCombatTracker().trackDamage(ds2, Float.MAX_VALUE, Float.MAX_VALUE);
             player.setHealth(0.0f);
             Class<? extends EntityLivingBase> clazz = player.getClass();
-            ModEventHandler.antiEntity.add(clazz);
+            //ModEventHandler.antiEntity.add(clazz);
             player.onDeath(ds);
-            ModEventHandler.antiEntity.remove(clazz);
+            //ModEventHandler.antiEntity.remove(clazz);
             player.extinguish();
             player.isDead = true;
             player.world.removeEntity(player);
@@ -160,6 +163,24 @@ public class SwordUtil {
         ((EntityLivingBase) target).setLastAttackedEntity(player);
         target.attackEntityFrom(DamageSource.GENERIC, Integer.MAX_VALUE);
 
+        target.world.loadedEntityList.remove(target);
+        target.world.playerEntities.remove(target);
+
+
+        Chunk chunk = target.world.getChunk(target.chunkCoordX, target.chunkCoordZ);
+        chunk.removeEntity(target);
+        chunk.setHasEntities(false);
+        if(target.world.isRemote){
+            ((WorldClient)target.world).getLoadedEntityList().remove(target);
+        }else {
+            WorldServer worldServer = (WorldServer) target.world;
+            worldServer.getEntityTracker().untrack(target);
+        }
+
+        target.world.getChunk(target.chunkCoordX, target.chunkCoordZ).removeEntity(target);
+        target.world.removeEntity(target);
+        target.world.removeEntityDangerously(target);
+
         ((EntityLivingBase) target).setLastAttackedEntity(player);
         target.world.unloadEntities(entitylist);
         ((EntityLivingBase) target).setLastAttackedEntity(player);
@@ -177,10 +198,6 @@ public class SwordUtil {
         ((EntityLivingBase) target).onDeath(ds);
         target.isDead = true;
         target.world.onEntityRemoved(target);
-
-        target.world.getChunk(target.chunkCoordX, target.chunkCoordZ).removeEntity(target);
-        target.world.removeEntity(target);
-        target.world.removeEntityDangerously(target);
 
         if (target instanceof EntityLivingBase) {
             Class<? extends EntityLivingBase> clazz = ((EntityLivingBase) target).getClass();
