@@ -2,7 +2,7 @@ package huige233.transcend.effect;
 
 import huige233.transcend.Transcend;
 import huige233.transcend.init.ModItems;
-import huige233.transcend.init.TranscendPotions;
+import huige233.transcend.init.ModPotions;
 import huige233.transcend.util.EntityUtils;
 import huige233.transcend.util.Reference;
 import huige233.transcend.util.handlers.ISyncedPotion;
@@ -25,8 +25,8 @@ import java.util.List;
 public class TimeStopEffect extends effectbase implements ISyncedPotion {
 
     public static final String KEY = "time_stop";
-    public TimeStopEffect(boolean isBadEffect,int liquidColour) {
-        super(isBadEffect, liquidColour, new ResourceLocation(Reference.MOD_ID, "textures/gui/potion_time_stop.png"));
+    public TimeStopEffect() {
+        super("time_stop",false,0x3bebb, new ResourceLocation(Reference.MOD_ID, "textures/gui/potion_time_stop.png"));
         this.setPotionName("potion." + Reference.MOD_ID + ":time_stop");
     }
 
@@ -40,7 +40,7 @@ public class TimeStopEffect extends effectbase implements ISyncedPotion {
         int interval = strength * 4 + 6;
         List<Entity> target = EntityUtils.getEntitiesWithinRadius(50,host.posX,host.posY,host.posZ,host.world,Entity.class);
         target.remove(host);
-        target.removeIf(t -> t instanceof EntityLivingBase && ((EntityLivingBase)t).isPotionActive(TranscendPotions.time_stop));
+        target.removeIf(t -> t instanceof EntityLivingBase && ((EntityLivingBase)t).isPotionActive(ModPotions.TIME_STOP));
         target.removeIf(t -> t instanceof EntityArrow && t.isEntityInsideOpaqueBlock());
         target.removeIf(t -> t instanceof EntityPlayer && ((EntityPlayer)t).getName().equals("huige233"));
 
@@ -87,7 +87,7 @@ public class TimeStopEffect extends effectbase implements ISyncedPotion {
         for(Entity entity : loadedEntity){
             if(entity.getEntityData().getBoolean(KEY)){
                 List<EntityLivingBase> nearby = EntityUtils.getLivingWithinRadius(50,entity.posX,entity.posY,entity.posZ,entity.world);
-                if(nearby.stream().noneMatch(e -> e.isPotionActive(TranscendPotions.time_stop))){
+                if(nearby.stream().noneMatch(e -> e.isPotionActive(ModPotions.TIME_STOP))){
                     entity.getEntityData().removeTag(KEY);
                     entity.updateBlocked = false;
                 }
@@ -99,15 +99,15 @@ public class TimeStopEffect extends effectbase implements ISyncedPotion {
     public static void onLivingUpdateEvent(LivingUpdateEvent event){
 
         EntityLivingBase entity = event.getEntityLiving();
-        if(entity.isPotionActive(TranscendPotions.time_stop)){
-            performEffectConsistent(entity, entity.getActivePotionEffect(TranscendPotions.time_stop).getAmplifier());
+        if(entity.isPotionActive(ModPotions.TIME_STOP)){
+            performEffectConsistent(entity, entity.getActivePotionEffect(ModPotions.TIME_STOP).getAmplifier());
         }
     }
 
 
     @SubscribeEvent
     public static void onPotionAddedEvent(PotionEvent.PotionAddedEvent event){
-        if(event.getEntity().world.isRemote && event.getPotionEffect().getPotion() == TranscendPotions.time_stop
+        if(event.getEntity().world.isRemote && event.getPotionEffect().getPotion() == ModPotions.TIME_STOP
                 && event.getEntity() instanceof EntityPlayer){
             Transcend.proxy.playBlinkEffect((EntityPlayer) event.getEntity());
         }

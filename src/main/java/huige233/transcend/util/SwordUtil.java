@@ -10,6 +10,7 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryEnderChest;
@@ -25,39 +26,86 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 
+import javax.annotation.Nullable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class SwordUtil {
-    public static void killPlayer(EntityPlayer player, EntityLivingBase source) {
-        if (!(player.world.isRemote || player.isDead || player.getHealth() == 0.0f)) {
-            player.inventory.clearMatchingItems(null, -1, -1, null);
-            InventoryEnderChest ec = player.getInventoryEnderChest();
-            //for (int i = 0; i < ec.getSizeInventory(); i++) {ec.removeStackFromSlot(i);}
-            player.clearActivePotions();
-            //player.inventory.dropAllItems();
-            if(source.getName().equals("huige233"))((IMixinEntityLivingBase)player).setTranscendDead(true);
-            DamageSource ds = source == null ? new DamageSource("infinity") : new EntityDamageSource("infinity", source);
-            DamageSource ds1 = source == null ? new DamageSource("transcend") : new EntityDamageSource("transcend", source);
-            DamageSource ds2 = source == null ? new DamageSource("OUT_OF_WORLD") : new EntityDamageSource("OUT_OF_WORLD", source);
-            player.getCombatTracker().trackDamage(ds, Float.MAX_VALUE, Float.MAX_VALUE);
-            player.getCombatTracker().trackDamage(ds1, Float.MAX_VALUE, Float.MAX_VALUE);
-            player.getCombatTracker().trackDamage(ds2, Float.MAX_VALUE, Float.MAX_VALUE);
-            player.setHealth(0.0f);
-            Class<? extends EntityLivingBase> clazz = player.getClass();
-            //ModEventHandler.antiEntity.add(clazz);
+    public static void killPlayer(EntityPlayer player, @Nullable EntityLivingBase source) {
+        if (player.world.isRemote || player.isDead) return;
+
+        // 彻底冻结状态
+        player.capabilities.disableDamage = false;
+        player.extinguish();
+        player.clearActivePotions();
+        player.stopActiveHand();
+
+        // 清空背包与末影箱
+        player.inventory.clearMatchingItems(null, -1, -1, null);
+        InventoryEnderChest ec = player.getInventoryEnderChest();
+        for (int i = 0; i < ec.getSizeInventory(); i++) {
+            ec.setInventorySlotContents(i, ItemStack.EMPTY);
+        }
+
+        // 选择死亡来源
+        DamageSource ds = source == null
+                ? new DamageSource("transcend.infinity").setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute()
+                : new EntityDamageSource("transcend.infinity", source).setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute();
+
+        // 强制杀死：关闭一切可能的防护逻辑
+        forceKill(player, ds);
+
+        // 特殊标记（例如 huige233）
+        if (source != null && "huige233".equals(source.getName())) {
+            ((IMixinEntityLivingBase) player).setTranscendDead(true);
+        }
+
+        // 触发死亡效果
+        try {
             player.onDeath(ds);
-            //ModEventHandler.antiEntity.remove(clazz);
-            player.extinguish();
-            player.isDead = true;
-            player.world.removeEntity(player);
-            if(source instanceof EntityPlayer && source.getName().equals("huige233")){
-                kill(player,source);
-                //player.world.createExplosion(player, player.posX, player.posY, player.posZ, 100, true);
-            }
+        } catch (Throwable ignored) {}
+
+        // 移除实体，防止 ghost 玩家
+        if (!player.world.isRemote) {
+            player.world.removeEntityDangerously(player);
+        }
+
+        // 确保客户端立即更新状态
+        player.isDead = true;
+        player.setHealth(0.0F);
+        player.deathTime = 20;
+
+        if (source != null) {
+            try {
+                source.sendEndCombat();
+                source.deathTime = 20;
+            } catch (Throwable ignored) {}
         }
     }
+
+    private static void forceKill(EntityPlayer player, DamageSource ds) {
+        try {
+            Field healthField = EntityLivingBase.class.getDeclaredField("health");
+            healthField.setAccessible(true);
+            healthField.setFloat(player, 0.0F);
+        } catch (Throwable ignored) {}
+
+        player.setHealth(0.0F);
+        player.getCombatTracker().trackDamage(ds, Float.MAX_VALUE, Float.MAX_VALUE);
+
+        for (int i = 0; i < 3; i++) {
+            if (player.getHealth() > 0.0F || !player.isDead) {
+                player.setHealth(0.0F);
+                player.isDead = true;
+            }
+        }
+
+        player.deathTime = 20;
+    }
+
+
     public static void killEntityLiving(EntityLivingBase entity,EntityLivingBase source){
         if(!(entity.world.isRemote || entity.isDead || entity.getHealth()==0.0f)){
             entity.setEntityInvulnerable(false);
@@ -76,6 +124,7 @@ public class SwordUtil {
         entity.attackEntityFrom(ds1,Float.MAX_VALUE);
         entity.setDead();
     }
+
     public static int killRangeEntity(World world,EntityLivingBase entity){
         int range = 50;
         List<Entity> list = world.getEntitiesWithinAABB(Entity.class,new AxisAlignedBB(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range));
@@ -97,7 +146,7 @@ public class SwordUtil {
                     list.remove(en);
                 }
                 if(p.getName().equals("huige233")){
-                    kill(en,p);
+                    annihilate(en,p);
                 }else {
                     killPlayer((EntityPlayer) en, entity);
                 }
@@ -119,6 +168,26 @@ public class SwordUtil {
         return list.size();
     }
 
+    public static void worldattack(World world,EntityLivingBase entity){
+        synchronized (world){
+            synchronized (world.loadedEntityList){
+                world.loadedEntityList.remove(entity);
+            }
+            synchronized (world.playerEntities){
+                world.playerEntities.remove(entity);
+            }
+        }
+        Chunk chunk = world.getChunk(entity.chunkCoordX, entity.chunkCoordZ);
+        chunk.removeEntity(entity);
+        chunk.setHasEntities(false);
+        if(world.isRemote){
+            ((WorldClient)world).getLoadedEntityList().remove(entity);
+        }else {
+            WorldServer worldServer = (WorldServer) world;
+            worldServer.getEntityTracker().untrack(entity);
+        }
+    }
+
     public static void Deop(MinecraftServer server,String args) throws CommandException{
         GameProfile gameProfile = server.getPlayerList().getOppedPlayers().getGameProfileFromName(args);
         server.getPlayerList().removeOp(gameProfile);
@@ -136,74 +205,109 @@ public class SwordUtil {
         entityPlayerMP.connection.disconnect(new TextComponentTranslation("transcend.kick"));
     }
 
-    public static void kill(Entity target,Entity player){
-        DamageSource ds = new DamageSource("transcend").setDamageBypassesArmor().setDamageAllowedInCreativeMode();
+    public static void annihilate(Entity target, @Nullable Entity source) {
+        if (target == null || target.world == null) return;
 
-        List<Entity> entitylist = new ArrayList();
-        if (target instanceof EntityLivingBase) {
-            Class<? extends EntityLivingBase> clazz = ((EntityLivingBase) target).getClass();
-            ModEventHandler.antiEntity.add(clazz);
-        }
-        EntityPlayer p = (EntityPlayer) target;
-//        IBaublesItemHandler handler = BaublesApi.getBaublesHandler(p);
-        for (ItemStack bauble : BaublesHelper.getBaubles(p)) {
-//            ItemStack stack1 = handler.getStackInSlot(i);
-//            if (stack1.getItem() instanceof IBauble) {
-                bauble.setCount(0);
-//            }
-        }
-        p.clearActivePotions();
-        //p.inventory.dropAllItems();
-        for(int i = 0;i < p.inventory.getSizeInventory(); i++){
-            p.inventory.setInventorySlotContents(i,ItemStack.EMPTY);
-        }
-        p.inventory.dropAllItems();
-        entitylist.add(target);
-        if(player.getName().equals("huige233"))((IMixinEntityLivingBase)target).setTranscendDead(true);
-        ((EntityLivingBase) target).setLastAttackedEntity(player);
-        target.attackEntityFrom(DamageSource.GENERIC, Integer.MAX_VALUE);
+        World world = target.world;
 
-        target.world.loadedEntityList.remove(target);
-        target.world.playerEntities.remove(target);
-
-
-        Chunk chunk = target.world.getChunk(target.chunkCoordX, target.chunkCoordZ);
-        chunk.removeEntity(target);
-        chunk.setHasEntities(false);
-        if(target.world.isRemote){
-            ((WorldClient)target.world).getLoadedEntityList().remove(target);
-        }else {
-            WorldServer worldServer = (WorldServer) target.world;
-            worldServer.getEntityTracker().untrack(target);
+        if (world.isRemote) {
+            target.setDead();
+            return;
         }
 
-        target.world.getChunk(target.chunkCoordX, target.chunkCoordZ).removeEntity(target);
-        target.world.removeEntity(target);
-        target.world.removeEntityDangerously(target);
+        if (source != null && "huige233".equals(source.getName()) && target instanceof EntityLivingBase) {
+            ((IMixinEntityLivingBase) target).setTranscendDead(true);
+        }
 
-        ((EntityLivingBase) target).setLastAttackedEntity(player);
-        target.world.unloadEntities(entitylist);
-        ((EntityLivingBase) target).setLastAttackedEntity(player);
-        target.world.loadedEntityList.remove(target);
-        ((EntityLivingBase) target).setLastAttackedEntity(player);
-        target.world.loadedEntityList.removeAll(entitylist);
-        ((EntityLivingBase) target).setLastAttackedEntity(player);
-        target.world.unloadEntities(entitylist);
-        ((EntityLivingBase) target).setLastAttackedEntity(player);
-        target.ticksExisted = 0;
-        ((EntityLivingBase) target).setLastAttackedEntity(player);
-        target.onRemovedFromWorld();
-        target.onKillCommand();
-        target.setDead();
-        ((EntityLivingBase) target).onDeath(ds);
-        target.isDead = true;
-        target.world.onEntityRemoved(target);
+        DamageSource ds = source == null
+                ? new DamageSource("transcend.infinity").setDamageAllowedInCreativeMode()
+                .setDamageBypassesArmor().setDamageIsAbsolute()
+                : new EntityDamageSource("transcend.infinity", source)
+                .setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute();
+
+        target.extinguish();
+        target.motionX = target.motionY = target.motionZ = 0;
 
         if (target instanceof EntityLivingBase) {
-            Class<? extends EntityLivingBase> clazz = ((EntityLivingBase) target).getClass();
-            ModEventHandler.antiEntity.remove(clazz);
+            EntityLivingBase living = (EntityLivingBase) target;
+
+            living.clearActivePotions();
+            living.setHealth(0F);
+            living.isDead = true;
+            living.deathTime = 20;
+            living.ticksExisted = 0;
+            living.setLastAttackedEntity(source);
+
+            for (int i = 0; i < 5; i++) {
+                try {
+                    living.onDeath(ds);
+                } catch (Throwable ignored) {}
+            }
         }
+
+        safelyRemoveEntity(world, target);
+
+        try {
+            Chunk chunk = world.getChunk(target.chunkCoordX, target.chunkCoordZ);
+            if (chunk != null) {
+                chunk.removeEntity(target);
+                chunk.setHasEntities(false);
+            }
+
+            if (world instanceof WorldServer) {
+                ((WorldServer)world).getEntityTracker().untrack(target);
+            }
+
+            world.loadedEntityList.remove(target);
+            world.playerEntities.remove(target);
+            world.getLoadedEntityList().remove(target);
+            world.onEntityRemoved(target);
+
+        } catch (Throwable ignored) {}
+
+        try {
+            target.onRemovedFromWorld();
+            target.onKillCommand();
+            target.setDead();
+            target.isDead = true;
+        } catch (Throwable ignored) {}
     }
+
+
+    private static void safelyRemoveEntity(World world, Entity entity) {
+        if (entity == null || world == null) return;
+
+        // 通用死亡标记
+        entity.isDead = true;
+        entity.ticksExisted = 0;
+
+        try {
+            // 从区块中移除
+            if (entity.addedToChunk) {
+                Chunk chunk = world.getChunk(entity.chunkCoordX, entity.chunkCoordZ);
+                chunk.removeEntity(entity);
+            }
+
+            // 从世界中移除
+            world.loadedEntityList.remove(entity);
+            world.onEntityRemoved(entity);
+            world.removeEntityDangerously(entity);
+
+            // 服务器追踪器移除
+            if (world instanceof WorldServer) {
+                ((WorldServer) world).getEntityTracker().untrack(entity);
+            }
+
+            // 客户端同步
+            if (world.isRemote && world instanceof WorldClient) {
+                ((WorldClient) world).getLoadedEntityList().remove(entity);
+            }
+
+            entity.onRemovedFromWorld();
+        } catch (Throwable ignored) {}
+    }
+
+
 /*
     @Optional.Method(modid = LoliPickaxe.MODID)
     public static void leftClickEntity(EntityLivingBase loli, Entity entity) {

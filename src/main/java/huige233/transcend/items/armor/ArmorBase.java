@@ -77,6 +77,11 @@ public class ArmorBase extends ItemArmor implements IHasModel, IVisDiscountGear,
         super.setDamage(stack, 0);
     }
 
+    @Override
+    public boolean isDamageable() {
+        return false;
+    }
+
     @SubscribeEvent
     public static void onPlayerDeath(LivingDeathEvent event) {
         if(event.getEntityLiving() instanceof EntityPlayer){

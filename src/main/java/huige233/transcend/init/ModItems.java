@@ -27,7 +27,7 @@ public class ModItems {
     public static final List<Item> ITEMS = new ArrayList<Item>();
     public static final Item TRANSCEND = new ItemBase("transcend", Transcend.TranscendTab);
     public static final Item FLAWLESS = new ItemBase("flawless", Transcend.TranscendTab);
-    public static final ArmorMaterial flawless_armor = EnumHelper.addArmorMaterial("flawless_alloy","",0,new int[] {1000,1000,1000,1000},1000, SoundEvents.ITEM_ARMOR_EQUIP_CHAIN,1000.0f);
+    public static final ArmorMaterial flawless_armor = EnumHelper.addArmorMaterial("flawless_alloy","",9999,new int[] {1000,1000,1000,1000},1000, SoundEvents.ITEM_ARMOR_EQUIP_CHAIN,1000.0f);
     public static final ArmorMaterial ARMOR_MATERIAL_FLAWLESS = EnumHelper.addArmorMaterial("FLAWLESS", Reference.MOD_ID+":flawless", 0, new int[]{1000 , 1000, 1000, 1000}, 100, SoundEvents.ITEM_ARMOR_EQUIP_CHAIN,1000.0f);
     public static final Item FLAWLESS_HELMET = new ArmorBase("flawless_helmet", ARMOR_MATERIAL_FLAWLESS, 1, EntityEquipmentSlot.HEAD, Transcend.TranscendTab);
     public static final Item FLAWLESS_CHESTPLATE = new ArmorBase("flawless_chestplate", ARMOR_MATERIAL_FLAWLESS, 1, EntityEquipmentSlot.CHEST, Transcend.TranscendTab);
@@ -68,4 +68,5 @@ public class ModItems {
     public static final Item LN = new LootUnder("lootunder",Transcend.TranscendTab);
     public static final ItemBow TBow = new ItemTBow("transcend_bow",Transcend.TranscendTab);
     public static final ItemShears TShears = new ToolShears("transcend_shears",Transcend.TranscendTab);
+    public static final Item TIMEBOTTLE = new ItemTimeBottle("timebottle",Transcend.TranscendTab);
 }

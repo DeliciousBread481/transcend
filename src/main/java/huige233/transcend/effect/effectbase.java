@@ -1,5 +1,6 @@
 package huige233.transcend.effect;
 
+import huige233.transcend.util.Reference;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,8 +13,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class effectbase extends Potion {
     private final ResourceLocation texture;
 
-    public effectbase(boolean isBadEffect, int liquidColour, ResourceLocation texture){
+    public effectbase(String name,boolean isBadEffect, int liquidColour, ResourceLocation texture){
         super(isBadEffect, liquidColour);
+        setRegistryName(new ResourceLocation(Reference.MOD_ID,name));
         this.texture = texture;
     }
 

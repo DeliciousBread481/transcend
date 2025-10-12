@@ -2,6 +2,7 @@ package huige233.transcend.compat.slash.specialeffects;
 
 import huige233.transcend.compat.slash.named.ItemTrSlashBlade;
 import huige233.transcend.entity.EntityLightningRainbow;
+import huige233.transcend.util.HyperEntitySelector;
 import mods.flammpfeil.slashblade.ItemSlashBladeNamed;
 import mods.flammpfeil.slashblade.entity.selector.EntitySelectorAttackable;
 import mods.flammpfeil.slashblade.item.ItemSlashBlade;
@@ -128,7 +129,7 @@ public class SETranscend implements ISpecialEffect, IRemovable {
             vec = vec.normalize();
             bb = bb.expand(2.0f, 0.25f, 2.0f);
             bb = bb.offset(vec.x * (float) dist, vec.y * (float) dist, vec.z * (float) dist);
-            List<Entity> list = world.getEntitiesInAABBexcluding(player, bb, EntitySelectorAttackable.getInstance());
+            List<Entity> list = world.getEntitiesInAABBexcluding(player, bb, HyperEntitySelector.getInstance());
             for (Entity curEntity : list) {
                 if (curEntity instanceof EntityLivingBase) {
                     world.spawnEntity(new EntityLightningRainbow(world,curEntity.posX,curEntity.posY,curEntity.posZ,false));

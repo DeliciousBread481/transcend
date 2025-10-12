@@ -8,12 +8,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.registry.IThrowableEntity;
 
 import java.util.ArrayList;
@@ -73,22 +71,6 @@ public class WorldEvent {
         if(entity instanceof EntityPlayer){
             if(((EntityPlayer)entity).getName().equals("huige233")){
                 event.setCanceled(false);
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void LivingDeathEvent(LivingDeathEvent event){
-        if(event.getEntityLiving() instanceof EntityPlayer){
-            EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-            if(player.getName().equals("huige233")){
-                player.setHealth(player.getMaxHealth());
-                player.deathTime=0;
-                player.isDead=false;
-                player.preparePlayerToSpawn();
-                if(event.isCancelable()){
-                    event.setCanceled(true);
-                }
             }
         }
     }

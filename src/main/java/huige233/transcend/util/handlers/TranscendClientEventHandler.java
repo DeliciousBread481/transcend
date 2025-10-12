@@ -1,7 +1,7 @@
 package huige233.transcend.util.handlers;
 
 import huige233.transcend.effect.TimeStopEffect;
-import huige233.transcend.init.TranscendPotions;
+import huige233.transcend.init.ModPotions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -34,7 +34,7 @@ public class TranscendClientEventHandler {
 
                 String activeShader = Minecraft.getMinecraft().entityRenderer.getShaderGroup().getShaderGroupName();
 
-                if((!Minecraft.getMinecraft().player.isPotionActive(TranscendPotions.time_stop))){
+                if((!Minecraft.getMinecraft().player.isPotionActive(ModPotions.TIME_STOP))){
                     Minecraft.getMinecraft().entityRenderer.stopUseShader();
                 }
             }

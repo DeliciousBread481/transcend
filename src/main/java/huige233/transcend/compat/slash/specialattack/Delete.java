@@ -81,6 +81,11 @@ public class Delete extends SpecialAttackBase {
             target = getEnityToWatch(player);
             if(target != null && !target.isDead) removeEntity(target, (Entity)player, Boolean.valueOf(true));
         }
+        EntitySpearEX entityex = new EntitySpearEX(world,player,false,3d);
+        entityex.setLifeTime(10);
+        if(entityex != null) {
+            world.spawnEntity(entityex);
+        }
         ItemSlashBlade.setComboSequence(tag, ItemSlashBlade.ComboSequence.SlashDim);
         player.playSound(SoundEvents.ENTITY_WITCH_HURT, 0.5F, 1.0F);
         if(target == null) {

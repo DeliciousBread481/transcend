@@ -30,6 +30,10 @@ public class TraitTranscend extends AbstractTrait {
         int modifiers = toolTag.getInteger("FreeModifiers");
         toolTag.setInteger("FreeModifiers", 100 + modifiers);
         rootCompound.setBoolean("Unbreakable", true);
+        NBTTagCompound tag = TagUtil.getToolTag(rootCompound);
+        float attack = 999999;
+        attack += tag.getFloat("Attack");
+        tag.setFloat("Attack", attack);
         TagUtil.setToolTag(rootCompound, toolTag);
     }
 

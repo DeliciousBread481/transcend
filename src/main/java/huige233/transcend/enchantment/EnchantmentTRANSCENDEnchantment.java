@@ -55,7 +55,7 @@ public class EnchantmentTRANSCENDEnchantment extends Enchantment {
             world.spawnEntity(new EntityLightningRainbow(world,pos.getX(),pos.getY(),pos.getZ(),false));
             world.spawnEntity(new EntityLightningRainbow(world,pos.getX(),pos.getY(),pos.getZ(),false));
             world.spawnEntity(new EntityLightningRainbow(world,pos.getX(),pos.getY(),pos.getZ(),false));
-            SwordUtil.kill(user, target);
+            target.isDead = true;
         } else if(r > 90) {
             world.spawnEntity(new EntityLightningRainbow(world,pos.getX(),pos.getY(),pos.getZ(),false));
             world.spawnEntity(new EntityLightningRainbow(world,pos.getX(),pos.getY(),pos.getZ(),false));

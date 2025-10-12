@@ -1,22 +1,20 @@
 buildscript {
     repositories {
-//        mavenLocal()
-        maven { url = "https://maven.aliyun.com/nexus/content/groups/public/" }
+        mavenLocal()
+       // maven { url = "https://maven.aliyun.com/nexus/content/groups/public/" }
         google()
-        mavenCentral()
-
+        maven { url = 'https://maven.minecraftforge.net/' }
         maven {
             name = "sponge"
             url = "https://repo.spongepowered.org/maven"
         }
-        maven {
-            name = "forge"
-            url = "https://files.minecraftforge.net/maven"
-        }
 
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
+        classpath("com.anatawa12.forge:ForgeGradle:2.3-1.0.+") { changing = true }
         classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
     }
 }
@@ -25,7 +23,7 @@ apply plugin: "net.minecraftforge.gradle.forge"
 apply plugin: 'org.spongepowered.mixin'
 
 group = 'huige233'
-version = '1.1.4-test225'
+version = '1.1.4-test230'
 
 minecraft {
     version = project.forgeVersion
@@ -134,8 +132,7 @@ dependencies {
     //compile fileTree(dir:'libs',includes:['*jar'])
     deobfCompile "mods:Baubles:1.12-1.5.2"
     //deobfCompile "mods:industrialcraft-2:2.8.188-ex112"
-    runtimeOnly "mods:industrialcraft-2:2.8.188-ex112"
-    compileOnly "mods:industrialcraft-2:2.8.188-ex112"
+    //implementation "mods:industrialcraft-2:2.8.188-ex112"
     //runtimeOnly "net.industrial-craft:industrialcraft-2:2.8.221-ex112"
     //compileOnly "net.industrial-craft:industrialcraft-2:2.8.221-ex112:dev"
     deobfCompile "mods:SlashBlade:OHHH"

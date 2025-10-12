@@ -9,6 +9,7 @@ public class TileEntityHandler {
         GameRegistry.registerTileEntity(TileEntityVirusGenerator.class,new ResourceLocation("transcend:tileEntityVirusGenerator"));
         GameRegistry.registerTileEntity(TileEntityCollerctor.class,new ResourceLocation("transcend:tileEntityCollector"));
         GameRegistry.registerTileEntity(TileCreativeRFSource.class,new ResourceLocation("transcend:TileCreativeRFSource"));
+        GameRegistry.registerTileEntity(TileRandomGenerator.class,new ResourceLocation("transcend:TileRandomGenerator"));
         /*
         if(Loader.isModLoaded("ic2")){
             GameRegistry.registerTileEntity(TileCreativeEUSource.class,new ResourceLocation("transcend:TileCreativeEUSource"));

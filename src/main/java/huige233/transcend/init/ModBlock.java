@@ -24,6 +24,7 @@ public class ModBlock {
     public static final Block CAST_MACHINE = new BlockVirusGenerator("cast_machine");
     public static final Block NETHER_STAR_BLOCK = new BlockBase("nether_star_block", Material.ROCK).setHardness(5.0F);
     public static final Block CREATIVERFSOURCE = new BlockCreativeRFSource("creative_rf_source");
+    public static final Block RANDOM_GENERATOR = new BlockRandomGenerator("random_generator");
     public static Block CREATIVEEUSOURCE = null;
 
     public static Block ULTRAMANAPOOL = null;

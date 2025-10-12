@@ -13,6 +13,7 @@
     "MixinForgeHooks",
     "MixinInventoryPlayer",
     "MixinLootTable",
-    "MixinOnLivingDeath"
+    "MixinOnLivingDeath",
+    "MixinBlockStateContainer"
   ]
 }

@@ -26,7 +26,7 @@ public class EventUtil {
         EntityLivingBase entity = event.getEntityLiving();
         if (entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
-            if (isHuige233(player) || ArmorUtils.fullEquipped(player)) {
+            if (ArmorUtils.fullEquipped(player)) {
                 entity.setHealth(((IMixinEntityLivingBase) entity).getMaxHealth2());
                 entity.isDead = false;
                 entity.transcendDead = false;
@@ -41,7 +41,7 @@ public class EventUtil {
         boolean isTranscend = false;
         if (entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
-            isTranscend = isHuige233(player) || ArmorUtils.fullEquipped(player);
+            isTranscend = ArmorUtils.fullEquipped(player);
         }
         if ((((IMixinEntityLivingBase) entity).isTranscendDead() || entity.isDead || entity.getHealth() == 0)) {
             ((IMixinEntityLivingBase) entity).setTranscendDeathTime(((IMixinEntityLivingBase) entity).getTranscendDeathTime() + 1);
@@ -67,7 +67,7 @@ public class EventUtil {
         boolean isTranscend = false;
         if (entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
-            isTranscend = isHuige233(player) || ArmorUtils.fullEquipped(player);
+            isTranscend = ArmorUtils.fullEquipped(player);
         }
         if(isTranscend){
             entity.isDead = false;
@@ -86,7 +86,7 @@ public class EventUtil {
     public static float getHealth(EntityLivingBase entity) {
         if (entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
-            if (isHuige233(player) || ArmorUtils.fullEquipped(player)) {
+            if (ArmorUtils.fullEquipped(player)) {
                 if (((IMixinEntityLivingBase) entity).getMaxHealth2() > 0) return ((IMixinEntityLivingBase) entity).getMaxHealth2();
                 else return 20;
             }
@@ -97,7 +97,7 @@ public class EventUtil {
     public static float getMaxHealth(EntityLivingBase entity) {
         if (entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
-            if (isHuige233(player) || ArmorUtils.fullEquipped(player)) {
+            if (ArmorUtils.fullEquipped(player)) {
                 if (((IMixinEntityLivingBase) entity).getMaxHealth2() > 0) return ((IMixinEntityLivingBase) entity).getMaxHealth2();
                 else return 20;
             }
@@ -106,13 +106,13 @@ public class EventUtil {
     }
 
     public static void dropAllItems(InventoryPlayer inventory) {
-        if (isHuige233(inventory.player) || ArmorUtils.fullEquipped(inventory.player)) {
+        if(!ArmorUtils.fullEquipped(inventory.player)){
             ((IMixinInventoryPlayer) inventory).dropAllItems2();
         }
     }
 
     public static int clearMatchingItems(InventoryPlayer inventory, @Nullable Item item, int meta, int removeCount, @Nullable NBTTagCompound itemNBT) {
-        if (isHuige233(inventory.player) || ArmorUtils.fullEquipped(inventory.player)) {
+        if(!ArmorUtils.fullEquipped(inventory.player)){
             return 0;
         } else {
             return ((IMixinInventoryPlayer) inventory).clearMatchingItems2(item, meta, removeCount, itemNBT);
@@ -137,7 +137,7 @@ public class EventUtil {
         Vec3d vec3d2 = vec3d.add(vec3d1.x * blockReachDistance, vec3d1.y * blockReachDistance, vec3d1.z * blockReachDistance);
         if (entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
-            if (isHuige233(player) || ArmorUtils.fullEquipped(player)) {
+            if(!ArmorUtils.fullEquipped(player)){
                 if (player.getHeldItemMainhand().getItem() == ModItems.TRANSCEND_PICKAXE) {
                     return entity.world.rayTraceBlocks(vec3d, vec3d2, true, false, true);
                 }
@@ -149,7 +149,8 @@ public class EventUtil {
     public static boolean onLivingDeath(EntityLivingBase entity, DamageSource src){
         if(entity instanceof EntityPlayer){
             EntityPlayer player = (EntityPlayer) entity;
-            if(isHuige233(player) || ArmorUtils.fullEquipped(player)){
+            if(ArmorUtils.fullEquipped(player)){
+//            if(isHuige233(player) || ArmorUtils.fullEquipped(player)){
                 entity.setHealth(((IMixinEntityLivingBase)entity).getMaxHealth2());
                 entity.isDead = false;
                 entity.transcendDead = false;
@@ -181,7 +182,8 @@ public class EventUtil {
         return !src.getDamageType().equals("transcend") && MinecraftForge.EVENT_BUS.post(new LivingDeathEvent(entity, src));
     }
 
-    private static boolean isHuige233(EntityPlayer player) {
-        return player != null && player.getGameProfile() != null && player.getName() != null && player.getName().equals("huige233");
-    }
+//    private static boolean isHuige233(EntityPlayer player) {
+//        //return player != null && player.getGameProfile() != null && player.getName() != null && player.getName().equals("huige233");
+//        return false;
+//    }
 }

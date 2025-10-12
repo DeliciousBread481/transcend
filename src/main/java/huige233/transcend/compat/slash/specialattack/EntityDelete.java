@@ -1,5 +1,6 @@
 package huige233.transcend.compat.slash.specialattack;
 
+import huige233.transcend.util.HyperEntitySelector;
 import mods.flammpfeil.slashblade.ability.ArmorPiercing;
 import mods.flammpfeil.slashblade.ability.StylishRankManager;
 import mods.flammpfeil.slashblade.ability.TeleportCanceller;
@@ -177,7 +178,7 @@ public class EntityDelete extends EntitySlashDimension {
                     }
                 }
                 if(getIsSingleHit() || this.ticksExisted % 2 == 0){
-                    List<Entity> list1 = this.world.getEntitiesInAABBexcluding(getThrower(), bb, EntitySelectorAttackable.getInstance());
+                    List<Entity> list1 = this.world.getEntitiesInAABBexcluding(getThrower(), bb, HyperEntitySelector.getInstance());
                     list1.removeAll(this.alreadyHitEntity);
                     if(getIsSingleHit()) this.alreadyHitEntity.addAll(list1);
                     float magicDamage = Math.max(1.0f,this.AttackLevel);

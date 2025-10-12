@@ -6,11 +6,12 @@ import huige233.transcend.compat.PsiCompat;
 import huige233.transcend.compat.slash.BladeLoader;
 import huige233.transcend.compat.slash.SlashInit;
 import huige233.transcend.compat.slash.specialattack.EntityDelete;
+import huige233.transcend.compat.slash.specialattack.EntitySpearEX;
 import huige233.transcend.compat.tinkers.TiCConfig;
 import huige233.transcend.compat.tinkers.conarmConfig;
 import huige233.transcend.entity.EntityLightningRainbow;
-import huige233.transcend.entity.RenderRegistry;
 import huige233.transcend.items.EntityFireImmune;
+import huige233.transcend.items.EntityTimeAccelerator;
 import huige233.transcend.packet.PacketEndTimeStop;
 import huige233.transcend.util.handlers.ModEventHandler;
 import net.minecraft.entity.player.EntityPlayer;
@@ -66,11 +67,15 @@ public class CommonProxy {
 
     public void init( FMLInitializationEvent event )
     {
-        if(Loader.isModLoaded("flammpfeil.slashblade")) EntityRegistry.registerModEntity(new ResourceLocation("transcend", "Delete"), EntityDelete.class, "Delete", 30, Transcend.instance, 250, 200, true);
+        if(Loader.isModLoaded("flammpfeil.slashblade")){
+            EntityRegistry.registerModEntity(new ResourceLocation("transcend", "Delete"), EntityDelete.class, "Delete", 101, Transcend.instance, 250, 200, true);
+            EntityRegistry.registerModEntity(new ResourceLocation("transcend", "SpearEX"), EntitySpearEX.class, "SpearEX", 102, Transcend.instance, 400, 1, true);
+        }
         if(Loader.isModLoaded("conarm")) conarmConfig.setup();
+        registerTickHandlers(TickManager.getInstance());
         EntityRegistry.registerModEntity(new ResourceLocation("transcend", "LightningRainbow"), EntityLightningRainbow.class, "LightningRainbow", 31, Transcend.instance, 250, 200, true);
         EntityRegistry.registerModEntity(new ResourceLocation("transcend", "FireImmune"), EntityFireImmune.class, "FIreImmune", 32, Transcend.instance, 250, 200, true);
-        registerTickHandlers(TickManager.getInstance());
+        EntityRegistry.registerModEntity(new ResourceLocation("transcend", "EntityTimeAccelerator"), EntityTimeAccelerator.class, "EntityTimeAccelerator", 33, Transcend.instance, 64, 10, false);
     }
 
     protected void registerTickHandlers(TickManager manager) {

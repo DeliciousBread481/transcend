@@ -107,7 +107,7 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
                 }
                 if(result) {
                     if(player.getName().equals("huige233")){
-                        SwordUtil.kill(entity,player);
+                        SwordUtil.annihilate(entity,player);
                     }
 //                    if(Loader.isModLoaded("lolipickaxe")){
 //                        leftClickEntity(player, entity);
@@ -293,6 +293,11 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
                 }
             }
         }
+    }
+
+    @Override
+    public boolean onDroppedByPlayer(ItemStack item, EntityPlayer player) {
+        return false;
     }
 
     @Override

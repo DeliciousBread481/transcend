@@ -24,6 +24,11 @@ public class LootUnder extends ItemBase implements IBauble, IHasModel {
     }
 
     @Override
+    public void registerModels() {
+        Transcend.proxy.registerItemRenderer(this, 0, "inventory");
+    }
+
+    @Override
     public BaubleType getBaubleType(ItemStack itemStack) {
         return BaubleType.TRINKET;
     }

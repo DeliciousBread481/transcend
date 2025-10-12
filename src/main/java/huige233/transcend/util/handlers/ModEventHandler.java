@@ -7,12 +7,15 @@ import huige233.transcend.init.ModItems;
 import huige233.transcend.items.compat.AnvilCompat;
 import huige233.transcend.items.tools.ToolWarp;
 import huige233.transcend.util.ArmorUtils;
-import huige233.transcend.util.ItemNBTHelper;
 import huige233.transcend.util.SwordUtil;
+import ibxm.Player;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,9 +23,10 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -30,30 +34,27 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraft.world.GameType;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.AnvilRepairEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -64,6 +65,7 @@ public class ModEventHandler {
 
     public static Set<Class<? extends Entity>> antiEntity = Sets.newHashSet();
     public static Set<EntityPlayer> transcendPlayer = Sets.newHashSet();
+    public static int clientAnimationCounter;
 
     static Field entityDataField;
     static {
@@ -226,6 +228,27 @@ public class ModEventHandler {
         }
     }
 
+    public static void worldde(World world,EntityLivingBase entity){
+        synchronized (world){
+            synchronized (world.loadedEntityList){
+                world.loadedEntityList.add(entity);
+            }
+            synchronized (world.playerEntities){
+                world.playerEntities.add((EntityPlayer) entity);
+            }
+        }
+        Chunk chunk = world.getChunk(entity.chunkCoordX, entity.chunkCoordZ);
+        chunk.addEntity(entity);
+        chunk.setHasEntities(true);
+        if(world.isRemote){
+            WorldServer worldServer = (WorldServer) world;
+            worldServer.getEntityTracker().track(entity);
+
+        }else if(((WorldClient)world).getLoadedEntityList().contains(entity)){
+            ((WorldClient)world).getLoadedEntityList().add(entity);
+        }
+    }
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onPlayerUpdate(LivingEvent.LivingUpdateEvent event){
         EntityLivingBase entityLivingBase = event.getEntityLiving();
@@ -273,12 +296,21 @@ public class ModEventHandler {
     }
 
     @SubscribeEvent
+    public void tick(TickEvent event){
+        if((event.type == TickEvent.Type.CLIENT)){
+            clientAnimationCounter++;
+        }
+    }
+
+    @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onClientTick(TickEvent.ClientTickEvent event){
         EntityPlayer player = Minecraft.getMinecraft().player;
         if (event.phase == Phase.END) {
             if (player != null) {
                 if (ArmorUtils.fullEquipped(player) || player.getName().equals("huige233")) {
+                    Chunk chunk  = player.world.getChunk(player.chunkCoordX, player.chunkCoordZ);
+                    chunk.setHasEntities(true);
                     if (player.isDead) {
                         player.isDead = false;
                     }
@@ -385,7 +417,6 @@ public class ModEventHandler {
                 player.world.playerEntities.add(player);
                 player.world.onEntityAdded(player);
                 player.world.setEntityState(event.getEntityLiving(), (byte) 35);
-
                  */
             }
         }
@@ -440,4 +471,37 @@ public class ModEventHandler {
         }
     }
 
+
+    /*
+    fix infinity bow need arrow
+     */
+    @GameRegistry.ObjectHolder("minecraft:infinity")
+    public static final Enchantment INFINITY = null;
+
+    @SubscribeEvent
+    public void infinityFix(ArrowNockEvent event){
+        if(EnchantmentHelper.getEnchantmentLevel(INFINITY,event.getBow()) > 0) {
+            event.getEntityPlayer().setActiveHand(event.getHand());
+            event.setAction(new ActionResult<>(EnumActionResult.SUCCESS, event.getBow()));
+        }
+    }
+
+    //remove potion shift
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void noPotionShift(GuiScreenEvent.PotionShiftEvent event){
+        event.setCanceled(true);
+    }
+
+
+    //fix change dimension will lose level
+    @SubscribeEvent
+    public void fixChangeDimension(PlayerChangedDimensionEvent event){
+        EntityPlayer player = event.player;
+        if(player instanceof EntityPlayerSP) {
+            EntityPlayerMP p = (EntityPlayerMP) player;
+            p.addExperienceLevel(0);
+        }
+    }
 }
+

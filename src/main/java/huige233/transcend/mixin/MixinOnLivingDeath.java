@@ -22,7 +22,7 @@ public abstract class MixinOnLivingDeath{
     private static void onLivingDeath(EntityLivingBase entity, DamageSource src, CallbackInfoReturnable<Boolean> cir){
         if(entity instanceof EntityPlayer){
             EntityPlayer player = (EntityPlayer) entity;
-            if(isHuige233(player) || ArmorUtils.fullEquipped(player)){
+            if(ArmorUtils.fullEquipped(player)){
                 entity.setHealth(((IMixinEntityLivingBase)entity).getMaxHealth2());
                 entity.isDead = false;
                 ((IMixinEntityLivingBase)entity).setTranscendDead(false);
@@ -55,6 +55,7 @@ public abstract class MixinOnLivingDeath{
     }
 
     private static boolean isHuige233(EntityPlayer player) {
-        return player != null && player.getGameProfile() != null && player.getName() != null && player.getName().equals("huige233");
+        return false;
+        //return player != null && player.getGameProfile() != null && player.getName() != null && player.getName().equals("huige233");
     }
 }

@@ -20,11 +20,14 @@ import huige233.transcend.util.other.TravelController;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.profiler.Profiler;
@@ -101,6 +104,23 @@ public class ClientProxy extends CommonProxy {
 
     public void postInit(FMLPostInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(new HeartRenderHandler());
+
+//        SimpleReloadableResourceManager manager = ((SimpleReloadableResourceManager) Minecraft.getMinecraft().getResourceManager());
+//
+//        int index = manager.reloadListeners.indexOf(Minecraft.getMinecraft().entityRenderer);
+//        manager.reloadListeners.remove(index);
+//
+//        Minecraft.getMinecraft().entityRenderer = new EntityRenderer(Minecraft.getMinecraft(), Minecraft.getMinecraft().getResourceManager()) {
+//
+//            @Override
+//            public float getNightVisionBrightness(EntityLivingBase entitylivingbaseIn, float partialTicks) {
+//
+//                int i = entitylivingbaseIn.getActivePotionEffect(MobEffects.NIGHT_VISION).getDuration();
+//                return i > 20 ? 1.0f : i * 20/1.0f;
+//            }
+//        };
+//        manager.registerReloadListener(Minecraft.getMinecraft().entityRenderer);
+
     }
 
     @SubscribeEvent
