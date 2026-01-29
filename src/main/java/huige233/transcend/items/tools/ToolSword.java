@@ -168,7 +168,7 @@ public class ToolSword extends ItemSword implements IHasModel, ICreativeManaProv
         }
         return false;
     }
-    public void getSubItems(@NotNull CreativeTabs tab,NonNullList<ItemStack> stack) {
+    public void getSubItems(@NotNull CreativeTabs tab,NonNullList<ItemStack> items) {
         if (tab != Transcend.TranscendTab) {
             return;
         }
