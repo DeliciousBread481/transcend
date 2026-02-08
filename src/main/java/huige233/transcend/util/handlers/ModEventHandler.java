@@ -13,7 +13,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -498,7 +497,7 @@ public class ModEventHandler {
     @SubscribeEvent
     public void fixChangeDimension(PlayerChangedDimensionEvent event){
         EntityPlayer player = event.player;
-        if(player instanceof EntityPlayerSP) {
+        if(player instanceof EntityPlayerMP) {
             EntityPlayerMP p = (EntityPlayerMP) player;
             p.addExperienceLevel(0);
         }
